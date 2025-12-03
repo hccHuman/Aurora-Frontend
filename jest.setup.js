@@ -7,12 +7,12 @@
  */
 
 // Importar matchers de Testing Library
-require('@testing-library/jest-dom');
+require("@testing-library/jest-dom");
 
 // ===== WEB ANIMATIONS API MOCK =====
 // Mock the Element.animate() method for testing theme transitions
 if (!Element.prototype.animate) {
-  Element.prototype.animate = jest.fn(function(keyframes, options) {
+  Element.prototype.animate = jest.fn(function (keyframes, options) {
     return {
       play: jest.fn(),
       pause: jest.fn(),
@@ -22,12 +22,12 @@ if (!Element.prototype.animate) {
       playbackRate: 1,
       currentTime: 0,
       startTime: 0,
-      playState: 'running',
+      playState: "running",
       ready: Promise.resolve(),
       finished: Promise.resolve(),
       effect: null,
       timeline: null,
-      id: '',
+      id: "",
       onfinish: null,
       oncancel: null,
       onremove: null,
@@ -40,10 +40,10 @@ if (!Element.prototype.animate) {
 // Use a regular function (not jest.fn) to ensure it persists through test execution
 const mockStartViewTransition = (callback) => {
   // Execute the callback immediately to apply theme changes
-  if (typeof callback === 'function') {
+  if (typeof callback === "function") {
     callback();
   }
-  
+
   // Return a ViewTransition-like object
   return {
     ready: Promise.resolve(),
@@ -54,7 +54,7 @@ const mockStartViewTransition = (callback) => {
 };
 
 // Only set if not already defined
-if (typeof document.startViewTransition === 'undefined') {
+if (typeof document.startViewTransition === "undefined") {
   document.startViewTransition = mockStartViewTransition;
 }
 
@@ -62,8 +62,8 @@ if (typeof document.startViewTransition === 'undefined') {
 globalThis.speechSynthesis = {
   getVoices: () => [
     {
-      name: 'Google Español',
-      lang: 'es-ES',
+      name: "Google Español",
+      lang: "es-ES",
     },
   ],
   onvoiceschanged: null,
