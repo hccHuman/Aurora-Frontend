@@ -1,4 +1,6 @@
 ---
+import LoginReader from "@/components/tsx/statement/loginReader";
+
 // src/pages/index.astro
 ---
 <html lang="en">
@@ -23,7 +25,7 @@
         } catch (err) {
           console.error("Error al redirigir por idioma:", err);
           // Fallback manual
-          window.location.replace("/en/");
+          window.location.replace("/");
         }
       }
 
@@ -31,6 +33,7 @@
     </script>
   </head>
   <body>
+    <LoginReader client:load />
     <p>Redirigiendo...</p>
   </body>
 </html>
