@@ -1,0 +1,116 @@
+---
+const { lang = "es" } = Astro.props;
+
+// IMPORT ESTÁTICO
+import TermsES from "../../content/legal/terms.es.md";
+import TermsEN from "../../content/legal/terms.en.md";
+import PrivacyES from "../../content/legal/privacy.es.md";
+import PrivacyEN from "../../content/legal/privacy.en.md";
+import CookiesES from "../../content/legal/cookies.es.md";
+import CookiesEN from "../../content/legal/cookies.en.md";
+
+// Seleccionamos según idioma
+const rendered = {
+  terms: lang === "es" ? TermsES : TermsEN,
+  privacy: lang === "es" ? PrivacyES : PrivacyEN,
+  cookies: lang === "es" ? CookiesES : CookiesEN,
+};
+
+const text = {
+  es: {
+    terms: "Términos y Condiciones",
+    privacy: "Política de Privacidad",
+    cookies: "Política de Cookies",
+    rights: "Todos los derechos reservados",
+  },
+  en: {
+    terms: "Terms & Conditions",
+    privacy: "Privacy Policy",
+    cookies: "Cookie Policy",
+    rights: "All rights reserved",
+  },
+}[lang];
+---
+
+<footer class="w-full bg-slate-900 text-white border-t border-slate-700 py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6">
+    <!-- TOP: 3 buttons -->
+    <div class="flex flex-wrap gap-6 justify-center text-sm font-medium">
+      <button data-panel="terms" class="footer-btn hover:text-red-400 transition">
+        {text.terms}
+      </button>
+
+      <button data-panel="privacy" class="footer-btn hover:text-red-400 transition">
+        {text.privacy}
+      </button>
+
+      <button data-panel="cookies" class="footer-btn hover:text-red-400 transition">
+        {text.cookies}
+      </button>
+    </div>
+
+    <!-- COLLAPSIBLE PANELS -->
+    <div id="footer-panels" class="mt-6 space-y-4">
+      <!-- TERMS -->
+      <div id="panel-terms" class="footer-panel hidden">
+        <div
+          class="p-6 bg-slate-800 rounded-xl border border-slate-600 prose prose-invert max-w-none"
+        >
+          <h2 class="text-xl font-semibold mb-4">{text.terms}</h2>
+          <article>
+            <rendered.terms/>
+          </article>
+        </div>
+      </div>
+
+      <!-- PRIVACY -->
+      <div id="panel-privacy" class="footer-panel hidden">
+        <div
+          class="p-6 bg-slate-800 rounded-xl border border-slate-600 prose prose-invert max-w-none"
+        >
+          <h2 class="text-xl font-semibold mb-4">{text.privacy}</h2>
+          <article>
+            <rendered.privacy/>
+          </article>
+        </div>
+      </div>
+
+      <!-- COOKIES -->
+      <div id="panel-cookies" class="footer-panel hidden">
+        <div
+          class="p-6 bg-slate-800 rounded-xl border border-slate-600 prose prose-invert max-w-none"
+        >
+          <h2 class="text-xl font-semibold mb-4">{text.cookies}</h2>
+          <article>
+            <rendered.cookies/>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <!-- COPYRIGHT -->
+    <p class="text-center text-xs opacity-70 mt-10">
+      © {new Date().getFullYear()} HCC Shop — {text.rights}
+    </p>
+  </div>
+
+  <!-- INLINE SCRIPT -->
+  <script is:inline>
+    const buttons = document.querySelectorAll(".footer-btn");
+    const panels = document.querySelectorAll(".footer-panel");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = "panel-" + btn.dataset.panel;
+
+        panels.forEach((p) => {
+          if (p.id === target) {
+            p.classList.toggle("hidden");
+          } else {
+            p.classList.add("hidden");
+          }
+        });
+      });
+    });
+  </script>
+</footer>
