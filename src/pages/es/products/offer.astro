@@ -1,0 +1,18 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+// Sacamos lang desde la URL
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+const lang = pathSegments[0];
+---
+
+<Layout
+  lang={lang}
+  title="Aurora Chat - Español"
+  description="Plataforma de chat con IA en español"
+  canonicalUrl="https://miweb.com/es/"
+  previewImage="/assets/preview.png"
+  home={true}
+>
+<p>offer products</p>
+</Layout>

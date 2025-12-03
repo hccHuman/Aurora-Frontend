@@ -1,8 +1,7 @@
 ---
-import PayPalCheckout from "@/components/tsx/PayPalCheckout/PayPalCheckout.astro";
-
+import { PayPalCheckout } from "@/components/tsx/PayPalCheckout/PayPalCheckoutComponent";
 ---
 
 <div>
-    <PayPalCheckout/>
+    <PayPalCheckout client:load/>
 </div>

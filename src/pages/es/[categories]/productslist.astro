@@ -1,0 +1,51 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { fetchCategories } from "@/services/categoryService";
+import CategoryProductsListComponent from "@/components/tsx/Paginator/CategoryProductsListComponent";
+import ChatbotLoader from "@/components/ui/ChatbotLoader.astro";
+// ⚡ getStaticPaths se ejecuta en build
+export async function getStaticPaths() {
+  const categories: any[] = await fetchCategories();
+
+  return categories.map((cat: any) => ({
+    params: { categories: cat.nombre.toLowerCase().replace(/\s+/g, "-") },
+  }));
+}
+
+// Parámetro dinámico de la URL
+const { categories } = Astro.params;
+
+// Traemos todas las categorías para obtener el id
+const allCategories: any[] = await fetchCategories();
+const currentCategory = allCategories.find((cat: any) =>
+  cat.nombre.toLowerCase().replace(/\s+/g, "-") === categories
+);
+
+if (!currentCategory) throw new Error("Categoría no encontrada 💔");
+
+const id = currentCategory.id;
+
+// We'll render products client-side and paginate using CategoryProductsListComponent
+const lang = (Astro.props as any)?.lang ?? "es";
+---
+
+<Layout
+  lang={lang}
+  title={`Productos de ${currentCategory.nombre}`}
+  description={`Listado de productos de la categoría ${currentCategory.nombre}`}
+  canonicalUrl={`https://miweb.com/${lang}/${categories}`}
+  previewImage="/assets/preview.png"
+  home={true}
+  showSearch={true}
+  searchCategoryId={id}
+  className="h-fit"
+>
+  <h1 class="text-3xl font-bold mb-4 mt-6 flex justify-center">
+    Productos de {currentCategory.nombre}
+  </h1>
+
+  <CategoryProductsListComponent client:load categoryId={id} lang={lang} />
+  
+  <!-- ProductModalWrapper mounted in layout globally -->
+  <ChatbotLoader />
+</Layout>

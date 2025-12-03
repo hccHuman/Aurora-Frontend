@@ -1,9 +1,22 @@
 ---
-import Header from "@/components/layout/Header.astro";
-import Footer from "@/components/layout/Footer.astro";
+/**
+ * Main Layout Component
+ * 
+ * This is the root layout wrapper for all pages in the application.
+ * Responsibilities:
+ * - SEO metadata handling (Open Graph, Twitter Cards, canonical URLs)
+ * - Theme initialization script for preventing theme flash on page load
+ * - Header and Footer components wrapping
+ * - Full-page structure with proper flex layout that extends to full height
+ */
 
-// src/layouts/Layout.astro
-const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = Astro.props;
+import Header from "@/components/ui/Header.astro";
+import Footer from "@/components/ui/Footer.astro";
+import LoginReader from "@/components/tsx/statement/loginReader";
+import ProductModalWrapper from "@/components/tsx/Modal/ProductModalWrapper";
+
+// Destructure props: language, titles, URLs, and preview image for SEO
+const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage, home, showSearch = false, searchCategoryId = null } = Astro.props;
 ---
 
 <!doctype html>
@@ -36,14 +49,26 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
     <link rel="stylesheet" href="/src/styles/global.css" />
     <link rel="stylesheet" href="/src/styles/animations.css" />
     <link rel="stylesheet" href="/src/styles/Components/main.css" />
+    <script type="module" src="/src/main.ts"></script>
 
     <!-- Script para aplicar tema persistido antes de renderizar -->
+    <!-- This script runs BEFORE rendering to prevent theme flash -->
     <script is:inline>
+      /**
+       * Theme initialization script
+       * Runs immediately when page loads to apply saved theme preference
+       * Prevents flash of unstyled content (FOUC) when switching themes
+       */
       (function () {
+        // Check localStorage for saved theme preference
         const theme = localStorage.getItem("theme");
+        // Check system color scheme preference (OS dark mode setting)
         const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        // Determine if dark mode should be enabled
+        // Priority: saved theme > system preference > light mode
         const shouldBeDark = theme === "dark" || (theme === null && systemDark);
 
+        // Apply dark class to HTML element if needed
         if (shouldBeDark) {
           document.documentElement.classList.add("dark");
         } else {
@@ -55,9 +80,11 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
   <body
     class="bg-sky-50 dark:bg-slate-800 text-slate-900 dark:text-slate-50 transition-colors duration-300 h-fit"
   >
-    <Header cartCount={3} lang={lang} />
+    <Header cartCount={3} lang={lang} home={home} showSearch={showSearch} searchCategoryId={searchCategoryId} />
     <slot />
     <Footer lang={lang} />
-    <script type="module" src="/src/main.ts"></script>
+    <LoginReader client:load />
+    <!-- Global product modal wrapper: mounts on client, exposes openProductModal(id) -->
+    <ProductModalWrapper client:load />
   </body>
 </html>

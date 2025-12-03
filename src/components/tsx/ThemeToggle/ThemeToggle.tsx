@@ -1,26 +1,26 @@
 /**
  * Theme Toggle Component
- * 
+ *
  * Top-level wrapper for theme toggling functionality. Initializes dark mode state
  * on component mount based on:
  * 1. Previously saved theme preference in localStorage
  * 2. System color scheme preference (prefers-color-scheme media query)
  * 3. Default to light mode if no preference found
- * 
+ *
  * The component only renders after hydration to prevent SSR mismatch,
  * then delegates UI rendering to the smaller AnimatedThemeToggler component.
- * 
+ *
  * Architecture:
  * - ThemeToggle (wrapper) - initializes theme and handles mount state
  * - AnimatedThemeToggler (child) - renders the actual toggle UI with animations
  */
 
 import React, { useState, useEffect } from "react";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { AnimatedThemeToggler } from "@/components/tsx/ThemeToggle/animated-theme-toggler";
 
 /**
  * ThemeToggle - Theme initialization and wrapper component
- * 
+ *
  * Lifecycle:
  * 1. Component mounts (useState initialized with mounted=false)
  * 2. useEffect fires (component now in browser environment)
@@ -28,7 +28,7 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
  * 4. Check system color scheme if no saved preference
  * 5. Apply theme class to document root (html element)
  * 6. Set mounted flag to true and render AnimatedThemeToggler
- * 
+ *
  * @component
  * @returns JSX.Element | null - Animated theme toggle button or null during SSR
  */
@@ -38,9 +38,9 @@ const ThemeToggle: React.FC = () => {
 
   /**
    * Initialize theme preference on component mount
-   * 
+   *
    * Runs only in browser environment (not during SSR).
-   * 
+   *
    * Process:
    * 1. Get saved theme from localStorage (key: "theme")
    * 2. Get system color scheme preference via matchMedia
@@ -86,4 +86,3 @@ const ThemeToggle: React.FC = () => {
 };
 
 export default ThemeToggle;
-
