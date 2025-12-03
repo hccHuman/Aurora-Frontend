@@ -1,5 +1,5 @@
 ---
-import { LoginFormComponent } from "../../../components/tsx/LoginForm/LoginComponent";
+import { RegisterComponent } from "@/components/tsx/AuthForm/RegisterComponent";
 import Layout from "@/layouts/LayoutForm.astro";
 ---
 
@@ -19,7 +19,7 @@ import Layout from "@/layouts/LayoutForm.astro";
       previewImage="/assets/preview.png"
     >
       <!-- Montamos el componente React solo en cliente -->
-      <LoginFormComponent client:load />
+      <RegisterComponent client:load lang="es"/>
     </Layout>
   </body>
 </html>

@@ -14,7 +14,8 @@
 /* Layer base: defines fundamental styles for HTML elements */
 @layer base {
   /* Root elements: set full height and width with no margins/padding */
-  html, body {
+  html,
+  body {
     @apply h-full w-full m-0 p-0;
   }
 
@@ -39,4 +40,3 @@
     @apply transition-colors duration-300;
   }
 }
-
