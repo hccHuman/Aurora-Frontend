@@ -15,6 +15,7 @@ Se ha creado una suite completa de tests para la funcionalidad del **chatbot Aur
 ## 📁 Estructura de Archivos Creados
 
 ### Tests Unitarios
+
 ```
 tests/modules/
 ├── aurora-sanitizer.test.ts          [73 tests] - Limpieza de entrada
@@ -26,6 +27,7 @@ tests/modules/
 ```
 
 ### Documentación de Test Cases (Markdown)
+
 ```
 tests/
 ├── TEST_CASES_SANITIZER.md           [20 casos de prueba]
@@ -35,6 +37,7 @@ tests/
 ```
 
 ### Configuración de Jest
+
 ```
 root/
 ├── jest.config.js                    [Configuración de Jest]
@@ -56,19 +59,21 @@ root/
 
 **Cobertura de tests**:
 
-| Categoría | Tests | Ejemplos |
-|:----------|:------|:---------|
-| Seguridad | 7 | XSS, caracteres peligrosos, SQL injection, símbolos especiales |
-| Funcionalidad | 8 | Trimeo, normalización, preservación de acentos, números |
-| Edge Cases | 5 | String vacío, solo espacios, emojis, URLs, repeticiones |
+| Categoría     | Tests | Ejemplos                                                       |
+| :------------ | :---- | :------------------------------------------------------------- |
+| Seguridad     | 7     | XSS, caracteres peligrosos, SQL injection, símbolos especiales |
+| Funcionalidad | 8     | Trimeo, normalización, preservación de acentos, números        |
+| Edge Cases    | 5     | String vacío, solo espacios, emojis, URLs, repeticiones        |
 
 **Casos clave**:
+
 - ✅ `SANITIZER-001` - Limpiar caracteres especiales peligrosos
 - ✅ `SANITIZER-005` - Truncar texto > 300 caracteres
 - ✅ `SANITIZER-006` - Reemplazar palabras prohibidas con 💫
 - ✅ `SANITIZER-008` - Preservar acentos españoles
 
 **Ejecutar**:
+
 ```bash
 npm run test:sanitizer
 npm run test:sanitizer:watch           # Con hot reload
@@ -88,14 +93,15 @@ npm run test:sanitizer:watch           # Con hot reload
 
 **Cobertura de tests**:
 
-| Categoría | Tests | Ejemplos |
-|:----------|:------|:---------|
-| Procesamiento básico | 4 | Mensaje válido, entrada vacía, espacios, emoción detectada |
-| Detección emocional | 4 | Feliz, triste, neutral, case-insensitive |
-| Seguridad | 4 | XSS attempt, SQL injection, caracteres especiales, repetición |
-| Integración | 2 | Sanitización + Coherencia de respuestas |
+| Categoría            | Tests | Ejemplos                                                      |
+| :------------------- | :---- | :------------------------------------------------------------ |
+| Procesamiento básico | 4     | Mensaje válido, entrada vacía, espacios, emoción detectada    |
+| Detección emocional  | 4     | Feliz, triste, neutral, case-insensitive                      |
+| Seguridad            | 4     | XSS attempt, SQL injection, caracteres especiales, repetición |
+| Integración          | 2     | Sanitización + Coherencia de respuestas                       |
 
 **Casos clave**:
+
 - ✅ `MSGMGR-001` - Procesar mensaje válido
 - ✅ `MSGMGR-002` - Detectar emoción "feliz"
 - ✅ `MSGMGR-003` - Detectar emoción "triste"
@@ -103,6 +109,7 @@ npm run test:sanitizer:watch           # Con hot reload
 - ✅ `MSGMGR-015` - Bloquea XSS attempt
 
 **Ejecutar**:
+
 ```bash
 npm run test:messagemanager
 npm run test:messagemanager:watch
@@ -120,15 +127,16 @@ npm run test:messagemanager:watch
 
 **Cobertura de tests**:
 
-| Categoría | Tests | Ejemplos |
-|:----------|:------|:---------|
-| Renderizado | 4 | Componente, botón, input, estado inicial |
-| Interacción | 6 | Escribir, enviar (click/Enter), validación, limpieza |
-| Pipeline | 5 | Mostrar mensaje usuario, mostrar respuesta Aurora, historial |
-| Edge Cases | 5 | Mensaje largo, caracteres especiales, acentos, saltos de línea |
-| Estructura CSS | 5 | Clases, alineación, estilos, placeholder |
+| Categoría      | Tests | Ejemplos                                                       |
+| :------------- | :---- | :------------------------------------------------------------- |
+| Renderizado    | 4     | Componente, botón, input, estado inicial                       |
+| Interacción    | 6     | Escribir, enviar (click/Enter), validación, limpieza           |
+| Pipeline       | 5     | Mostrar mensaje usuario, mostrar respuesta Aurora, historial   |
+| Edge Cases     | 5     | Mensaje largo, caracteres especiales, acentos, saltos de línea |
+| Estructura CSS | 5     | Clases, alineación, estilos, placeholder                       |
 
 **Casos clave**:
+
 - ✅ `CHATFRAME-001` - Renderización correcta
 - ✅ `CHATFRAME-006` - Enviar mensaje con click
 - ✅ `CHATFRAME-007` - Enviar mensaje con Enter
@@ -137,9 +145,33 @@ npm run test:messagemanager:watch
 - ✅ `CHATFRAME-015` - Mantener historial
 
 **Ejecutar**:
+
 ```bash
 npm run test:chatframe
 npm run test:chatframe:watch
+```
+
+---
+
+### 4️⃣ Product Modal & Pagination (components front + API)
+
+**Área testeada**: Paginación por categoría & modal de producto
+
+**Archivos testeados**:
+
+- `tests/components/product-modal.test.tsx` — Verifica `ProductModalWrapper` + integración con `ProductCardComponent`
+- `tests/components/category-pagination.test.tsx` — Verifica `CategoryProductsListComponent` y `Paginator` behavior
+
+**Documentación**:
+
+- `tests/doc/test_cases/TEST_CASES_PRODUCT_MODAL.md`
+- `tests/doc/test_cases/TEST_CASES_PAGINATION.md`
+
+**Ejecutar**:
+
+```bash
+npm test -- tests/components/product-modal.test.tsx
+npm test -- tests/components/category-pagination.test.tsx
 ```
 
 ---
@@ -159,19 +191,20 @@ Total                  : 70 casos de prueba documentados
 
 ### Cobertura por Tipo
 
-| Tipo | Cantidad | Prioridad |
-|:-----|:---------|:----------|
-| Seguridad | 15 | 🔴 ALTA |
-| Funcionalidad Core | 25 | 🔴 ALTA |
-| Internacionalización | 8 | 🔴 ALTA |
-| Edge Cases | 15 | 🟡 MEDIA |
-| Estructura/CSS | 7 | 🟢 BAJA |
+| Tipo                 | Cantidad | Prioridad |
+| :------------------- | :------- | :-------- |
+| Seguridad            | 15       | 🔴 ALTA   |
+| Funcionalidad Core   | 25       | 🔴 ALTA   |
+| Internacionalización | 8        | 🔴 ALTA   |
+| Edge Cases           | 15       | 🟡 MEDIA  |
+| Estructura/CSS       | 7        | 🟢 BAJA   |
 
 ---
 
 ## 🚀 Cómo Usar
 
 ### Instalación
+
 ```bash
 # Instalar dependencias de test
 npm install
@@ -183,12 +216,14 @@ npm test -- --version
 ### Ejecutar Tests
 
 **Todos los tests de chatbot**:
+
 ```bash
 npm run test:chatbot              # Ejecución una sola vez
 npm run test:chatbot:watch        # Watch mode para desarrollo
 ```
 
 **Tests individuales**:
+
 ```bash
 npm run test:sanitizer            # Solo AuroraSanitizer
 npm run test:messagemanager       # Solo AuroraMessageManager
@@ -196,6 +231,7 @@ npm run test:chatframe            # Solo AuroraChatFrame
 ```
 
 **Todos los tests del proyecto**:
+
 ```bash
 npm test                           # Ejecuta todos
 npm test -- --watch              # Watch mode global
@@ -203,6 +239,7 @@ npm run test:coverage            # Reporte de cobertura
 ```
 
 **Tests específicos por patrón**:
+
 ```bash
 npm test -- -t "sanitize"        # Tests con "sanitize" en el nombre
 npm test -- -t "CHATFRAME-006"   # Test por ID único
@@ -210,6 +247,7 @@ npm test -- -t "XSS"             # Tests de XSS
 ```
 
 ### Ver Cobertura
+
 ```bash
 npm run test:coverage
 
@@ -228,9 +266,11 @@ npm run test:coverage
 ## 📚 Documentación de Casos de Prueba
 
 ### TEST_CASES_SANITIZER.md
+
 **20 casos de prueba** con ID único (SANITIZER-001 a SANITIZER-020)
 
 **Estructura de cada caso**:
+
 - ID único
 - Descripción
 - Entrada (input)
@@ -239,6 +279,7 @@ npm run test:coverage
 - Riesgo/Nota
 
 **Categorías**:
+
 - Limpiar caracteres peligrosos (XSS, HTML)
 - Preservar caracteres válidos
 - Normalizar espacios
@@ -250,9 +291,11 @@ npm run test:coverage
 ---
 
 ### TEST_CASES_MESSAGE_MANAGER.md
+
 **25 casos de prueba** con ID único (MSGMGR-001 a MSGMGR-025)
 
 **Estructura similar a Sanitizer con énfasis en**:
+
 - Procesamiento de entrada
 - Detección de emociones
 - Generación de respuestas
@@ -262,9 +305,11 @@ npm run test:coverage
 ---
 
 ### TEST_CASES_CHAT_FRAME.md
+
 **25 casos de prueba** con ID único (CHATFRAME-001 a CHATFRAME-025)
 
 **Enfoque en**:
+
 - Renderizado inicial
 - Interacción de usuario (click, Enter, escribir)
 - Pipeline de mensajes
@@ -275,7 +320,9 @@ npm run test:coverage
 ---
 
 ### tests/README.md
+
 **Guía general** con:
+
 - Descripción general
 - Cómo ejecutar tests
 - Convenciones de naming
@@ -287,6 +334,7 @@ npm run test:coverage
 ## 🔧 Configuración de Jest
 
 ### jest.config.js
+
 ```javascript
 - Preset: ts-jest (TypeScript)
 - Entorno: jsdom (React)
@@ -296,6 +344,7 @@ npm run test:coverage
 ```
 
 ### jest.setup.js
+
 ```javascript
 - Mock de SpeechSynthesis (auroraVoice)
 - Mock de SpeechSynthesisUtterance
@@ -308,12 +357,14 @@ npm run test:coverage
 ## ✅ Checklist de Casos Críticos
 
 ### 🔴 ALTA PRIORIDAD - Seguridad
+
 - [ ] SANITIZER-001: Limpiar XSS
 - [ ] SANITIZER-005: Truncar texto > 300 chars
 - [ ] MSGMGR-015: Bloquear XSS attempt
 - [ ] MSGMGR-016: Bloquear SQL Injection
 
 ### 🔴 ALTA PRIORIDAD - Core Functionality
+
 - [ ] MSGMGR-001: Procesar mensaje válido
 - [ ] MSGMGR-002: Detectar "feliz"
 - [ ] MSGMGR-003: Detectar "triste"
@@ -322,16 +373,19 @@ npm run test:coverage
 - [ ] CHATFRAME-012: Mostrar respuesta
 
 ### 🔴 ALTA PRIORIDAD - Internacionalización
+
 - [ ] SANITIZER-008: Acentos españoles
 - [ ] MSGMGR-013: Caracteres españoles
 - [ ] CHATFRAME-018: Acentos en UI
 
 ### 🟡 MEDIA PRIORIDAD
+
 - [ ] SANITIZER-006: Palabras prohibidas
 - [ ] MSGMGR-009: Case-insensitive emociones
 - [ ] CHATFRAME-015: Historial múltiple
 
 ### 🟢 BAJA PRIORIDAD - Edge Cases
+
 - [ ] CHATFRAME-016: Mensaje muy largo
 - [ ] CHATFRAME-019: Espacios múltiples
 - [ ] CHATFRAME-020: Saltos de línea
@@ -341,6 +395,7 @@ npm run test:coverage
 ## 📦 Dependencias Instaladas
 
 ### Para Testing
+
 ```json
 {
   "@testing-library/jest-dom": "^6.1.5",
@@ -357,6 +412,7 @@ npm run test:coverage
 ## 🎓 Próximos Pasos
 
 ### Fase 1: Completar Tests Existentes ✅
+
 - [x] Configurar Jest
 - [x] Crear tests AuroraSanitizer
 - [x] Crear tests AuroraMessageManager
@@ -364,16 +420,19 @@ npm run test:coverage
 - [x] Documentar casos en markdown
 
 ### Fase 2: Modules Faltantes (Pendiente)
+
 - [ ] Implementar tests para LUCIA module
 - [ ] Implementar tests para MARIA module
 - [ ] Implementar tests para ANA module
 
 ### Fase 3: E2E Tests (Pendiente)
+
 - [ ] Tests de carrito (cart.test.ts)
 - [ ] Tests de checkout (checkout.test.ts)
 - [ ] Pruebas de integración completa
 
 ### Fase 4: Optimización (Pendiente)
+
 - [ ] Aumentar cobertura a 80%+
 - [ ] Agregar snapshot tests
 - [ ] Integración con CI/CD
@@ -383,22 +442,28 @@ npm run test:coverage
 ## 🐛 Debugging
 
 ### Ver DOM renderizado
+
 ```typescript
 const { debug } = render(<AuroraChatFrame />);
 debug();
 ```
 
 ### Aumentar timeout
+
 ```typescript
-await waitFor(() => {
-  expect(element).toBeInTheDocument();
-}, { timeout: 5000 });
+await waitFor(
+  () => {
+    expect(element).toBeInTheDocument();
+  },
+  { timeout: 5000 }
+);
 ```
 
 ### Logs de debug
+
 ```typescript
-console.log('Estado:', state);
-console.log('DOM:', screen.logTestingPlaygroundURL());
+console.log("Estado:", state);
+console.log("DOM:", screen.logTestingPlaygroundURL());
 ```
 
 ---
@@ -433,16 +498,19 @@ npm test -- --bail          # Para en primer error
 ## 📄 Referencias
 
 ### Módulos Testeados
+
 - `src/modules/AURORA/core/AuroraSanitizer.ts`
 - `src/modules/AURORA/core/AuroraMessageManager.ts`
 - `src/modules/AURORA/components/AuroraChatFrame.tsx`
 
 ### Documentación del Proyecto
+
 - `doc/markdown/arquitectura.md` - Arquitectura general
 - `doc/markdown/README.md` - Documentación técnica
 - `src/models/` - Interfaces y tipos
 
 ### Documentación de Jest
+
 - [Jest Official Docs](https://jestjs.io/)
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - [Testing Async Code](https://jestjs.io/docs/asynchronous)
@@ -458,6 +526,7 @@ npm test -- --bail          # Para en primer error
 - **Estado de cobertura target**: 80%+
 
 **El suite está listo para ser ejecutado**:
+
 ```bash
 npm install  # Instalar dependencias
 npm test     # Ejecutar todos los tests

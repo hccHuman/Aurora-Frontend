@@ -7,6 +7,7 @@ Esta guía te llevará paso a paso through la instalación y configuración del 
 Antes de comenzar, asegúrate de tener instalado:
 
 ### 🛠️ Software Requerido
+
 - **Node.js** versión 18 o superior
   - [Descargar Node.js](https://nodejs.org/)
 - **npm** o **yarn** como gestor de paquetes
@@ -14,7 +15,8 @@ Antes de comenzar, asegúrate de tener instalado:
   - [Descargar Git](https://git-scm.com/)
 
 ### 🔍 Verificar Instalaciones
-```bash
+
+````bash
 # Verificar Node.js
 node --version
 # Debe mostrar v18.x.x o superior
@@ -36,7 +38,7 @@ git clone https://github.com/tu-usuario/aurora-frontend.git
 
 # Navegar al directorio del proyecto
 cd aurora-frontend
-```
+````
 
 ### 2. 📦 Instalar Dependencias
 
@@ -85,7 +87,7 @@ PUBLIC_NODE_ENV=development
 
 ### 🛠️ Desarrollo
 
-```bash 
+```bash
 # Iniciar servidor de desarrollo
 npm run dev
 
@@ -127,6 +129,7 @@ npm run test:coverage
 ```
 
 ### 🔧 Utilidades
+
 ```bash
 # Linting y formateo
 npm run lint
@@ -137,7 +140,7 @@ npm run type-check
 
 # Limpiar caché
 npm run clean
-````
+```
 
 ## 🐛 Solución de Problemas Comunes
 
@@ -155,6 +158,7 @@ npm run dev -- --port 4322
 ```
 
 ### ❌ Error: Dependencias No Encontradas
+
 ```bash
 # Limpiar cache y reinstalar
 npm cache clean --force
@@ -165,6 +169,7 @@ npm install
 ```
 
 ### ❌ Error: Variables de Entorno Faltantes
+
 ```bash
 # Verificar que .env existe
 ls -la .env
@@ -174,6 +179,7 @@ npm run env:check
 ```
 
 ### ❌ Error: TypeScript
+
 ```bash
 # Verificar tipos
 npm run type-check

@@ -5,6 +5,7 @@
 Complete testing documentation for the Aurora Frontend Theme System (Light/Dark Mode).
 
 This guide includes:
+
 - **20 Manual Test Cases** with detailed steps and expected results
 - **Jest Unit Tests** covering all theme functionality
 - **Integration Tests** for complete user workflows
@@ -17,17 +18,17 @@ This guide includes:
 
 ### Documentation
 
-| File | Purpose |
-|------|---------|
+| File                         | Purpose                                             |
+| ---------------------------- | --------------------------------------------------- |
 | `THEME_SYSTEM_TEST_CASES.md` | 20 detailed manual test cases with expected results |
-| `README.md` (this file) | How to run and execute all tests |
+| `README.md` (this file)      | How to run and execute all tests                    |
 
 ### Automated Tests
 
-| File | Description | Tests |
-|------|-------------|-------|
-| `theme-system.test.ts` | Unit tests for theme components | 40+ tests |
-| `theme-system-integration.test.ts` | E2E style integration tests | 25+ tests |
+| File                               | Description                     | Tests     |
+| ---------------------------------- | ------------------------------- | --------- |
+| `theme-system.test.ts`             | Unit tests for theme components | 40+ tests |
+| `theme-system-integration.test.ts` | E2E style integration tests     | 25+ tests |
 
 ---
 
@@ -69,6 +70,7 @@ npm test -- theme-system.test.ts -t "TC-1"
 ### Preparing for Manual Testing
 
 1. **Clear Browser Data**
+
    ```javascript
    // Open DevTools Console and run:
    localStorage.clear();
@@ -120,6 +122,7 @@ Print and check off these as you test:
 ### Unit Tests (theme-system.test.ts)
 
 Run unit tests:
+
 ```bash
 npm test -- theme-system.test.ts
 ```
@@ -172,6 +175,7 @@ npm test -- theme-system.test.ts
 ### Integration Tests (theme-system-integration.test.ts)
 
 Run integration tests:
+
 ```bash
 npm test -- theme-system-integration.test.ts
 ```
@@ -215,17 +219,20 @@ npm test -- theme-system-integration.test.ts
 ## 📊 Test Coverage Report
 
 Generate coverage report:
+
 ```bash
 npm test -- theme-system --coverage
 ```
 
 **Expected Coverage:**
+
 - Statements: > 95%
 - Branches: > 90%
 - Functions: > 95%
 - Lines: > 95%
 
 View coverage HTML report:
+
 ```bash
 # After running coverage, open:
 # coverage/lcov-report/index.html
@@ -244,6 +251,7 @@ npm test -- theme-system.test.ts -t "TC-6a"
 ```
 
 **Manual Verification:**
+
 1. Open DevTools → Responsive Design Mode (Ctrl+Shift+M)
 2. Set to mobile size (e.g., iPhone 12: 390x844)
 3. Click theme toggle
@@ -257,6 +265,7 @@ npm test -- theme-system.test.ts -t "TC-6b"
 ```
 
 **Manual Verification:**
+
 1. Maximize browser window
 2. Set to full HD or larger (1920x1080+)
 3. Click theme toggle
@@ -270,6 +279,7 @@ npm test -- theme-system.test.ts -t "TC-7"
 ```
 
 **Manual Verification:**
+
 1. Set localStorage: `localStorage.setItem('theme', 'dark')`
 2. Enable network throttling: DevTools → Network → Slow 4G
 3. Hard refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
@@ -283,6 +293,7 @@ npm test -- theme-system.test.ts -t "TC-20"
 ```
 
 **Manual Verification:**
+
 1. Click theme toggle rapidly 5-10 times
 2. No errors should appear in console
 3. Final theme should match last click
@@ -310,10 +321,11 @@ Then open `chrome://inspect` in Chrome.
 ### Check Console for Errors
 
 During manual testing:
+
 ```javascript
 // In DevTools Console, check for errors
-console.log(localStorage.getItem('theme'));
-console.log(document.documentElement.classList.contains('dark'));
+console.log(localStorage.getItem("theme"));
+console.log(document.documentElement.classList.contains("dark"));
 ```
 
 ---
@@ -321,28 +333,31 @@ console.log(document.documentElement.classList.contains('dark'));
 ## 🌐 Cross-Browser Testing
 
 ### Chrome / Edge
+
 - ✅ Full View Transition API support
 - ✅ Smooth circular animation
 - ✅ All features work
 
 ### Firefox
+
 - ⚠️ No View Transition API support (uses fallback)
 - ✅ Theme still toggles instantly
 - ✅ No visual animation, but fully functional
 
 ### Safari
+
 - ⚠️ View Transition API not yet supported
 - ✅ Theme toggle works
 - ✅ CSS transitions apply correctly
 
 ### Test Matrix
 
-| Browser | Version | View Transition | Animation | Notes |
-|---------|---------|----------------|-----------|-------|
-| Chrome | 111+ | ✅ Full | Circular | Recommended |
-| Edge | 111+ | ✅ Full | Circular | Same as Chrome |
-| Firefox | 115+ | ❌ None | Instant | Works fine |
-| Safari | 16+ | ❌ None | Instant | Works fine |
+| Browser | Version | View Transition | Animation | Notes          |
+| ------- | ------- | --------------- | --------- | -------------- |
+| Chrome  | 111+    | ✅ Full         | Circular  | Recommended    |
+| Edge    | 111+    | ✅ Full         | Circular  | Same as Chrome |
+| Firefox | 115+    | ❌ None         | Instant   | Works fine     |
+| Safari  | 16+     | ❌ None         | Instant   | Works fine     |
 
 ---
 
@@ -350,13 +365,13 @@ console.log(document.documentElement.classList.contains('dark'));
 
 ### Animation Duration Targets
 
-| Device | Screen | RAM | Target Duration |
-|--------|--------|-----|-----------------|
-| iPhone SE | 375x667 | 3GB | 600-700ms |
-| iPhone 14 | 390x844 | 4GB | 800-900ms |
-| iPad Air | 1024x1366 | 4GB | 900-1000ms |
-| MacBook Air | 1440x900 | 8GB | 1000-1100ms |
-| Desktop 4K | 3840x2160 | 16GB | 900-1000ms |
+| Device      | Screen    | RAM  | Target Duration |
+| ----------- | --------- | ---- | --------------- |
+| iPhone SE   | 375x667   | 3GB  | 600-700ms       |
+| iPhone 14   | 390x844   | 4GB  | 800-900ms       |
+| iPad Air    | 1024x1366 | 4GB  | 900-1000ms      |
+| MacBook Air | 1440x900  | 8GB  | 1000-1100ms     |
+| Desktop 4K  | 3840x2160 | 16GB | 900-1000ms      |
 
 ### Paint & Render Times
 
@@ -423,6 +438,7 @@ console.log(document.documentElement.classList.contains('dark'));
 ```
 
 Steps:
+
 1. Open browser on iPhone
 2. Navigate to app
 3. Click theme toggle
@@ -433,6 +449,7 @@ Steps:
 ### Android Chrome
 
 Steps:
+
 1. Connect Android device
 2. Enable USB debugging
 3. Open Chrome DevTools
@@ -445,11 +462,13 @@ Steps:
 ### GitHub Actions
 
 Theme tests run automatically on:
+
 - Every push to `main` or `main-ui-dark-light-system`
 - Every pull request
 - Daily schedule (midnight)
 
 **Test Results:**
+
 - View in "Actions" tab
 - Check for failing tests
 - Coverage report attached
@@ -471,6 +490,7 @@ npx husky add .husky/pre-commit "npm test -- theme-system"
 ### Issue: Tests Fail with "localStorage is not defined"
 
 **Solution:**
+
 ```javascript
 // jest.config.js already has testEnvironment: 'jsdom'
 // If still failing, ensure test uses:
@@ -480,6 +500,7 @@ npx husky add .husky/pre-commit "npm test -- theme-system"
 ### Issue: Animation Tests Fail
 
 **Solution:**
+
 ```javascript
 // Mock View Transition API in test setup:
 document.startViewTransition = jest.fn((callback) => {
@@ -495,6 +516,7 @@ document.startViewTransition = jest.fn((callback) => {
 ### Issue: "Cannot find module 'AnimatedThemeToggler'"
 
 **Solution:**
+
 ```bash
 # Ensure path alias is configured in tsconfig.json:
 # "@/components": ["src/components"]
@@ -504,11 +526,13 @@ npm test -- --clearCache
 ### Issue: Manual Test Won't Show Animation
 
 **Possible Causes:**
+
 - Browser doesn't support View Transition API (Firefox, Safari)
 - Animation disabled in system settings
 - GPU acceleration disabled
 
 **Solutions:**
+
 - Use Chrome/Edge for full animation
 - Check `prefers-reduced-motion` setting
 - Enable hardware acceleration in browser settings
@@ -551,6 +575,7 @@ When all tests pass (both automated and manual), update this checklist:
 ## 📞 Support
 
 For issues or questions about testing:
+
 1. Check test file comments for detailed explanations
 2. Review THEME_SYSTEM_TEST_CASES.md for scenario details
 3. Check test failure messages for specific errors
