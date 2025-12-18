@@ -1,12 +1,13 @@
 ---
-import { onMount } from 'astro/client';
 import initTrafficByDeviceChart from './TrafficByDeviceChart.client';
 
-onMount(() => {
+// Client-only initialization
+;(function () {
+  if (typeof window === 'undefined') return;
   const el = document.getElementById('traffic-by-device') as HTMLElement | null;
   if (!el) return;
   initTrafficByDeviceChart(el);
-});
+})();
 ---
 
 <div class="w-full h-64" id="traffic-by-device"></div>

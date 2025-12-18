@@ -1,12 +1,13 @@
 ---
-import { onMount } from 'astro/client';
 import initSalesByCategoryChart from './SalesByCategoryChart.client';
 
-onMount(() => {
+// Client-only initialization
+;(function () {
+  if (typeof window === 'undefined') return;
   const el = document.getElementById('sales-by-category') as HTMLElement | null;
   if (!el) return;
   initSalesByCategoryChart(el);
-});
+})();
 ---
 
 <div class="w-full h-72" id="sales-by-category"></div>

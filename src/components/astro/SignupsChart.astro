@@ -1,12 +1,13 @@
 ---
-import { onMount } from 'astro/client';
 import initSignupsChart from './SignupsChart.client';
 
-onMount(() => {
+// Client-only initialization
+;(function () {
+  if (typeof window === 'undefined') return;
   const el = document.getElementById('week-signups-chart') as HTMLElement | null;
   if (!el) return;
   initSignupsChart(el);
-});
+})();
 ---
 
 <div class="w-full h-36" id="week-signups-chart"></div>

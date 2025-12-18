@@ -1,9 +1,11 @@
 ---
-import { onMount } from 'astro/client';
 import initMainChart from './MainChart.client';
 import { fetchData } from '../../lib/data';
 
-onMount(async () => {
+// Client-only initialization (avoid importing `astro/client` which resolves to types in some environments)
+;(async () => {
+  if (typeof window === 'undefined') return;
+
   const el = document.getElementById('main-chart') as HTMLElement | null;
   if (!el) return;
 
@@ -22,7 +24,7 @@ onMount(async () => {
     // eslint-disable-next-line no-console
     console.error(e);
   }
-});
+})();
 ---
 
 <div class="w-full h-80" id="main-chart"></div>
