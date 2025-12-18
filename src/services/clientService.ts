@@ -196,17 +196,35 @@ export const clientService = {
         body: JSON.stringify({}), // si usas POST, sino eliminar en GET
       });
 
-      console.log("Respuesta /auth/me status:", res.status);
+      // Si la respuesta indica que no hay sesión válida (401), devolvemos
+      // { user: null } silenciosamente para que el consumidor (LoginReader)
+      // pueda manejar el estado sin que se imprima un error en consola.
       if (!res.ok) {
+        // Intentamos parsear el body para obtener detalles (no obligatorio)
         let errorData: any = null;
         try {
           errorData = await res.json();
         } catch {}
-        throw new Error(errorData?.message || `Error HTTP ${res.status}`);
+
+        // Si es un 401 (token inválido o expirado), devolvemos un objeto vacío
+        // en lugar de lanzar una excepción que luego se vea como error en consola.
+        if (res.status === 401) {
+          return { user: null } as any;
+        }
+
+        // Para otros errores, usamos el sistema de errores internos si viene código
+        if (errorData?.code) {
+          handleInternalError(errorData.code, errorData);
+          throw new Error(errorData.message || `Error interno ${errorData.code}`);
+        }
+
+        throw new Error(`Error HTTP ${res.status}`);
       }
 
       return await res.json(); // aquí recibirás { response: 200, user: { ... } }
     } catch (err: any) {
+      // Si ocurre un error de red u otro error inesperado, registrarlo en ALBA
+      // y propagar la excepción para que el caller pueda reaccionar.
       handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
       throw new Error(err.message || "Error al obtener datos de /auth/me");
     }

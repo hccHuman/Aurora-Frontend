@@ -47,10 +47,13 @@ const LoginReader: React.FC = () => {
           console.log("❌ No hay sesión válida");
         }
       } catch (err) {
+        // No queremos saturar la consola con errores esperables (token expirado).
+        // Usamos console.debug para mantener la información disponible en depuración
+        // sin alarmar al desarrollador con un error de nivel "error".
         setUser({ loggedIn: false, user: null });
         sessionStorage.setItem("login", "false");
         sessionStorage.setItem("user", JSON.stringify(null));
-        console.error("❌ Error restaurando sesión:", err);
+        console.debug("❌ Error restaurando sesión:", err);
       }
     };
 
