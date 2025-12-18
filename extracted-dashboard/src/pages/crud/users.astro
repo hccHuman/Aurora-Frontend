@@ -1,0 +1,16 @@
+---
+import { fetchData } from '../../lib/data';
+let users = [];
+try { users = await fetchData('users'); } catch (e) { users = []; }
+---
+
+<h1>Users CRUD (Astro)</h1>
+<p>Demo: read-only list from `data/users.json`</p>
+<table>
+  <thead><tr><th>ID</th><th>Name</th><th>Email</th></tr></thead>
+  <tbody>
+  {users.map(u => (
+    <tr key={u.id}><td>{u.id}</td><td>{u.name}</td><td>{u.email}</td></tr>
+  ))}
+  </tbody>
+</table>

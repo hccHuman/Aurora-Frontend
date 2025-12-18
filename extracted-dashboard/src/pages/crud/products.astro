@@ -1,0 +1,16 @@
+---
+import { fetchData } from '../../lib/data';
+let products = [];
+try { products = await fetchData('products'); } catch (e) { products = []; }
+---
+
+<h1>Products CRUD (Astro)</h1>
+<p>Demo: read-only list from `data/products.json`</p>
+<table>
+  <thead><tr><th>ID</th><th>Name</th><th>Price</th></tr></thead>
+  <tbody>
+  {products.map(p => (
+    <tr key={p.id}><td>{p.id}</td><td>{p.name}</td><td>{p.price}</td></tr>
+  ))}
+  </tbody>
+</table>

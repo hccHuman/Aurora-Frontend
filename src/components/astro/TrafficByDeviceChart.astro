@@ -1,0 +1,12 @@
+---
+import { onMount } from 'astro/client';
+import initTrafficByDeviceChart from './TrafficByDeviceChart.client';
+
+onMount(() => {
+  const el = document.getElementById('traffic-by-device') as HTMLElement | null;
+  if (!el) return;
+  initTrafficByDeviceChart(el);
+});
+---
+
+<div class="w-full h-64" id="traffic-by-device"></div>

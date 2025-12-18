@@ -1,25 +1,58 @@
-export async function fetchBackendResponse(message: string) {
+/**
+ * API Client Service
+ *
+ * Provides a base HTTP client for making authenticated requests to the backend API.
+ * Handles common request configuration, error handling, and token management.
+ */
+
+/**
+ * Make an authenticated HTTP request to the backend API
+ *
+ * @param endpoint - The API endpoint path (e.g., '/users', '/products')
+ * @param options - Fetch options (method, headers, body, etc.)
+ * @returns Promise resolving to the parsed JSON response
+ * @throws Error if the request fails
+ *
+ * @example
+ * const data = await apiCall('/categories', {
+ *   method: 'GET',
+ *   headers: { 'Authorization': `Bearer ${token}` }
+ * })
+ */
+export async function apiCall(endpoint: string, options: RequestInit = {}): Promise<any> {
+  // Get base API URL from environment configuration
+  const baseURL =
+    typeof window !== "undefined" ? window.ENV?.API_URL : import.meta.env.PUBLIC_API_URL;
+
+  // Construct full URL
+  const url = `${baseURL}${endpoint}`;
+
+  // Set default headers for JSON communication
+  const headers = {
+    "Content-Type": "application/json",
+    ...options.headers,
+  };
+
   try {
-    // 🌍 Leemos la URL base del entorno (.env)
-    const apiUrl =
-      import.meta.env.PUBLIC_API_URL ||
-      process.env.PUBLIC_API_URL;
-
-    const endpoint = `${apiUrl}/aurora/chats`;
-
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+    // Make the HTTP request with provided options
+    const response = await fetch(url, {
+      ...options,
+      headers,
     });
 
-    if (!res.ok) {
-      throw new Error(`Error del backend: ${res.status}`);
+    // Parse JSON response
+    const data = await response.json();
+
+    // Check if response is successful
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} - ${data.message || "Unknown error"}`);
     }
 
-    return await res.json(); // { text: "¡Hola! Me alegra verte 💫" }
+    return data;
   } catch (error: any) {
-    console.error("🚫 Error en fetchBackendResponse:", error.message || error);
-    return { text: "Lo siento, no puedo conectar con el servidor 😔" };
+    // Log error for debugging
+    console.error("API Client Error:", error.message);
+    // Re-throw the error for caller to handle
+    throw error;
   }
 }

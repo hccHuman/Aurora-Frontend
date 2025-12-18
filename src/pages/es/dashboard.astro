@@ -1,0 +1,27 @@
+---
+import MainChart from "@/components/astro/MainChart.astro";
+import NewProductsChart from "@/components/astro/NewProductsChart.astro";
+import SalesByCategoryChart from "@/components/astro/SalesByCategoryChart.astro";
+import TrafficByDeviceChart from "@/components/astro/TrafficByDeviceChart.astro";
+import VisitorsChart from "@/components/astro/VisitorsChart.astro";
+import Layout from "@/layouts/Layout.astro";
+import SingupsChart from "@/components/astro/SignupsChart.astro";
+
+let lang = "es";
+---
+
+<Layout
+  lang={lang}
+  title="Aurora Chat - Español"
+  description="Plataforma de chat con IA en español"
+  canonicalUrl="https://miweb.com/es/"
+  previewImage="/assets/preview.png"
+  home={false}
+> 
+    <MainChart client:only/>
+    <NewProductsChart client:only/>
+    <SalesByCategoryChart client:only/>
+    <TrafficByDeviceChart client:only/>
+    <VisitorsChart client:only/>
+    <SingupsChart client:only/>
+</Layout>

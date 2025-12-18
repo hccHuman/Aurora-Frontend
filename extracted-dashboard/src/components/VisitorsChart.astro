@@ -1,0 +1,13 @@
+---
+import { onMount } from 'astro/client';
+import initVisitorsChart from './VisitorsChart.client';
+let el: HTMLElement | null = null;
+let controller: any;
+
+onMount(() => {
+  if (!el) return;
+  controller = initVisitorsChart(el);
+});
+---
+
+<div class="w-full h-64" ref={(r) => (el = r)} id="visitors-chart"></div>

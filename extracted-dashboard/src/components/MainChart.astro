@@ -1,0 +1,30 @@
+---
+import { onMount } from 'astro/client';
+import initMainChart from './MainChart.client';
+import { fetchData } from '../lib/data';
+
+let chartController: any;
+let el: HTMLElement | null = null;
+
+onMount(async () => {
+  if (!el) return;
+
+  // initial render with placeholder data
+  chartController = initMainChart(el, {
+    series: [{ name: 'Revenue', data: [0, 0, 0, 0, 0, 0, 0] }],
+    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  });
+
+  // Fetch series from API
+  try {
+    const sales = await fetchData('sales');
+    chartController.update(sales.series, sales.categories);
+  } catch (e) {
+    // keep initial data on error
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+});
+---
+
+<div class="w-full h-80" ref={(r) => (el = r)} id="main-chart"></div>

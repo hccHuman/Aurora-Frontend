@@ -1,0 +1,13 @@
+---
+import { onMount } from 'astro/client';
+import initNewProductsChart from './NewProductsChart.client';
+let el: HTMLElement | null = null;
+let controller: any;
+
+onMount(() => {
+  if (!el) return;
+  controller = initNewProductsChart(el);
+});
+---
+
+<div class="w-full h-36" ref={(r) => (el = r)} id="new-products-chart"></div>

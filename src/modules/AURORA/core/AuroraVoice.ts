@@ -1,5 +1,5 @@
 // /src/modules/AURORA/core/AuroraVoice.ts
-import type { AuroraVoiceOptions } from "@/models/AuroraVoiceOptions";
+import type { AuroraVoiceOptions } from "@/models/AuroraProps/AuroraVoiceOptionsProps";
 
 /**
  * AuroraVoiceLocal (text-driven lip-sync)
@@ -30,7 +30,11 @@ export class AuroraVoiceLocal {
     const loadVoices = () => {
       const voices = this.synth.getVoices();
       this.voice =
-        voices.find((v) => v.lang.startsWith("es") && /female|mujer|Helena|Conchita|Lucia|Google Español/i.test(v.name)) ||
+        voices.find(
+          (v) =>
+            v.lang.startsWith("es") &&
+            /female|mujer|Helena|Conchita|Lucia|Google Español/i.test(v.name)
+        ) ||
         voices.find((v) => v.lang.startsWith("es")) ||
         voices[0] ||
         null;

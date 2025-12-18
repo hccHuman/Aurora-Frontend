@@ -16,7 +16,7 @@ export const useAuroraState = () => {
     setEmotion(data.emotion || "neutral");
     setExpression(data.expression || "neutral");
     setMotion(data.motion || "haru_g_idle");
-  };  
+  };
 
   return { emotion, expression, motion, updateFromResponse };
 };

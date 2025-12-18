@@ -37,6 +37,7 @@ import { Image } from "astro:assets";
 import AccountMenu from "../tsx/AccountMenu/AccountMenu";
 import HeaderSearch from "../tsx/Header/HeaderSearch";
 import ThemeToggle from "../tsx/ThemeToggle/ThemeToggle";
+import CartCount from "../tsx/Header/CartCount";
 const { cartCount = 0, lang, home, showSearch = false, searchCategoryId = null } = Astro.props;
 
 import iconImg from "@/assets/icon.png";
@@ -138,23 +139,17 @@ import cartImg from "@/assets/Icons/dark/cart.png";
               class="w-10 h-10 hidden dark:block"
               inferSize={true}
             />
-            {
-              cartCount > 0 && (
-                <span class="absolute -top-2 -right-2 bg-red-600 dark:bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                  {cartCount}
-                </span>
-              )
-            }
+            <CartCount client:load variant="badge" />
           </button>
           <div
             id="cart-menu"
             class="hidden absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-md shadow-lg z-50 bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
             role="menu"
           >
-            <p class="px-4 py-2 dark:text-slate-100">Tu carrito tiene {cartCount} artículo(s)</p>
-            <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
+          <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
             <a
-              href={`/${lang}/products/cart`}
+              href={`/${lang}/products/checkout`}
+              class="finalize-purchase"
               class="block px-4 hover:bg-slate-800 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
               role="menuitem"
             >
@@ -163,11 +158,13 @@ import cartImg from "@/assets/Icons/dark/cart.png";
             <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
             <a
               href={`/${lang}/products/checkout`}
+              class="finalize-purchase"
               class="block px-4 hover:bg-slate-800 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
               role="menuitem"
             >
               Finalizar compra
             </a>
+            <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
           </div>
         </div>
 
@@ -244,26 +241,24 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     </div>
 
     {/* Mobile cart dropdown */}
-    <div class="relative mt-2">
+      <div class="relative mt-2">
       <button
         id="cart-toggle-mobile"
         aria-label="Carrito"
         aria-expanded="false"
         class="hover:opacity-75 transition w-full text-left py-2 px-2 border border-slate-300 dark:border-slate-600 rounded text-white bg-slate-900 dark:text-slate-100"
       >
-        Carrito ({cartCount})
+        <CartCount client:load variant="button" />
       </button>
       <div
         id="cart-menu-mobile"
         class="hidden mt-1 w-full border border-slate-300 bg-slate-900 dark:border-slate-600 rounded-md shadow-lg z-50 bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
         role="menu"
       >
-        <p class="px-4 py-2 dark:text-slate-100">
-          Tu carrito tiene {cartCount} artículo(s)
-        </p>
         <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
         <a
-          href={`/${lang}/products/cart`}
+          href={`/${lang}/products/checkout`}
+          class="finalize-purchase"
           class="block px-4 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
           role="menuitem"
         >
@@ -272,6 +267,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
         <a
           href={`/${lang}/products/checkout`}
+          class="finalize-purchase"
           class="block px-4 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
           role="menuitem"
         >
@@ -431,5 +427,15 @@ import cartImg from "@/assets/Icons/dark/cart.png";
       cartToggleMobile?.setAttribute("aria-expanded", "false");
       mobileToggle?.setAttribute("aria-expanded", "false");
     });
+  </script>
+  <script type="module">
+    import { setupFinalizeLinks } from '/src/lib/headerNavigation.ts';
+    // initialize finalize purchase handlers for header links
+    try {
+      const lang = document.documentElement.lang || 'es';
+      setupFinalizeLinks(lang);
+    } catch (e) {
+      // ignore errors during setup
+    }
   </script>
 </header>

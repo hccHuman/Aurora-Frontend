@@ -43,19 +43,7 @@ export const ENV = {
   /** Base URL for all backend API calls */
   API_URL: getEnvVariable("PUBLIC_API_URL"),
 
-  // ===== AI SERVICES =====
-  /** API key for LUCIA (Logic/Language module) */
-  LUCIA_API_KEY: getEnvVariable("PUBLIC_LUCIA_API_KEY"),
-  /** API endpoint for ANA (Emotion Analysis module) */
-  ANA_EMOTION_API: getEnvVariable("PUBLIC_ANA_EMOTION_API"),
 
-  // ===== PAYMENT SERVICES =====
-  /** Stripe publishable key for frontend payment processing */
-  STRIPE_PUBLISHABLE_KEY: getEnvVariable("PUBLIC_STRIPE_PUBLISHABLE_KEY"),
-  /** Redirect URL after successful payment */
-  PAYMENT_SUCCESS_URL: getEnvVariable("PUBLIC_PAYMENT_SUCCESS_URL"),
-  /** Redirect URL after cancelled payment */
-  PAYMENT_CANCEL_URL: getEnvVariable("PUBLIC_PAYMENT_CANCEL_URL"),
 
   // ===== APPLICATION ENVIRONMENT =====
   /** Current runtime environment: 'development' or 'production' */

@@ -1,3 +1,17 @@
+/**
+ * VtuberLive2D.tsx
+ * Purpose: Integrates a Live2D model into a PIXI application and
+ * exposes hooks to drive expressions, motions and lip-sync from
+ * Aurora's state and audio input. Acts as the visual avatar for the
+ * assistant and forwards user messages to the AnaCore controller.
+ *
+ * Behavior summary:
+ * - Initializes a PIXI.Application and loads a Live2D model
+ * - Registers a ticker to update the Live2D runtime
+ * - Maps audio frames (visemes) to mouth parameters for lip-sync
+ * - Applies expressions and motions when the Aurora state updates
+ */
+
 "use client";
 import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
@@ -65,7 +79,8 @@ const VtuberLive2D: React.FC = () => {
           try {
             // Many Live2D models expose a `coreModel` API with parameter info
             const core = (model.internalModel.coreModel as any) || {};
-            const paramNames = core.getParameterIds?.() || core.parameters?.map((p: any) => p.id) || [];
+            const paramNames =
+              core.getParameterIds?.() || core.parameters?.map((p: any) => p.id) || [];
             if (paramNames && paramNames.length) {
               console.log("🧭 Parámetros del modelo detectados:", paramNames.slice(0, 30));
             }
@@ -76,9 +91,9 @@ const VtuberLive2D: React.FC = () => {
         console.log("✅ Modelo totalmente cargado y listo.");
       });
 
-  // Register the Ticker class required by pixi-live2d-display.
-  // This makes sure the Live2D runtime receives regular time updates.
-  Live2DModel.registerTicker(Ticker);
+      // Register the Ticker class required by pixi-live2d-display.
+      // This makes sure the Live2D runtime receives regular time updates.
+      Live2DModel.registerTicker(Ticker);
 
       app.stage.addChild(model);
       modelRef.current = model;
@@ -109,7 +124,9 @@ const VtuberLive2D: React.FC = () => {
               return;
             }
             // Fallback to exposed `parameters` APIs
-            const params: any = (m.internalModel.parameters as any) || (m.internalModel.coreModel && (m.internalModel.coreModel as any).parameters);
+            const params: any =
+              (m.internalModel.parameters as any) ||
+              (m.internalModel.coreModel && (m.internalModel.coreModel as any).parameters);
             if (params && typeof params.setValueById === "function") {
               params.setValueById(id, scaled);
               return;
@@ -203,7 +220,8 @@ const VtuberLive2D: React.FC = () => {
     if (!m || !motion) return;
     const motionUrl = `/models/haru/runtime/motion/${motion}.motion3.json`;
     m.internalModel.motionManager.stopAllMotions();
-    m.internalModel.motionManager.startMotion(motionUrl, 0, 1)
+    m.internalModel.motionManager
+      .startMotion(motionUrl, 0, 1)
       .catch(() => console.warn("⚠️ No se encontró el motion:", motion));
   }, [motion]);
 
@@ -215,7 +233,10 @@ const VtuberLive2D: React.FC = () => {
     // Also request local voice output so the avatar speaks. Uses optional
     // emotion and pitch parameters.
     if (voiceRef.current) {
-      voiceRef.current.speak(instruction?.text ?? instruction?.response ?? "Te escucho, cariño~", { emotion: "sweet", pitch: 1.2 });
+      voiceRef.current.speak(instruction?.text ?? instruction?.response ?? "Te escucho, cariño~", {
+        emotion: "sweet",
+        pitch: 1.2,
+      });
     }
   };
 

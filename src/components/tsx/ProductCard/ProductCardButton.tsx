@@ -7,6 +7,8 @@
  */
 
 import type { ButtonProps } from "@/models/SystemProps/ButonProps";
+import { useAtom } from 'jotai';
+import { cartStore } from '@/store/cartStore';
 
 /**
  * ProductCardButton - Add to cart button for product cards
@@ -23,7 +25,8 @@ import type { ButtonProps } from "@/models/SystemProps/ButonProps";
  * <ProductCardButton title="Laptop" id={123} />
  * // On click: Logs "Añadido al carrito: Laptop (ID: 123)"
  */
-export default function ProductCardButton({ title, id }: ButtonProps) {
+export default function ProductCardButton({ title, id, price }: ButtonProps & { price?: number }) {
+  const [, setCart] = useAtom(cartStore);
   /**
    * Handle add to cart action
    *
@@ -34,10 +37,16 @@ export default function ProductCardButton({ title, id }: ButtonProps) {
    * - Show success notification to user
    */
   function addToCart() {
+    setCart((prev: any) => {
+      const existing = prev.items.find((it: any) => it.productId === id);
+      if (existing) {
+        // increment quantity
+        return { items: prev.items.map((it: any) => it.productId === id ? { ...it, quantity: it.quantity + 1 } : it) };
+      }
+      return { items: [...prev.items, { productId: id, title, price: price ?? 0, quantity: 1 }] };
+    });
+    // simple feedback
     console.log(`Añadido al carrito: ${title} (ID: ${id})`);
-
-    // TODO: Integrate with cartStore to persist cart data
-    // Example: dispatch(addToCart({ id, title }))
   }
 
   return (

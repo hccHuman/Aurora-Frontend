@@ -1,0 +1,12 @@
+---
+import { onMount } from 'astro/client';
+import initVisitorsChart from './VisitorsChart.client';
+
+onMount(() => {
+  const el = document.getElementById('visitors-chart') as HTMLElement | null;
+  if (!el) return;
+  initVisitorsChart(el);
+});
+---
+
+<div class="w-full h-64" id="visitors-chart"></div>

@@ -1,6 +1,6 @@
 // src/modules/AURORA/controller/AuroraController.ts
 import type { Live2DModel } from "pixi-live2d-display";
-import type { AuroraInstruction } from "@/models/AuroraInstruction";
+import type { AuroraInstruction } from "@/models/AuroraProps/AuroraInstructionProps";
 import type { MutableRefObject } from "react";
 
 /**
@@ -34,11 +34,17 @@ export function applyAuroraInstruction(
           mm.startMotion(motionUrl, 0, 1);
         } else if (typeof (modelRef.current as any).motion === "function") {
           // fallback a API convenience
-          const motionName = motionUrl.replace(/\.motion3\.json$/i, "").split('/').pop();
+          const motionName = motionUrl
+            .replace(/\.motion3\.json$/i, "")
+            .split("/")
+            .pop();
           (modelRef.current as any).motion(motionName);
         }
       } catch (e) {
-        console.warn("⚠️ No se pudo reproducir el motion con motionManager, intentando fallback:", e);
+        console.warn(
+          "⚠️ No se pudo reproducir el motion con motionManager, intentando fallback:",
+          e
+        );
         try {
           const motionName = motion.replace(/\.motion3\.json$/i, "");
           (modelRef.current as any).motion(motionName);
@@ -54,10 +60,14 @@ export function applyAuroraInstruction(
         const em = modelRef.current.internalModel?.expressionManager as any;
         if (em && typeof em.setExpression === "function") {
           const expUrl = `/models/haru/runtime/expressions/${expression}.exp3.json`;
-          em.setExpression(expUrl).catch?.(() => console.warn("⚠️ No se encontró la expresión:", expression));
+          em.setExpression(expUrl).catch?.(() =>
+            console.warn("⚠️ No se encontró la expresión:", expression)
+          );
         } else {
           // no hay expressionManager: dejar que quien llame use parámetros o motions como fallback
-          console.debug("ℹ️ expressionManager no disponible — usa parámetros o motions para la expresión.");
+          console.debug(
+            "ℹ️ expressionManager no disponible — usa parámetros o motions para la expresión."
+          );
         }
       } catch (err) {
         console.warn("⚠️ Error aplicando expresión:", err);

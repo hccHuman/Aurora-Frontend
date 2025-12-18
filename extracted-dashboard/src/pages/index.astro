@@ -1,0 +1,84 @@
+---
+import MainChart from '../components/MainChart.astro';
+import NewProductsChart from '../components/NewProductsChart.astro';
+import SalesByCategoryChart from '../components/SalesByCategoryChart.astro';
+import SignupsChart from '../components/SignupsChart.astro';
+import TrafficByDeviceChart from '../components/TrafficByDeviceChart.astro';
+import VisitorsChart from '../components/VisitorsChart.astro';
+import { fetchData } from '../lib/data';
+
+let products; let users;
+
+try {
+  products = await fetchData('products');
+  users = await fetchData('users');
+} catch (e) {
+  products = [];
+  users = [];
+}
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Extracted Dashboard</title>
+    <script type="module" src="/node_modules/apexcharts/dist/apexcharts.esm.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>Extracted Dashboard</h1>
+      <section>
+        <MainChart />
+      </section>
+
+      <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div>
+          <h3>New products</h3>
+          <NewProductsChart />
+        </div>
+        <div>
+          <h3>Week signups</h3>
+          <SignupsChart />
+        </div>
+        <div>
+          <h3>Traffic by device</h3>
+          <TrafficByDeviceChart />
+        </div>
+      </section>
+
+      <section class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <h3>Sales by category</h3>
+          <SalesByCategoryChart />
+        </div>
+        <div>
+          <h3>Visitors</h3>
+          <VisitorsChart />
+        </div>
+      </section>
+
+      <section>
+        <h2>Products (sample)</h2>
+        <ul>
+          {products.map(p => (
+            <li key={p.id}>{p.name} — {p.price}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Users (sample)</h2>
+        <ul>
+          {users.map(u => (
+            <li key={u.id}>{u.name} — {u.email}</li>
+          ))}
+        </ul>
+      </section>
+
+      <footer>
+        <p>This is a portable extract: charts and CRUD data are separated into components and services.</p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -41,7 +41,7 @@ export default function ProductCardReact({
             Ver detalles
           </button>
 
-          <ProductCardButton title={title} id={id} />
+          <ProductCardButton title={title} id={id} price={price} />
         </div>
       </div>
     </div>

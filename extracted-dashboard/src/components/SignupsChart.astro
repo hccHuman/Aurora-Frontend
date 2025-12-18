@@ -1,0 +1,13 @@
+---
+import { onMount } from 'astro/client';
+import initSignupsChart from './SignupsChart.client';
+let el: HTMLElement | null = null;
+let controller: any;
+
+onMount(() => {
+  if (!el) return;
+  controller = initSignupsChart(el);
+});
+---
+
+<div class="w-full h-36" ref={(r) => (el = r)} id="week-signups-chart"></div>
