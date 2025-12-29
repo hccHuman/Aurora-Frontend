@@ -1,27 +1,101 @@
 ---
-import MainChart from "@/components/astro/MainChart.astro";
-import NewProductsChart from "@/components/astro/NewProductsChart.astro";
-import SalesByCategoryChart from "@/components/astro/SalesByCategoryChart.astro";
-import TrafficByDeviceChart from "@/components/astro/TrafficByDeviceChart.astro";
-import VisitorsChart from "@/components/astro/VisitorsChart.astro";
+import MainChart from "@/components/tsx/Dashboard/charts/MainChart/MainChart";
+import NewProductsChart from "@/components/tsx/Dashboard/charts/NewProductsChart/NewProductsChart";
+import SalesByCategoryChart from "@/components/tsx/Dashboard/charts/SalesByCategoryChart/SalesByCategoryChart";
+import TrafficByDeviceChart from "@/components/tsx/Dashboard/charts/TrafficByDeviceChart/TrafficByDeviceChart";
+import SingupsChart from "@/components/tsx/Dashboard/charts/SignupsChart/SignupsChart";
 import Layout from "@/layouts/Layout.astro";
-import SingupsChart from "@/components/astro/SignupsChart.astro";
+import VisitorsChart from "@/components/tsx/Dashboard/charts/VisitorsChart/VisitorsChart";
+import LoginReader from "@/components/tsx/statement/loginReader";
+import OrdersTable from "@/components/tsx/Dashboard/ChartsTables/OrdersTable/OrdersTable";
+import ProductsTable from "@/components/tsx/Dashboard/ChartsTables/ProductsTable/ProductsTable";
+import CategoryTable from "@/components/tsx/Dashboard/ChartsTables/CategoryTable/CategoryTable";
+import UsersList from "@/components/tsx/Dashboard/ChartsTables/UsersList/UsersList";
 
 let lang = "es";
 ---
-
+<meta charset="utf-8">
+<LoginReader client:load /> 
 <Layout
   lang={lang}
   title="Aurora Chat - Español"
   description="Plataforma de chat con IA en español"
   canonicalUrl="https://miweb.com/es/"
   previewImage="/assets/preview.png"
-  home={false}
-> 
-    <MainChart client:only/>
-    <NewProductsChart client:only/>
-    <SalesByCategoryChart client:only/>
-    <TrafficByDeviceChart client:only/>
-    <VisitorsChart client:only/>
-    <SingupsChart client:only/>
+  home={true}
+>
+  <div class="space-y-8 p-5">
+    <!-- Chart principal -->
+    <section class="gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <MainChart client:only />
+      </div>
+    </section>
+    <section class="gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <VisitorsChart client:only />
+      </div>
+    </section>
+    <!-- Segunda fila -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <NewProductsChart client:only />
+      </div>
+
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <SingupsChart client:only />
+      </div>
+    </section>
+
+    <!-- Tercera fila -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <SalesByCategoryChart client:only />
+      </div>
+
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <TrafficByDeviceChart client:only />
+      </div>
+    </section>
+    <section class="gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <OrdersTable client:only />
+      </div>
+    </section>
+    <section class="gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <CategoryTable client:only />
+      </div>
+    </section>
+    <section class="gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <ProductsTable client:only />
+      </div>
+    </section>
+    <section class="gap-6">
+      <div
+        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+      >
+        <UsersList client:only />
+      </div>
+    </section>
+  </div>
 </Layout>
