@@ -34,6 +34,7 @@ export async function fetchProductsByCategory(id: string | number) {
     const res = await fetch(endpoint, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
 
     // Check for successful response

@@ -36,6 +36,7 @@ export async function fetchCategories() {
     const res = await fetch(endpoint, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
 
     // Check if response is successful
