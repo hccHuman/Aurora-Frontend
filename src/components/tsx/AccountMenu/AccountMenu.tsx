@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useAtomValue } from "jotai";
 import { userStore } from "@/store/userStore";
-import type { Lang } from "@/models/SystemProps/LangProps";
+import type  { Lang } from "@/models/SystemProps/LangProps";
 
-/**
- * AccountMenu - User account navigation dropdown
- *
- * Muestra enlaces según estado de login.
- * Espera a que el cliente se monte para evitar flicker de "Iniciar Sesión".
- */
 const AccountMenu: React.FC<Lang> = ({ lang }) => {
-  const user = useAtomValue(userStore);
+  const auth = useAtomValue(userStore);
   const [mounted, setMounted] = useState(false);
 
-  // Solo renderizamos después de montar en cliente
   useEffect(() => {
     setMounted(true);
-    console.log("🟢 [AccountMenu] Estado del usuario:", user);
-  }, [user]);
+    console.log("🟢 [AccountMenu] Estado del usuario:", auth);
+  }, [auth]);
 
   if (!mounted) return null;
 
@@ -27,7 +20,7 @@ const AccountMenu: React.FC<Lang> = ({ lang }) => {
       role="menu"
       aria-label="Account menu"
     >
-      {user.loggedIn ? (
+      {auth.loggedIn ? (
         <>
           <a
             href={`/${lang}/account/profile`}
@@ -36,7 +29,23 @@ const AccountMenu: React.FC<Lang> = ({ lang }) => {
           >
             Perfil
           </a>
+
+          {/* 🔐 SOLO ADMIN */}
+          {auth.user?.admin && (
+            <>
+              <hr className="border-t border-slate-300 dark:border-slate-600 my-1" />
+              <a
+                href={`/${lang}/dashboard`}
+                className="block px-4 py-2 font-semibold text-red-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
+                role="menuitem"
+              >
+                Dashboard
+              </a>
+            </>
+          )}
+
           <hr className="border-t border-slate-300 dark:border-slate-600 my-1" />
+
           <a
             href={`/${lang}/account/logout`}
             className="block px-4 py-2 text-slate-900 dark:text-slate-50 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"

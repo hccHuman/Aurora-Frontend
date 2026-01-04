@@ -21,10 +21,7 @@ export interface RegisterResponse {
 
 export interface Profile {
   id: number;
-  nombre: string;
-  email: string;
-  rol_id: number;
-  activo: boolean;
+  admin: boolean;
 }
 
 export interface Auth {

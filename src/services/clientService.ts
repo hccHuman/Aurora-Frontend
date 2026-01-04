@@ -194,7 +194,7 @@ export const clientService = {
         credentials: "include", // Muy importante para enviar cookies HttpOnly
         body: JSON.stringify({}), // si usas POST, sino eliminar en GET
       });
-
+      
       // Si la respuesta indica que no hay sesión válida (401), devolvemos
       // { user: null } silenciosamente para que el consumidor (LoginReader)
       // pueda manejar el estado sin que se imprima un error en consola.
