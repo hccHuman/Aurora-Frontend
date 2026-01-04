@@ -1,0 +1,24 @@
+import React, { useState, useEffect } from "react";
+import { ProductModal } from "./ProductModal";
+import { getProductById } from "@/services/productService";
+
+export default function ProductModalWrapper() {
+  const [open, setOpen] = useState(false);
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    (window as any).openProductModal = async (id: number) => {
+      const p = await getProductById(id);
+      setProduct(p);
+      setOpen(true);
+    };
+  }, []);
+
+  // Ensure we also clear the product when the modal closes to avoid stale content
+  const handleClose = () => {
+    setOpen(false);
+    setProduct(null);
+  };
+
+  return <ProductModal product={product} open={open} onClose={handleClose} />;
+}

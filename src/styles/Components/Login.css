@@ -6,16 +6,16 @@
   background-color: rgb(241 245 249); /* light: slate-100 */
   border: 1px solid rgb(203 213 225); /* light: slate-300 */
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   color: rgb(15 23 42); /* light: slate-900 */
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   transition: all 0.3s ease;
 }
 
 html.dark .form-container {
   background-color: rgb(15 23 42); /* dark: slate-950 */
   border: 1px solid rgb(71 85 105); /* dark: slate-600 */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   color: rgb(241 245 249); /* dark: slate-100 */
 }
 

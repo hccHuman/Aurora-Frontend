@@ -4,11 +4,17 @@
 
 /* Transiciones suaves para todos los elementos */
 header {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 header * {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Logo e imágenes */
@@ -22,7 +28,9 @@ header a:hover img {
 
 /* Iconos principales */
 header .relative img {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 header .relative:hover img {
@@ -52,5 +60,19 @@ header button:hover img {
   #account-menu-mobile,
   #cart-menu-mobile {
     width: 100%;
+  }
+}
+
+/* Tablet: prevent icon compression and maintain spacing */
+@media (min-width:769px) and (max-width: 1024px) {
+  header .relative img {
+    min-width: 40px;
+    min-height: 40px;
+    object-fit: contain;
+  }
+
+  /* Make the icon containers non-shrinking on tablet */
+  header .flex-shrink-0 {
+    min-width: 40px;
   }
 }

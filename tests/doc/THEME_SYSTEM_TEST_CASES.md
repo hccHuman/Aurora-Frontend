@@ -46,16 +46,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-1: Initial Load - Light Mode (Default)
 
 **Preconditions:**
+
 - Browser cache/localStorage is cleared
 - System preference is Light mode (or not detected)
 - First time visiting the application
 
 **Steps:**
+
 1. Navigate to the application
 2. Wait for React hydration
 3. Observe the DOM and UI
 
 **Expected Results:**
+
 - HTML element does NOT have `.dark` class
 - Light mode colors are applied (light backgrounds, dark text)
 - Sun icon is visible in theme toggle button (indicates dark mode available)
@@ -68,16 +71,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-2: Initial Load - Dark Mode (System Preference)
 
 **Preconditions:**
+
 - Browser cache/localStorage is cleared
 - System color scheme is set to Dark mode
 - First time visiting the application
 
 **Steps:**
+
 1. Navigate to the application
 2. Wait for React hydration
 3. Observe the DOM and UI
 
 **Expected Results:**
+
 - HTML element has `.dark` class
 - Dark mode colors are applied (dark backgrounds, light text)
 - Moon icon is visible in theme toggle button (indicates light mode available)
@@ -90,16 +96,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-3: Toggle Theme - Light to Dark
 
 **Preconditions:**
+
 - Application is loaded in Light mode
 - ThemeToggle button is visible
 
 **Steps:**
+
 1. Click the theme toggle button
 2. Observe the transition animation
 3. Wait for animation to complete (600-1400ms depending on device)
 4. Check DOM and localStorage
 
 **Expected Results:**
+
 - View Transition animation displays (circular expansion from button)
 - HTML element adds `.dark` class
 - Dark mode colors are applied
@@ -114,16 +123,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-4: Toggle Theme - Dark to Light
 
 **Preconditions:**
+
 - Application is loaded in Dark mode
 - ThemeToggle button is visible
 
 **Steps:**
+
 1. Click the theme toggle button
 2. Observe the transition animation
 3. Wait for animation to complete
 4. Check DOM and localStorage
 
 **Expected Results:**
+
 - View Transition animation displays
 - HTML element removes `.dark` class
 - Light mode colors are applied
@@ -137,16 +149,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-5: Persistence - Theme Preference Saved
 
 **Preconditions:**
+
 - User has toggled theme at least once
 - localStorage contains theme preference
 
 **Steps:**
+
 1. Set theme to Dark mode (toggle button)
 2. Close the application tab/window
 3. Reopen the application in new tab/window
 4. Observe initial state before animations
 
 **Expected Results:**
+
 - Application loads with previously selected Dark mode
 - HTML element has `.dark` class on initial load
 - No flash of wrong theme color (FOUC prevention)
@@ -161,13 +176,16 @@ The theme system provides users with light and dark mode switching capabilities.
 **Test Case 6a: Mobile Device**
 
 **Preconditions:**
+
 - Using mobile device or emulated mobile browser (width < 1000px, RAM ≤ 3GB)
 
 **Steps:**
+
 1. Click theme toggle button
 2. Measure animation duration
 
 **Expected Results:**
+
 - Animation completes in ~600-900ms (optimized for mobile)
 - UI remains responsive during animation
 - Animation is smooth without stuttering
@@ -179,13 +197,16 @@ The theme system provides users with light and dark mode switching capabilities.
 **Test Case 6b: Desktop Device**
 
 **Preconditions:**
+
 - Using desktop browser (width > 1920px, RAM ≥ 8GB)
 
 **Steps:**
+
 1. Click theme toggle button
 2. Measure animation duration
 
 **Expected Results:**
+
 - Animation completes in ~1000-1100ms (optimized for desktop)
 - Smooth circular expansion animation
 - Animation uses hardware acceleration
@@ -197,16 +218,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-7: No Flash of Unstyled Content (FOUC)
 
 **Preconditions:**
+
 - Slow network connection simulated (DevTools Network throttling)
 - User has Dark mode saved in localStorage
 
 **Steps:**
+
 1. Open DevTools Network tab
 2. Set throttling to "Slow 4G"
 3. Hard refresh the page (Ctrl+Shift+R)
 4. Observe initial page load
 
 **Expected Results:**
+
 - No white flash visible before dark mode applies
 - Dark mode is applied from the start
 - CSS is properly loaded and applied
@@ -219,16 +243,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-8: Header Component Theme Sync
 
 **Preconditions:**
+
 - Application is loaded with Header component visible
 - Header contains ThemeToggle button
 
 **Steps:**
+
 1. Toggle theme from Light to Dark
 2. Observe Header styling changes
 3. Toggle theme back to Light
 4. Observe Header styling returns
 
 **Expected Results:**
+
 - Header background changes from light to dark (#1e293b → #020617)
 - Header text colors update (white maintained, opacity changes)
 - Border colors update (#e0e7ff → #475569)
@@ -241,10 +268,12 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-9: Cart Menu Theme Sync
 
 **Preconditions:**
+
 - Cart icon is visible in Header
 - Cart dropdown menu is open
 
 **Steps:**
+
 1. Open cart dropdown menu
 2. Toggle theme to Dark
 3. Observe cart menu styling
@@ -252,6 +281,7 @@ The theme system provides users with light and dark mode switching capabilities.
 5. Observe cart menu styling
 
 **Expected Results:**
+
 - Cart menu background updates based on theme
 - Text colors remain readable in both modes
 - Border colors update appropriately
@@ -264,16 +294,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-10: Account Menu Theme Sync
 
 **Preconditions:**
+
 - Account menu is visible
 - User is logged in or account menu is accessible
 
 **Steps:**
+
 1. Open account dropdown menu
 2. Toggle theme to Dark
 3. Observe account menu styling
 4. Hover over menu items
 
 **Expected Results:**
+
 - Account menu background: light (light mode) → dark (dark mode)
 - Text colors update for readability
 - Hover states are clearly visible in both themes
@@ -286,10 +319,12 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-11: Form Elements Theme Consistency
 
 **Preconditions:**
+
 - Login form is accessible
 - Form contains input fields and buttons
 
 **Steps:**
+
 1. Navigate to login page
 2. Toggle theme to Dark
 3. Observe form styling
@@ -297,6 +332,7 @@ The theme system provides users with light and dark mode switching capabilities.
 5. Observe focus states
 
 **Expected Results:**
+
 - Input fields have appropriate background colors
 - Text remains readable in both modes
 - Focus ring appears in both light and dark modes
@@ -310,15 +346,18 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-12: CSS Animations During Theme Toggle
 
 **Preconditions:**
+
 - Animations are enabled on the device
 - ThemeToggle button is visible
 
 **Steps:**
+
 1. Toggle theme
 2. Observe View Transition animation
 3. Measure animation smoothness (60fps target)
 
 **Expected Results:**
+
 - View Transition API renders circular expansion
 - Animation is smooth (no jank)
 - Animation originates from button center
@@ -332,15 +371,18 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-13: localStorage Write Protection
 
 **Preconditions:**
+
 - Browser with localStorage disabled or in private mode
 - Application is loaded
 
 **Steps:**
+
 1. Attempt to toggle theme
 2. Check for console errors
 3. Observe UI behavior
 
 **Expected Results:**
+
 - Theme toggle still works in UI
 - No JavaScript errors logged
 - localStorage.setItem() gracefully handles quota exceeded
@@ -353,16 +395,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-14: Multiple Tab Synchronization
 
 **Preconditions:**
+
 - Application is open in two browser tabs
 - Both tabs are visible
 
 **Steps:**
+
 1. Toggle theme in Tab 1 to Dark
 2. Observe Tab 2 after 1-2 seconds
 3. Toggle theme in Tab 2 to Light
 4. Observe Tab 1 after 1-2 seconds
 
 **Expected Results (Ideal):**
+
 - Both tabs show the same theme
 - Storage event listeners can sync across tabs
 - If tabs don't auto-sync, manual refresh shows correct theme
@@ -374,15 +419,18 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-15: Accessibility - prefers-reduced-motion
 
 **Preconditions:**
+
 - Browser has `prefers-reduced-motion: reduce` enabled in OS settings
 - ThemeToggle button is visible
 
 **Steps:**
+
 1. Set OS-level motion preference to "Reduce Motion"
 2. Click theme toggle button
 3. Observe animation behavior
 
 **Expected Results:**
+
 - Theme still toggles (functionality preserved)
 - Animation duration is minimal or skipped (respects preference)
 - App remains fully functional
@@ -395,16 +443,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-16: Color Contrast - Dark Mode
 
 **Preconditions:**
+
 - Application is in Dark mode
 - Various text elements are visible
 
 **Steps:**
+
 1. Use WCAG contrast checker or DevTools to verify contrast ratios
 2. Check headings (H1, H2, etc.)
 3. Check body text
 4. Check buttons and links
 
 **Expected Results:**
+
 - All text has contrast ratio ≥ 4.5:1 (WCAG AA standard)
 - Headings have contrast ratio ≥ 3:1 minimum
 - Links are distinguishable from body text
@@ -417,15 +468,18 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-17: Color Contrast - Light Mode
 
 **Preconditions:**
+
 - Application is in Light mode
 - Various text elements are visible
 
 **Steps:**
+
 1. Use WCAG contrast checker or DevTools
 2. Check all text elements for contrast
 3. Verify buttons and interactive elements
 
 **Expected Results:**
+
 - All text has contrast ratio ≥ 4.5:1 (WCAG AA)
 - Links stand out from body text
 - All interactive elements have sufficient contrast
@@ -438,24 +492,29 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-18: Browser Compatibility - CSS Transitions
 
 **Preconditions:**
+
 - Testing on multiple browsers (Chrome, Firefox, Safari, Edge)
 
 **Steps:**
+
 1. Toggle theme in each browser
 2. Observe transition smoothness
 3. Check for any browser-specific issues
 
 **Expected Results (Chrome/Edge):**
+
 - View Transition API works smoothly
 - Circular animation renders correctly
 
 **Expected Results (Firefox):**
+
 - May not support View Transition API
 - Fallback to instant theme change
 - No errors in console
 - Theme toggle still functional
 
 **Expected Results (Safari):**
+
 - Verify dark mode class application
 - Check CSS transitions work
 - Ensure no layout shifts
@@ -467,16 +526,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-19: Performance - Theme Toggle Timing
 
 **Preconditions:**
+
 - DevTools Performance tab open
 - ThemeToggle button visible
 
 **Steps:**
+
 1. Record performance during theme toggle
 2. Measure paint timing
 3. Check for layout thrashing
 4. Verify no memory leaks
 
 **Expected Results:**
+
 - View Transition animation: 600-1400ms
 - Paint time: < 50ms
 - No layout recalculation loops
@@ -490,16 +552,19 @@ The theme system provides users with light and dark mode switching capabilities.
 ### ✅ TC-20: Edge Case - Rapid Theme Toggling
 
 **Preconditions:**
+
 - ThemeToggle button is visible
 - Application is responsive
 
 **Steps:**
+
 1. Rapidly click theme toggle button 5-10 times in quick succession
 2. Observe animation behavior
 3. Check final theme state
 4. Check console for errors
 
 **Expected Results:**
+
 - Each click triggers animation
 - Theme toggles correctly with each click
 - Final state matches last click
@@ -517,11 +582,11 @@ The theme system provides users with light and dark mode switching capabilities.
 
 ```javascript
 // In Console - Verify theme state
-document.documentElement.classList.contains('dark') // true/false
-localStorage.getItem('theme') // "dark" or "light"
+document.documentElement.classList.contains("dark"); // true/false
+localStorage.getItem("theme"); // "dark" or "light"
 
 // Verify View Transition API support
-document.startViewTransition // function (Chrome/Edge)
+document.startViewTransition; // function (Chrome/Edge)
 
 // Simulate network throttling
 // DevTools → Network tab → Slow 3G / Slow 4G
@@ -529,12 +594,12 @@ document.startViewTransition // function (Chrome/Edge)
 
 ### Test Data
 
-| Device Type | Screen Width | RAM | Expected Duration | Test Case |
-|-------------|-------------|-----|-------------------|-----------|
-| Mobile | < 800px | ≤ 3GB | 600ms | TC-6a |
-| Tablet | 800-1400px | 4GB | 900ms | TC-6b |
-| Laptop | 1400-1920px | 8GB | 1000ms | TC-6b |
-| Desktop 4K | > 1920px | ≥ 8GB | 900-1000ms | TC-6b |
+| Device Type | Screen Width | RAM   | Expected Duration | Test Case |
+| ----------- | ------------ | ----- | ----------------- | --------- |
+| Mobile      | < 800px      | ≤ 3GB | 600ms             | TC-6a     |
+| Tablet      | 800-1400px   | 4GB   | 900ms             | TC-6b     |
+| Laptop      | 1400-1920px  | 8GB   | 1000ms            | TC-6b     |
+| Desktop 4K  | > 1920px     | ≥ 8GB | 900-1000ms        | TC-6b     |
 
 ---
 

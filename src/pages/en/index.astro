@@ -1,20 +1,22 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import ChatbotLoader from '@/components/ui/ChatbotLoader.astro';
-import LoginForm from '@/components/tsx/LoginForm/LoginForm.astro';
-import PayPalCheckout from '@/components/tsx/PayPalCheckout/PayPalCheckout.astro';
+import Layout from "@/layouts/Layout.astro";
+import ChatbotLoader from "@/components/ui/ChatbotLoader.astro";
+import CategoryListComponent from "@/components/tsx/Paginator/CategoryListComponent";
+
+let lang = "en";
 ---
 
 <Layout
-  lang="en"
-  title="Aurora Chat - English"
-  description="AI chat platform in English"
-  canonicalUrl="https://miweb.com/en/"
+  lang={lang}
+  title="Aurora Chat - Español"
+  description="Plataforma de chat con IA en español"
+  canonicalUrl="https://miweb.com/es/"
   previewImage="/assets/preview.png"
+  home={false}
 >
+  <!-- AI Chatbot Component: Loads Live2D avatar and chat interface -->
   <ChatbotLoader />
-  <LoginForm /> 
-  <PayPalCheckout/>
+
+  <!-- Product Categories Grid: Fetches and displays categories from backend -->
+  <CategoryListComponent client:load lang={lang}/>
 </Layout>
-
-

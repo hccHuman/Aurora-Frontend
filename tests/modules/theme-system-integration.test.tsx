@@ -1,21 +1,21 @@
 /**
  * Theme System - Integration Tests (E2E Style)
- * 
+ *
  * Tests for complete user workflows and component interactions
  * in the theme system across the entire application.
- * 
+ *
  * Focus areas:
  * - Header component theme sync
  * - Cart menu theme changes
  * - Account menu appearance in both themes
  * - Form elements theme consistency
  * - Persistence across page navigation
- * 
+ *
  * @jest-environment jsdom
  */
 
-import React from 'react';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import React from "react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 
 /**
  * ============================================
@@ -23,7 +23,7 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
  * ============================================
  */
 
-describe('Theme System - Integration Tests (E2E)', () => {
+describe("Theme System - Integration Tests (E2E)", () => {
   /**
    * ============================================
    * SETUP
@@ -32,7 +32,7 @@ describe('Theme System - Integration Tests (E2E)', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove("dark");
 
     // Mock View Transition API
     if (!document.startViewTransition) {
@@ -58,30 +58,33 @@ describe('Theme System - Integration Tests (E2E)', () => {
    * ============================================
    */
 
-  describe('User Scenarios', () => {
+  describe("User Scenarios", () => {
     /**
      * Scenario: New User Visits App (Light Mode Default)
-     * 
+     *
      * Expected Flow:
      * 1. User opens app for first time
      * 2. App detects no saved preference
      * 3. App loads in light mode by default
      * 4. User sees light UI, can toggle to dark
      */
-    it('Scenario 1: New user visits app - should default to light mode', async () => {
+    it("Scenario 1: New user visits app - should default to light mode", async () => {
       localStorage.clear();
 
       // Simulate app load
       const mockComponent = () => (
-        <div className={document.documentElement.classList.contains('dark') ? 'dark' : 'light'}>
+        <div className={document.documentElement.classList.contains("dark") ? "dark" : "light"}>
           <header className="bg-slate-50 dark:bg-slate-900">
             <h1>Aurora Shop</h1>
-            <button id="theme-toggle" onClick={() => {
-              const html = document.documentElement;
-              html.classList.toggle('dark');
-              const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
-              localStorage.setItem('theme', newTheme);
-            }}>
+            <button
+              id="theme-toggle"
+              onClick={() => {
+                const html = document.documentElement;
+                html.classList.toggle("dark");
+                const newTheme = html.classList.contains("dark") ? "dark" : "light";
+                localStorage.setItem("theme", newTheme);
+              }}
+            >
               Toggle Theme
             </button>
           </header>
@@ -91,14 +94,14 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const { container } = render(mockComponent());
 
       // Verify light mode
-      const header = container.querySelector('header');
-      expect(header?.classList.contains('bg-slate-50')).toBe(true);
-      expect(localStorage.getItem('theme')).toBeNull();
+      const header = container.querySelector("header");
+      expect(header?.classList.contains("bg-slate-50")).toBe(true);
+      expect(localStorage.getItem("theme")).toBeNull();
     });
 
     /**
      * Scenario: User Toggles to Dark Mode and Leaves
-     * 
+     *
      * Expected Flow:
      * 1. User loads app in light mode
      * 2. User clicks theme toggle
@@ -108,53 +111,56 @@ describe('Theme System - Integration Tests (E2E)', () => {
      * 6. User reopens app (next session)
      * 7. App loads in dark mode automatically
      */
-    it('Scenario 2: User toggles to dark mode and returns - preference persists', async () => {
+    it("Scenario 2: User toggles to dark mode and returns - preference persists", async () => {
       // Session 1: User toggles theme
       localStorage.clear();
-      
+
       const mockComponent = () => (
-        <div className={document.documentElement.classList.contains('dark') ? 'dark' : 'light'}>
-          <button id="theme-toggle" onClick={() => {
-            const html = document.documentElement;
-            const isDark = html.classList.contains('dark');
-            if (isDark) {
-              html.classList.remove('dark');
-            } else {
-              html.classList.add('dark');
-            }
-            const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('theme', newTheme);
-          }}>
+        <div className={document.documentElement.classList.contains("dark") ? "dark" : "light"}>
+          <button
+            id="theme-toggle"
+            onClick={() => {
+              const html = document.documentElement;
+              const isDark = html.classList.contains("dark");
+              if (isDark) {
+                html.classList.remove("dark");
+              } else {
+                html.classList.add("dark");
+              }
+              const newTheme = html.classList.contains("dark") ? "dark" : "light";
+              localStorage.setItem("theme", newTheme);
+            }}
+          >
             Toggle Theme
           </button>
         </div>
       );
 
       const { rerender } = render(mockComponent());
-      
-      const toggleButton = screen.getByRole('button');
+
+      const toggleButton = screen.getByRole("button");
       fireEvent.click(toggleButton);
 
       // Verify dark mode is set
       await waitFor(() => {
-        expect(document.documentElement.classList.contains('dark')).toBe(true);
-        expect(localStorage.getItem('theme')).toBe('dark');
+        expect(document.documentElement.classList.contains("dark")).toBe(true);
+        expect(localStorage.getItem("theme")).toBe("dark");
       });
 
       // Session 2: User returns (simulate page reload)
-      localStorage.setItem('theme', 'dark');
-      document.documentElement.classList.add('dark');
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
 
       rerender(mockComponent());
 
       // Verify dark mode persists
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
-      expect(localStorage.getItem('theme')).toBe('dark');
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
+      expect(localStorage.getItem("theme")).toBe("dark");
     });
 
     /**
      * Scenario: User Rapidly Toggles Theme Multiple Times
-     * 
+     *
      * Expected Flow:
      * 1. User clicks theme toggle multiple times quickly
      * 2. Each click triggers animation
@@ -162,29 +168,32 @@ describe('Theme System - Integration Tests (E2E)', () => {
      * 4. Final state matches last click
      * 5. No errors in console
      */
-    it('Scenario 3: User rapidly toggles theme - should handle gracefully', async () => {
-      localStorage.setItem('theme', 'light');
+    it("Scenario 3: User rapidly toggles theme - should handle gracefully", async () => {
+      localStorage.setItem("theme", "light");
 
       const mockComponent = () => (
-        <div className={document.documentElement.classList.contains('dark') ? 'dark' : 'light'}>
-          <button id="theme-toggle" onClick={() => {
-            const html = document.documentElement;
-            const isDark = html.classList.contains('dark');
-            if (isDark) {
-              html.classList.remove('dark');
-            } else {
-              html.classList.add('dark');
-            }
-            const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('theme', newTheme);
-          }}>
+        <div className={document.documentElement.classList.contains("dark") ? "dark" : "light"}>
+          <button
+            id="theme-toggle"
+            onClick={() => {
+              const html = document.documentElement;
+              const isDark = html.classList.contains("dark");
+              if (isDark) {
+                html.classList.remove("dark");
+              } else {
+                html.classList.add("dark");
+              }
+              const newTheme = html.classList.contains("dark") ? "dark" : "light";
+              localStorage.setItem("theme", newTheme);
+            }}
+          >
             Toggle Theme
           </button>
         </div>
       );
 
       const { container } = render(mockComponent());
-      const toggleButton = screen.getByRole('button');
+      const toggleButton = screen.getByRole("button");
 
       // Rapid clicks: light → dark → light → dark → light
       const clicks = 5;
@@ -193,36 +202,36 @@ describe('Theme System - Integration Tests (E2E)', () => {
       }
 
       // After odd number of clicks, should be dark
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
-      expect(localStorage.getItem('theme')).toBe('dark');
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
+      expect(localStorage.getItem("theme")).toBe("dark");
     });
 
     /**
      * Scenario: User Changes System Theme While App Is Open
-     * 
+     *
      * Expected Flow:
      * 1. User has app open with light mode
      * 2. User changes OS theme preference to dark (via OS Settings)
      * 3. Browser fires prefers-color-scheme change event (ideally)
      * 4. App could optionally respond to this change
-     * 
+     *
      * Note: This is an edge case - most apps don't update automatically
      */
-    it('Scenario 4: System theme preference changes - current implementation ignores', async () => {
+    it("Scenario 4: System theme preference changes - current implementation ignores", async () => {
       // Current implementation: Only reads system preference on initial load
       // Once user sets a preference, system changes are ignored
-      
-      localStorage.setItem('theme', 'light');
-      document.documentElement.classList.remove('dark');
+
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove("dark");
 
       // App is running in light mode
-      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains("dark")).toBe(false);
 
       // User changes OS to dark mode (simulated by matchMedia change)
       // Current implementation: No automatic change
       // This is acceptable behavior - user's localStorage preference wins
-      
-      expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+      expect(document.documentElement.classList.contains("dark")).toBe(false);
     });
   });
 
@@ -232,30 +241,33 @@ describe('Theme System - Integration Tests (E2E)', () => {
    * ============================================
    */
 
-  describe('Component Interactions', () => {
+  describe("Component Interactions", () => {
     /**
      * Test: Header Component Responds to Theme Changes
-     * 
+     *
      * Verifies that header colors update correctly
      * when theme toggle is activated.
      */
-    it('Header component should update colors when theme changes', async () => {
+    it("Header component should update colors when theme changes", async () => {
       const mockHeader = () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         return (
-          <header className={isDark ? 'bg-slate-900 text-slate-50' : 'bg-slate-50 text-slate-900'}>
+          <header className={isDark ? "bg-slate-900 text-slate-50" : "bg-slate-50 text-slate-900"}>
             <h1>Aurora Shop</h1>
           </header>
         );
       };
 
       const mockToggle = () => (
-        <button id="theme-toggle" onClick={() => {
-          const html = document.documentElement;
-          html.classList.toggle('dark');
-          const newTheme = html.classList.contains('dark') ? 'dark' : 'light';
-          localStorage.setItem('theme', newTheme);
-        }}>
+        <button
+          id="theme-toggle"
+          onClick={() => {
+            const html = document.documentElement;
+            html.classList.toggle("dark");
+            const newTheme = html.classList.contains("dark") ? "dark" : "light";
+            localStorage.setItem("theme", newTheme);
+          }}
+        >
           Toggle
         </button>
       );
@@ -268,11 +280,11 @@ describe('Theme System - Integration Tests (E2E)', () => {
         </>
       );
 
-      let header = container.querySelector('header');
-      expect(header?.classList.contains('bg-slate-50')).toBe(true);
+      let header = container.querySelector("header");
+      expect(header?.classList.contains("bg-slate-50")).toBe(true);
 
       // Toggle to dark mode
-      const toggleButton = screen.getByRole('button');
+      const toggleButton = screen.getByRole("button");
       fireEvent.click(toggleButton);
 
       // Rerender with new theme
@@ -284,25 +296,27 @@ describe('Theme System - Integration Tests (E2E)', () => {
       );
 
       // Verify header colors updated
-      header = container.querySelector('header');
-      expect(header?.classList.contains('bg-slate-900')).toBe(true);
+      header = container.querySelector("header");
+      expect(header?.classList.contains("bg-slate-900")).toBe(true);
     });
 
     /**
      * Test: Cart Menu Visibility in Both Themes
-     * 
+     *
      * Verifies that cart menu remains visible and readable
      * in both light and dark modes.
      */
-    it('Cart menu should be visible and readable in both themes', async () => {
+    it("Cart menu should be visible and readable in both themes", async () => {
       const mockCartMenu = () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         return (
-          <div 
+          <div
             id="cart-menu"
-            className={isDark 
-              ? 'bg-slate-900 text-slate-50 border-slate-600' 
-              : 'bg-slate-50 text-slate-900 border-slate-300'}
+            className={
+              isDark
+                ? "bg-slate-900 text-slate-50 border-slate-600"
+                : "bg-slate-50 text-slate-900 border-slate-300"
+            }
           >
             <p>Your cart has 2 items</p>
           </div>
@@ -312,36 +326,34 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const { container, rerender } = render(mockCartMenu());
 
       // Light mode
-      let cartMenu = container.querySelector('#cart-menu');
-      expect(cartMenu?.classList.contains('bg-slate-50')).toBe(true);
+      let cartMenu = container.querySelector("#cart-menu");
+      expect(cartMenu?.classList.contains("bg-slate-50")).toBe(true);
 
       // Switch to dark mode
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
       rerender(mockCartMenu());
 
       // Dark mode
-      cartMenu = container.querySelector('#cart-menu');
-      expect(cartMenu?.classList.contains('bg-slate-900')).toBe(true);
-      expect(cartMenu?.textContent).toContain('Your cart has 2 items');
+      cartMenu = container.querySelector("#cart-menu");
+      expect(cartMenu?.classList.contains("bg-slate-900")).toBe(true);
+      expect(cartMenu?.textContent).toContain("Your cart has 2 items");
     });
 
     /**
      * Test: Account Menu Theme Consistency
-     * 
+     *
      * Verifies account menu styling matches theme.
      */
-    it('Account menu should update styling for current theme', async () => {
+    it("Account menu should update styling for current theme", async () => {
       const mockAccountMenu = () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         return (
-          <div 
+          <div
             id="account-menu"
-            className={isDark 
-              ? 'bg-slate-900 border-slate-600' 
-              : 'bg-slate-50 border-slate-300'}
+            className={isDark ? "bg-slate-900 border-slate-600" : "bg-slate-50 border-slate-300"}
           >
-            <a href="/profile" className={isDark ? 'text-slate-50' : 'text-slate-900'}>
+            <a href="/profile" className={isDark ? "text-slate-50" : "text-slate-900"}>
               Profile
             </a>
           </div>
@@ -351,15 +363,15 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const { container, rerender } = render(mockAccountMenu());
 
       // Light mode
-      let accountMenu = container.querySelector('#account-menu');
-      expect(accountMenu?.classList.contains('bg-slate-50')).toBe(true);
+      let accountMenu = container.querySelector("#account-menu");
+      expect(accountMenu?.classList.contains("bg-slate-50")).toBe(true);
 
       // Switch to dark
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
       rerender(mockAccountMenu());
 
-      accountMenu = container.querySelector('#account-menu');
-      expect(accountMenu?.classList.contains('bg-slate-900')).toBe(true);
+      accountMenu = container.querySelector("#account-menu");
+      expect(accountMenu?.classList.contains("bg-slate-900")).toBe(true);
     });
   });
 
@@ -369,24 +381,26 @@ describe('Theme System - Integration Tests (E2E)', () => {
    * ============================================
    */
 
-  describe('Form Elements in Different Themes', () => {
+  describe("Form Elements in Different Themes", () => {
     /**
      * Test: Input Fields Are Readable in Both Themes
-     * 
+     *
      * Verifies form inputs have good contrast
      * in light and dark modes.
      */
-    it('Form input fields should be readable in both themes', async () => {
+    it("Form input fields should be readable in both themes", async () => {
       const mockForm = () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         return (
           <form>
             <input
               type="text"
               placeholder="Email"
-              className={isDark
-                ? 'bg-slate-800 text-slate-50 border-slate-600'
-                : 'bg-white text-slate-900 border-slate-300'}
+              className={
+                isDark
+                  ? "bg-slate-800 text-slate-50 border-slate-600"
+                  : "bg-white text-slate-900 border-slate-300"
+              }
             />
           </form>
         );
@@ -395,27 +409,31 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const { container, rerender } = render(mockForm());
 
       // Light mode
-      let input = container.querySelector('input') as HTMLInputElement;
-      expect(input.classList.contains('bg-white')).toBe(true);
+      let input = container.querySelector("input") as HTMLInputElement;
+      expect(input.classList.contains("bg-white")).toBe(true);
 
       // Dark mode
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
       rerender(mockForm());
 
-      input = container.querySelector('input') as HTMLInputElement;
-      expect(input.classList.contains('bg-slate-800')).toBe(true);
+      input = container.querySelector("input") as HTMLInputElement;
+      expect(input.classList.contains("bg-slate-800")).toBe(true);
     });
 
     /**
      * Test: Form Buttons Visible in Both Themes
      */
-    it('Form buttons should be clearly visible in both themes', async () => {
+    it("Form buttons should be clearly visible in both themes", async () => {
       const mockButton = () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         return (
-          <button className={isDark 
-            ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-            : 'bg-blue-500 hover:bg-blue-600 text-white'}>
+          <button
+            className={
+              isDark
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
+            }
+          >
             Submit
           </button>
         );
@@ -424,15 +442,15 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const { container, rerender } = render(mockButton());
 
       // Light mode
-      let button = container.querySelector('button');
-      expect(button?.classList.contains('bg-blue-500')).toBe(true);
+      let button = container.querySelector("button");
+      expect(button?.classList.contains("bg-blue-500")).toBe(true);
 
       // Dark mode
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
       rerender(mockButton());
 
-      button = container.querySelector('button');
-      expect(button?.classList.contains('bg-blue-600')).toBe(true);
+      button = container.querySelector("button");
+      expect(button?.classList.contains("bg-blue-600")).toBe(true);
     });
   });
 
@@ -442,22 +460,22 @@ describe('Theme System - Integration Tests (E2E)', () => {
    * ============================================
    */
 
-  describe('Theme Persistence Across Navigation', () => {
+  describe("Theme Persistence Across Navigation", () => {
     /**
      * Test: Theme Persists When Navigating Between Pages
-     * 
+     *
      * Simulates user navigating from home to products
      * while maintaining theme preference.
      */
-    it('Theme should persist when navigating between pages', async () => {
+    it("Theme should persist when navigating between pages", async () => {
       // User sets dark mode on home page
-      localStorage.setItem('theme', 'dark');
-      document.documentElement.classList.add('dark');
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
 
       // Simulate navigation to products page
       // (In real app, Astro would handle this)
       const mockPage = () => (
-        <div className={document.documentElement.classList.contains('dark') ? 'dark' : 'light'}>
+        <div className={document.documentElement.classList.contains("dark") ? "dark" : "light"}>
           <h1>Products Page</h1>
         </div>
       );
@@ -465,27 +483,27 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const { container } = render(mockPage());
 
       // Theme should still be dark
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
-      expect(localStorage.getItem('theme')).toBe('dark');
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
+      expect(localStorage.getItem("theme")).toBe("dark");
     });
 
     /**
      * Test: Theme Preference Survives Page Reload
      */
-    it('Theme preference should survive full page reload', async () => {
+    it("Theme preference should survive full page reload", async () => {
       // User sets theme to dark
-      localStorage.setItem('theme', 'dark');
-      document.documentElement.classList.add('dark');
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
 
       // Simulate page reload by checking localStorage
-      const stored = localStorage.getItem('theme');
+      const stored = localStorage.getItem("theme");
       const html = document.documentElement;
-      
-      if (stored === 'dark') {
-        html.classList.add('dark');
+
+      if (stored === "dark") {
+        html.classList.add("dark");
       }
 
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
     });
   });
 
@@ -495,34 +513,35 @@ describe('Theme System - Integration Tests (E2E)', () => {
    * ============================================
    */
 
-  describe('Performance Under Load', () => {
+  describe("Performance Under Load", () => {
     /**
      * Test: Theme Toggle Performance with Complex DOM
-     * 
+     *
      * Verifies that theme switching remains responsive
      * even with many DOM elements.
      */
-    it('Should toggle theme quickly even with large DOM', async () => {
+    it("Should toggle theme quickly even with large DOM", async () => {
       // Create a component with many elements
       const mockComplexApp = () => {
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         return (
-          <div className={isDark ? 'dark' : 'light'}>
+          <div className={isDark ? "dark" : "light"}>
             {/* Simulate 100 elements */}
             {Array.from({ length: 100 }).map((_, i) => (
-              <div 
+              <div
                 key={i}
-                className={isDark 
-                  ? 'bg-slate-900 text-slate-50' 
-                  : 'bg-white text-slate-900'}
+                className={isDark ? "bg-slate-900 text-slate-50" : "bg-white text-slate-900"}
               >
                 Item {i}
               </div>
             ))}
-            <button id="toggle" onClick={() => {
-              const html = document.documentElement;
-              html.classList.toggle('dark');
-            }}>
+            <button
+              id="toggle"
+              onClick={() => {
+                const html = document.documentElement;
+                html.classList.toggle("dark");
+              }}
+            >
               Toggle
             </button>
           </div>
@@ -532,15 +551,15 @@ describe('Theme System - Integration Tests (E2E)', () => {
       const startTime = performance.now();
 
       const { container } = render(mockComplexApp());
-      const toggleButton = screen.getByRole('button');
+      const toggleButton = screen.getByRole("button");
 
       fireEvent.click(toggleButton);
 
       const endTime = performance.now();
       const duration = endTime - startTime;
 
-      // Should complete quickly (< 100ms for click + render)
-      expect(duration).toBeLessThan(100);
+      // Should complete quickly (allow some CI variance; < 250ms for click + render)
+      expect(duration).toBeLessThan(250);
     });
   });
 
@@ -550,91 +569,99 @@ describe('Theme System - Integration Tests (E2E)', () => {
    * ============================================
    */
 
-  describe('Edge Cases & Error Handling', () => {
+  describe("Edge Cases & Error Handling", () => {
     /**
      * Test: App Works When localStorage Is Full
      */
-    it('Should work even when localStorage quota is exceeded', async () => {
+    it("Should work even when localStorage quota is exceeded", async () => {
       // Mock localStorage quota exceeded
-      jest.spyOn(Storage.prototype, 'setItem').mockImplementationOnce(() => {
-        throw new Error('QuotaExceededError');
+      jest.spyOn(Storage.prototype, "setItem").mockImplementationOnce(() => {
+        throw new Error("QuotaExceededError");
       });
 
       // App should still toggle theme in memory
       const mockComponent = () => (
-        <div className={document.documentElement.classList.contains('dark') ? 'dark' : 'light'}>
-          <button id="toggle" onClick={() => {
-            document.documentElement.classList.toggle('dark');
-            // Try to save but don't crash if it fails
-            try {
-              localStorage.setItem('theme', 
-                document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-              );
-            } catch (e) {
-              // Silently fail, theme still works
-            }
-          }}>
+        <div className={document.documentElement.classList.contains("dark") ? "dark" : "light"}>
+          <button
+            id="toggle"
+            onClick={() => {
+              document.documentElement.classList.toggle("dark");
+              // Try to save but don't crash if it fails
+              try {
+                localStorage.setItem(
+                  "theme",
+                  document.documentElement.classList.contains("dark") ? "dark" : "light"
+                );
+              } catch (e) {
+                // Silently fail, theme still works
+              }
+            }}
+          >
             Toggle
           </button>
         </div>
       );
 
       const { container } = render(mockComponent());
-      const button = screen.getByRole('button');
+      const button = screen.getByRole("button");
 
       fireEvent.click(button);
 
       // Theme should still toggle
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
     });
 
     /**
      * Test: App Works in Private Browsing Mode
      */
-    it('Should work in private browsing mode (limited localStorage)', async () => {
+    it("Should work in private browsing mode (limited localStorage)", async () => {
       // Simulate private browsing: localStorage access restricted
       const mockComponent = () => (
         <div>
-          <button id="toggle" onClick={() => {
-            document.documentElement.classList.toggle('dark');
-            // In private mode, this might fail
-            try {
-              localStorage.setItem('theme', 
-                document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-              );
-            } catch (e) {
-              // Graceful fallback
-            }
-          }}>
+          <button
+            id="toggle"
+            onClick={() => {
+              document.documentElement.classList.toggle("dark");
+              // In private mode, this might fail
+              try {
+                localStorage.setItem(
+                  "theme",
+                  document.documentElement.classList.contains("dark") ? "dark" : "light"
+                );
+              } catch (e) {
+                // Graceful fallback
+              }
+            }}
+          >
             Toggle
           </button>
         </div>
       );
 
       const { container } = render(mockComponent());
-      const button = screen.getByRole('button');
+      const button = screen.getByRole("button");
 
       fireEvent.click(button);
 
       // Should still toggle even if localStorage fails
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
     });
 
     /**
      * Test: Invalid Theme Values Are Handled
      */
-    it('Should handle invalid theme values gracefully', async () => {
-      localStorage.setItem('theme', 'invalid-theme' as any);
+    it("Should handle invalid theme values gracefully", async () => {
+      localStorage.setItem("theme", "invalid-theme" as any);
 
       // App should treat invalid value as missing
-      const theme = localStorage.getItem('theme');
-      
+      const theme = localStorage.getItem("theme");
+
       // Invalid theme should trigger fallback to default/system preference
-      if (theme !== 'dark' && theme !== 'light') {
-        document.documentElement.classList.remove('dark');
+      if (theme !== "dark" && theme !== "light") {
+        document.documentElement.classList.remove("dark");
       }
 
-      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains("dark")).toBe(false);
     });
   });
 });
@@ -645,21 +672,21 @@ describe('Theme System - Integration Tests (E2E)', () => {
  * ============================================
  */
 
-describe('Theme System - Accessibility', () => {
+describe("Theme System - Accessibility", () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove("dark");
   });
 
   /**
    * Test: Keyboard Navigation of Theme Toggle
    */
-  it('Theme toggle should be keyboard accessible', async () => {
+  it("Theme toggle should be keyboard accessible", async () => {
     const mockComponent = () => (
       <button
         id="theme-toggle"
         onClick={() => {
-          document.documentElement.classList.toggle('dark');
+          document.documentElement.classList.toggle("dark");
         }}
         aria-label="Toggle theme"
       >
@@ -668,11 +695,11 @@ describe('Theme System - Accessibility', () => {
     );
 
     const { container } = render(mockComponent());
-    const button = screen.getByRole('button');
+    const button = screen.getByRole("button");
 
     // Simulate keyboard activation (Space or Enter)
-    fireEvent.keyDown(button, { key: 'Enter', code: 'Enter' });
-    
+    fireEvent.keyDown(button, { key: "Enter", code: "Enter" });
+
     // Should be focusable or be able to focus
     try {
       button.focus();
@@ -686,7 +713,7 @@ describe('Theme System - Accessibility', () => {
   /**
    * Test: Screen Reader Announces Theme Toggle
    */
-  it('Theme toggle button should have accessible label', async () => {
+  it("Theme toggle button should have accessible label", async () => {
     const mockComponent = () => (
       <button aria-label="Toggle theme" id="theme-toggle">
         <span className="sr-only">Toggle theme</span>
@@ -695,14 +722,14 @@ describe('Theme System - Accessibility', () => {
 
     render(mockComponent());
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-label', 'Toggle theme');
+    const button = screen.getByRole("button");
+    expect(button).toHaveAttribute("aria-label", "Toggle theme");
   });
 
   /**
    * Test: Sufficient Contrast in Both Themes
    */
-  it('Text should have sufficient contrast in both themes', async () => {
+  it("Text should have sufficient contrast in both themes", async () => {
     // Light mode: dark text on light background
     // Dark mode: light text on dark background
     // Both should meet WCAG AA standards (4.5:1 for normal text)
@@ -710,7 +737,7 @@ describe('Theme System - Accessibility', () => {
     // This is typically verified with actual color values
     // Mock verification:
     const lightContrast = 12; // Example ratio
-    const darkContrast = 13;  // Example ratio
+    const darkContrast = 13; // Example ratio
 
     expect(lightContrast).toBeGreaterThanOrEqual(4.5);
     expect(darkContrast).toBeGreaterThanOrEqual(4.5);

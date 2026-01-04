@@ -1,8 +1,20 @@
+/**
+ * AuroraChatFrame.tsx
+ * Purpose: React functional component that renders a chat UI for Aurora.
+ * It manages a local message list and delegates message processing to
+ * `processUserInput` (the message manager). The component shows user and
+ * Aurora messages with simple entry animations using framer-motion.
+ *
+ * Notes:
+ * - This is a client component (uses "use client").
+ * - Messages are stored locally in component state; no persistence.
+ */
+
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { processUserInput } from "../core/AuroraMessageManager";
-import type { Message } from "../../../models/Message";
+import type { Message } from "../../../models/AuroraProps/MessageProps";
 
 export const AuroraChatFrame: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);

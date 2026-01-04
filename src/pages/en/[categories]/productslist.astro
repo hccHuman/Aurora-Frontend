@@ -1,0 +1,68 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { fetchCategories } from "@/services/categoryService";
+import { fetchProductsByCategory } from "@/services/productService";
+import ProductCard from "@/components/tsx/ProductCard/ProductCard.astro"; // supongo que tienes un componente para productos
+import ChatbotLoader from "@/components/ui/ChatbotLoader.astro";
+import ProductModalWrapper from "@/components/tsx/Modal/ProductModalWrapper";
+// ⚡ getStaticPaths se ejecuta en build
+export async function getStaticPaths() {
+  const categories = await fetchCategories();
+
+  return categories.map((cat) => ({
+    params: { categories: cat.nombre.toLowerCase().replace(/\s+/g, "-") },
+  }));
+}
+
+// Parámetro dinámico de la URL
+const { categories } = Astro.params;
+
+// Traemos todas las categorías para obtener el id
+const allCategories = await fetchCategories();
+const currentCategory = allCategories.find(
+  (cat) => cat.nombre.toLowerCase().replace(/\s+/g, "-") === categories
+);
+
+if (!currentCategory) throw new Error("Categoría no encontrada 💔");
+
+const id = currentCategory.id;
+
+// Traemos los productos de la categoría
+const products = await fetchProductsByCategory(id);
+const lang = Astro.props.lang || "es";
+---
+
+<Layout
+  lang={lang}
+  title={`Productos de ${currentCategory.nombre}`}
+  description={`Listado de productos de la categoría ${currentCategory.nombre}`}
+  canonicalUrl={`https://miweb.com/${lang}/${categories}`}
+  previewImage="/assets/preview.png"
+  home={true}
+  className="h-fit"
+>
+  <h1 class="text-3xl font-bold mb-4 mt-6 flex justify-center">
+    Productos de {currentCategory.nombre}
+  </h1>
+
+  {
+    products.length === 0 ? (
+      <p>No hay productos en esta categoría 💔</p>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 p-4">
+        {products.map((p) => (
+          <ProductCard
+            key={p.id}
+            title={p.nombre}
+            img={p.img_url}
+            price={p.precio}
+            id={p.id}
+            lang={lang}
+          />
+        ))}
+      </div>
+    )
+  }
+  <ProductModalWrapper client:load />
+  <ChatbotLoader />
+</Layout>

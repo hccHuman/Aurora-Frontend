@@ -1,17 +1,12 @@
 ---
-import '@/styles/global.css';
-import '@/styles/Components/ChatFrame.css';
-import ChatWrapper from '@/modules/AURORA/components/ChatWrapper';
-
+import "@/styles/global.css";
+import "@/styles/Components/ChatFrame.css";
+import ChatWrapper from "@/modules/AURORA/components/ChatWrapper";
 ---
-<html>
-  <head>
-      <script is:inline src="/webpack/live2d.min.js"></script>
-      <script is:inline src="/webpack/live2dcubismcore.js"></script>
-  </head>
-  <body>
-      <div class="flex justify-center">
-        <ChatWrapper client:only="react" />
-      </div>
-  </body>
-</html>
+<div>
+  <script is:inline src="/webpack/live2d.min.js"></script>
+  <script is:inline src="/webpack/live2dcubismcore.js"></script>
+  <div class="flex justify-center">
+    <ChatWrapper client:only="react" />
+  </div>
+</div>

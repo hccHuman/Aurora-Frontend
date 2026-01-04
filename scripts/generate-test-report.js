@@ -8,53 +8,57 @@
  * quick CLI inspection and lightweight CI summaries.
  */
 
-import { execSync } from 'child_process';
-import { writeFileSync, mkdirSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { execSync } from "child_process";
+import { writeFileSync, mkdirSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = dirname(__dirname);
-const reportsDir = join(projectRoot, 'tests', 'reports');
+const reportsDir = join(projectRoot, "tests", "reports");
 
 mkdirSync(reportsDir, { recursive: true });
 
-const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('-').slice(0, 3).join('-') + 
-                 '_' + new Date().toTimeString().split(' ')[0].replace(/:/g, '-');
+const timestamp =
+  new Date().toISOString().replace(/[:.]/g, "-").split("-").slice(0, 3).join("-") +
+  "_" +
+  new Date().toTimeString().split(" ")[0].replace(/:/g, "-");
 const reportFile = join(reportsDir, `test-results_${timestamp}.txt`);
 
-let report = '';
+let report = "";
 const now = new Date();
 
-report += '═════════════════════════════════════════════════════════════════════\n';
-report += 'AURORA CHATBOT - TEST RESULTS\n';
-report += '═════════════════════════════════════════════════════════════════════\n\n';
+report += "═════════════════════════════════════════════════════════════════════\n";
+report += "AURORA CHATBOT - TEST RESULTS\n";
+report += "═════════════════════════════════════════════════════════════════════\n\n";
 
-report += `Fecha: ${now.toLocaleDateString('es-ES')}\n`;
-report += `Hora: ${now.toLocaleTimeString('es-ES')}\n`;
+report += `Fecha: ${now.toLocaleDateString("es-ES")}\n`;
+report += `Hora: ${now.toLocaleTimeString("es-ES")}\n`;
 report += `Node.js: ${process.version}\n`;
 report += `OS: ${process.platform}\n\n`;
 
 const testSuites = [
-  { name: 'AuroraSanitizer', file: 'tests/modules/aurora-sanitizer.test.ts' },
-  { name: 'AuroraMessageManager', file: 'tests/modules/aurora-message-manager.test.ts' },
-  { name: 'AuroraChatFrame', file: 'tests/modules/aurora-chat-frame.test.ts' }
+  { name: "AuroraSanitizer", file: "tests/modules/aurora-sanitizer.test.ts" },
+  { name: "AuroraMessageManager", file: "tests/modules/aurora-message-manager.test.ts" },
+  { name: "AuroraChatFrame", file: "tests/modules/aurora-chat-frame.test.ts" },
 ];
 
-let totalTests = 0, totalPassed = 0, totalFailed = 0;
+let totalTests = 0,
+  totalPassed = 0,
+  totalFailed = 0;
 const startTime = Date.now();
 
 testSuites.forEach((suite) => {
   report += `\nTest Suite: ${suite.name}\n`;
-  report += '─'.repeat(65) + '\n';
+  report += "─".repeat(65) + "\n";
 
   try {
-    let output = '';
+    let output = "";
     try {
       output = execSync(`npm test -- ${suite.file} 2>&1`, {
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
-        maxBuffer: 200 * 1024 * 1024
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
+        maxBuffer: 200 * 1024 * 1024,
       });
     } catch (e) {
       output = e.stdout || e.stderr || e.toString();
@@ -73,7 +77,6 @@ testSuites.forEach((suite) => {
     report += `Pasados: ${passed}\n`;
     report += `Fallidos: ${failed}\n`;
     report += `Total: ${passed + failed}\n`;
-
   } catch (error) {
     report += `Error al ejecutar suite\n`;
   }
@@ -81,9 +84,9 @@ testSuites.forEach((suite) => {
 
 const totalDuration = ((Date.now() - startTime) / 1000).toFixed(2);
 
-report += '\n' + '═'.repeat(65) + '\n';
-report += 'ESTADISTICAS TOTALES\n';
-report += '═'.repeat(65) + '\n\n';
+report += "\n" + "═".repeat(65) + "\n";
+report += "ESTADISTICAS TOTALES\n";
+report += "═".repeat(65) + "\n\n";
 
 report += `Total de tests: ${totalTests}\n`;
 report += `Pasados: ${totalPassed}\n`;
@@ -94,14 +97,14 @@ const globalRate = totalTests > 0 ? ((totalPassed / totalTests) * 100).toFixed(2
 report += `Tasa de exito: ${globalRate}%\n\n`;
 
 if (totalFailed === 0 && totalTests > 0) {
-  report += '[SUCCESS] TODOS LOS TESTS PASARON CORRECTAMENTE\n';
+  report += "[SUCCESS] TODOS LOS TESTS PASARON CORRECTAMENTE\n";
 } else {
   report += `[WARNING] Se encontraron ${totalFailed} test(s) fallido(s)\n`;
 }
 
-report += '\n' + '═'.repeat(65) + '\n';
+report += "\n" + "═".repeat(65) + "\n";
 
-writeFileSync(reportFile, report, 'utf-8');
+writeFileSync(reportFile, report, "utf-8");
 
 console.log(report);
 console.log(`\nReporte guardado en: ${reportFile}\n`);
