@@ -11,11 +11,12 @@ import OrdersTable from "@/components/tsx/Dashboard/ChartsTables/OrdersTable/Ord
 import ProductsTable from "@/components/tsx/Dashboard/ChartsTables/ProductsTable/ProductsTable";
 import CategoryTable from "@/components/tsx/Dashboard/ChartsTables/CategoryTable/CategoryTable";
 import UsersList from "@/components/tsx/Dashboard/ChartsTables/UsersList/UsersList";
+import AdminOnly from "@/components/tsx/statement/AdminOnly";
 
 let lang = "es";
 ---
-<meta charset="utf-8">
-<LoginReader client:load /> 
+
+<meta charset="utf-8" />
 <Layout
   lang={lang}
   title="Aurora Chat - Español"
@@ -24,78 +25,81 @@ let lang = "es";
   previewImage="/assets/preview.png"
   home={true}
 >
-  <div class="space-y-8 p-5">
-    <!-- Chart principal -->
-    <section class="gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <MainChart client:only />
-      </div>
-    </section>
-    <section class="gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <VisitorsChart client:only />
-      </div>
-    </section>
-    <!-- Segunda fila -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <NewProductsChart client:only />
-      </div>
+  <LoginReader client:load />
+  <AdminOnly client:only>
+    <div class="space-y-8 p-5">
+      <!-- Chart principal -->
+      <section class="gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <MainChart client:only />
+        </div>
+      </section>
+      <section class="gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <VisitorsChart client:only />
+        </div>
+      </section>
+      <!-- Segunda fila -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <NewProductsChart client:only />
+        </div>
 
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <SingupsChart client:only />
-      </div>
-    </section>
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <SingupsChart client:only />
+        </div>
+      </section>
 
-    <!-- Tercera fila -->
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <SalesByCategoryChart client:only />
-      </div>
+      <!-- Tercera fila -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <SalesByCategoryChart client:only />
+        </div>
 
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <TrafficByDeviceChart client:only />
-      </div>
-    </section>
-    <section class="gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <OrdersTable client:only />
-      </div>
-    </section>
-    <section class="gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <CategoryTable client:only />
-      </div>
-    </section>
-    <section class="gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <ProductsTable client:only />
-      </div>
-    </section>
-    <section class="gap-6">
-      <div
-        class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-      >
-        <UsersList client:only />
-      </div>
-    </section>
-  </div>
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <TrafficByDeviceChart client:only />
+        </div>
+      </section>
+      <section class="gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <OrdersTable client:only />
+        </div>
+      </section>
+      <section class="gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <CategoryTable client:only />
+        </div>
+      </section>
+      <section class="gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <ProductsTable client:only />
+        </div>
+      </section>
+      <section class="gap-6">
+        <div
+          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+        >
+          <UsersList client:only />
+        </div>
+      </section>
+    </div>
+  </AdminOnly>
 </Layout>

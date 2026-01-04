@@ -41,7 +41,8 @@ import type { Profile } from "@/models/EcommerceProps/UserProps";
  * // Logout user
  * setUser({ loggedIn: false, user: null });
  */
-export const userStore = atom<{ loggedIn: boolean; user: Profile | null }>({
+export const userStore = atom<{ loggedIn: boolean; user: Profile | null; ready: boolean }>({
   loggedIn: false,
   user: null,
+  ready: false,
 });

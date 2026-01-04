@@ -28,7 +28,7 @@ const LoginReader: React.FC = () => {
         const userData: Profile | null = JSON.parse(sessionStorage.getItem("user") || "null");
 
         if (loggedIn && userData) {
-          setUser({ loggedIn: true, user: userData });
+          setUser({ loggedIn: true, user: userData, ready: true });
           console.log("💖 Sesión restaurada desde sessionStorage");
           return;
         }
@@ -36,13 +36,13 @@ const LoginReader: React.FC = () => {
         // Si no hay sesión en sessionStorage, consultamos backend
         const data = await clientService.me(); // valida cookie HttpOnly
         if (data.user) {
-          setUser({ loggedIn: true, user: data.user });
+          setUser({ loggedIn: true, user: data.user, ready: true });
           sessionStorage.setItem("login", "true");
           sessionStorage.setItem("user", JSON.stringify(data.user));
           console.log("💖 Sesión restaurada desde backend");
           console.log("datos: ", data.user);
         } else {
-          setUser({ loggedIn: false, user: null });
+          setUser({ loggedIn: false, user: null, ready: true });
           sessionStorage.setItem("login", "false");
           sessionStorage.setItem("user", JSON.stringify(null));
           console.log("❌ No hay sesión válida");
@@ -51,7 +51,7 @@ const LoginReader: React.FC = () => {
         // No queremos saturar la consola con errores esperables (token expirado).
         // Usamos console.debug para mantener la información disponible en depuración
         // sin alarmar al desarrollador con un error de nivel "error".
-        setUser({ loggedIn: false, user: null });
+        setUser({ loggedIn: false, user: null, ready: true });
         sessionStorage.setItem("login", "false");
         sessionStorage.setItem("user", JSON.stringify(null));
         console.debug("❌ Error restaurando sesión:", err);

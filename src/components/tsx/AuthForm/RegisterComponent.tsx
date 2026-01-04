@@ -59,7 +59,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
       sessionStorage.setItem("user", JSON.stringify(data.user));
       setSuccess("¡Cuenta creada con éxito! 🌸 Redirigiendo…");
       setTimeout(() => {
-        //window.location.href = "/";
+        window.location.href = "/";
       }, 1500);
     } catch (err: any) {
       setError(err.message || "Error desconocido durante el registro");
