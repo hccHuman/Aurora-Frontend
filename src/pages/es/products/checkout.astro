@@ -1,5 +1,31 @@
 ---
-import CheckoutComponent from '@/components/tsx/Checkout/CheckoutComponent';
+import CheckoutComponent from "@/components/tsx/Checkout/CheckoutComponent";
+import Layout from "@/layouts/Layout.astro";
+let lang = "es";
 ---
-<meta charset="utf-8">
-<CheckoutComponent client:load />
+
+<meta charset="utf-8" />
+<Layout
+  lang={lang}
+  title="Aurora Chat - Español"
+  description="Plataforma de chat con IA en español"
+  canonicalUrl="https://miweb.com/es/"
+  previewImage="/assets/preview.png"
+  home={true}
+>
+  <div
+    class="min-h-screen bg-gray-50 dark:bg-slate-900 flex items-start justify-center py-10 px-4 sm:px-6 lg:px-8"
+  >
+    <div class="w-full max-w-4xl">
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-6 text-center">
+        Tu carrito de compras
+      </h1>
+
+      <div
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg p-6 sm:p-8 transition-colors"
+      >
+        <CheckoutComponent client:load />
+      </div>
+    </div>
+  </div>
+</Layout>
