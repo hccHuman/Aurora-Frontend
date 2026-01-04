@@ -40,6 +40,7 @@ const LoginReader: React.FC = () => {
           sessionStorage.setItem("login", "true");
           sessionStorage.setItem("user", JSON.stringify(data.user));
           console.log("💖 Sesión restaurada desde backend");
+          console.log("datos: ", data.user);
         } else {
           setUser({ loggedIn: false, user: null });
           sessionStorage.setItem("login", "false");
