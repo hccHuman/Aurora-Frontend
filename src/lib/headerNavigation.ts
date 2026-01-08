@@ -1,4 +1,15 @@
-// Client-side utilities for header navigation behaviors
+/**
+ * Header Navigation Behaviors
+ *
+ * Client-side utilities for handling header navigation, link hijacking,
+ * and automatic redirection based on user session state.
+ */
+
+/**
+ * Performs a URL navigation using the best available method.
+ *
+ * @param {string} url - Target URL
+ */
 export function navigateTo(url: string) {
   if (typeof window !== 'undefined' && typeof (window as any).goTo === 'function') {
     (window as any).goTo(url);
@@ -24,6 +35,13 @@ export function navigateTo(url: string) {
   }
 }
 
+/**
+ * Handles clicks on the "Finalize Purchase" link.
+ * Redirects to checkout if logged in, otherwise to login page.
+ *
+ * @param {Event} e - Click event
+ * @param {string} [lang='es'] - Language code for the URL
+ */
 export function handleFinalizeLinkClick(e: Event, lang = 'es') {
   e.preventDefault();
 
@@ -43,6 +61,12 @@ export function handleFinalizeLinkClick(e: Event, lang = 'es') {
   }
 }
 
+/**
+ * Scans the document for ".finalize-purchase" links and attaches
+ * the session-aware click handler.
+ *
+ * @param {string} [lang='es'] - Language code for target URLs
+ */
 export function setupFinalizeLinks(lang = 'es') {
   if (typeof document === 'undefined') return;
   const links = document.querySelectorAll('.finalize-purchase');

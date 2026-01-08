@@ -1,5 +1,5 @@
 ---
-import ThemeToggle from "@/components/tsx/ThemeToggle/ThemeToggle";
+import AccessibilityMenu from "@/components/tsx/AccessibilityMenu/AccessibilityMenu";
 
 // src/layouts/Layout.astro
 const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = Astro.props;
@@ -40,6 +40,7 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
     <!-- Script para aplicar tema persistido antes de renderizar -->
     <script is:inline>
       (function () {
+        // --- Theme ---
         const theme = localStorage.getItem("theme");
         const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const shouldBeDark = theme === "dark" || (theme === null && systemDark);
@@ -48,6 +49,29 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
           document.documentElement.classList.add("dark");
         } else {
           document.documentElement.classList.remove("dark");
+        }
+
+        // --- Accessibility Modes (ADHD & Epilepsy) ---
+        if (localStorage.getItem("mode-epilepsy") === "true") {
+          document.documentElement.classList.add("mode-epilepsy");
+        }
+        if (localStorage.getItem("mode-adhd") === "true") {
+          document.documentElement.classList.add("mode-adhd");
+        }
+
+        // --- CVD Mode (Color Vision Deficiency) ---
+        const cvdMode = localStorage.getItem("cvd-mode");
+        const validCvdModes = [
+          "cvd-protanopia",
+          "cvd-deuteranopia",
+          "cvd-tritanopia",
+          "cvd-achromatopsia",
+        ];
+
+        document.documentElement.classList.remove(...validCvdModes);
+
+        if (cvdMode && validCvdModes.includes(cvdMode)) {
+          document.documentElement.classList.add(cvdMode);
         }
       })();
     </script>
@@ -75,12 +99,34 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
         Volver
       </a>
 
-      <!-- Botón de cambio de tema -->
-      <ThemeToggle client:load />
+      <!-- Botón de cambio de tema / Menú Accesibilidad -->
+      <AccessibilityMenu client:load />
     </header>
 
-    <main class="flex-1 flex flex-col">
+    <main class="flex-1 flex flex-col animate-pageChange">
       <slot />
     </main>
+
+    <!-- SVG Filters for Color Vision Deficiency (CVD) -->
+    <svg style="display: none;">
+      <filter id="protanopia-filter">
+        <feColorMatrix
+          type="matrix"
+          values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0"
+        ></feColorMatrix>
+      </filter>
+      <filter id="deuteranopia-filter">
+        <feColorMatrix
+          type="matrix"
+          values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0"
+        ></feColorMatrix>
+      </filter>
+      <filter id="tritanopia-filter">
+        <feColorMatrix
+          type="matrix"
+          values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0"
+        ></feColorMatrix>
+      </filter>
+    </svg>
   </body>
 </html>
