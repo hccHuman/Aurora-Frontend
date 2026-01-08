@@ -49,13 +49,3 @@ export const ENV = {
   /** Current runtime environment: 'development' or 'production' */
   NODE_ENV: getEnvVariable("NODE_ENV", "development") as "development" | "production",
 };
-
-/**
- * Usage Example:
- *
- * import { ENV } from './config'
- *
- * console.log('API URL:', ENV.API_URL)
- * console.log('Stripe Key:', ENV.STRIPE_PUBLISHABLE_KEY)
- * console.log('Environment:', ENV.NODE_ENV)
- */
