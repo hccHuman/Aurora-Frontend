@@ -4,29 +4,29 @@
 
 Aurora es una plataforma de e-commerce revolucionaria que combina la potencia del comercio electrónico tradicional con un sistema de inteligencia artificial emocionalmente consciente. Diseñada para ofrecer experiencias de usuario personalizadas y empáticas.
 
-## 🎯 Características Principales
+### 🤖 **Sistema Multi-Modal de IA**
 
-### 🤖 **Sistema Tri-Modal de IA**
+- **🧠 LUCIA** - Lógica Unificada de Comprensión e Interfaz Accesible (Mente Cognitiva)
+- **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación (Corazón Operativo)
+- **💖 ANA** - Analizador de Niveles Afectivos (Alma Emocional)
+- **🛠️ ALBA** - Aviso Logístico de Bloqueo y Anomalías (Sistema de Resiliencia)
 
-- **🧠 LUCIA** - Lógica Unificada de Comprensión e Interfaz Accesible
-- **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación
-- **💖 ANA** - Analizador de Niveles Afectivos
+### 🛒 **Funcionalidades E-commerce & Admin**
 
-### 🛒 **Funcionalidades E-commerce**
-
-- Catálogo de productos inteligente
-- Carrito de compras dinámico
-- Proceso de checkout
-- Interfaz adaptable a las necesidades del usuario
+- Catálogo de productos inteligente con IA.
+- Interfaz altamente animada y responsiva (Framer Motion).
+- **Dashboard de Administración**: Gestión total de productos, usuarios y pedidos.
+- **Accesibilidad Avanzada**: Modos para TDAH, Epilepsia y Daltonismo.
 
 ## 📚 Documentación
 
 ### 📖 **Documentación Técnica** ([Ver en Markdown](./doc/markdown/))
 
-- [🏗️ Arquitectura del Sistema](./doc/markdown/arquitectura.md) - Descripción detallada de la arquitectura
-- [📁 Estructura del Proyecto](./doc/markdown/estructura.md) - Organización de archivos y carpetas
-- [⚙️ Guía de Instalación](./doc/markdown/instalacion.md) - Instrucciones de configuración
-- [📋 README Principal](./doc/markdown/README.md) - Documentación general
+- [🏗️ Arquitectura del Sistema](./doc/markdown/arquitectura.md)
+- [✨ Catálogo de Animaciones](./doc/markdown/animaciones.md)
+- [👤 Avatar Virtual (Live2D)](./doc/markdown/avatar.md)
+- [📊 Dashboard de Administración](./doc/markdown/dashboard.md)
+- [⚙️ Guía de Instalación](./doc/markdown/instalacion.md)
 
 ### 📄 **Documentos en PDF** ([Ver en PDF](./doc/pdf/))
 
@@ -116,21 +116,24 @@ npm run build
 
 ## 🌌 Integración General
 
-| Módulo         | Rol Principal                        | Tipo de Procesamiento   | Interacción                           |
-| :------------- | :----------------------------------- | :---------------------- | :------------------------------------ |
-| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico      | Coordina y gestiona todos los módulos |
-| **L.U.C.I.A.** | Comprensión e interfaz accesible     | Cognitivo / Lingüístico | Comunica la IA con el usuario         |
-| **A.N.A.**     | Análisis y regulación emocional      | Afectivo / Adaptativo   | Equilibra las emociones del sistema   |
+| Módulo | Rol Principal | Tipo de Procesamiento | Interacción |
+| :--- | :--- | :--- | :--- |
+| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico | Coordina y gestiona todos los módulos |
+| **L.U.C.I.A.** | Comprensión e interfaz accesible | Cognitivo / Lingüístico | Comunica la IA con el usuario |
+| **A.N.A.** | Análisis y regulación emocional | Afectivo / Adaptativo | Equilibra las emociones del sistema |
+| **A.L.B.A.** | Aviso Logístico de Bloqueo y Anomalías | Gestión de Errores | Provee feedback visual de anomalías |
 
 ---
 
 ### 💫 Filosofía del Sistema
 
 > “La razón guía, la gestión equilibra y la emoción conecta.”
->
-> Este tríptico de módulos conforma una IA con **mente, cuerpo y alma**, capaz de pensar con precisión, actuar con coherencia y sentir con empatía.
 
-### Estructura del proyecto
+Este ecosistema de módulos conforma una IA con **mente, cuerpo y alma**, capaz de pensar con precisión, actuar con coherencia y sentir con empatía.
+
+### 📁 Estructura del Proyecto
+
+Aurora sigue una arquitectura modular y escalable para facilitar el mantenimiento y la expansión:
 
 ```
 📦 Aurora/

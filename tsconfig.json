@@ -14,9 +14,18 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     }
   },
-  "include": ["src/**/*", "astro.config.mjs"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "astro.config.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
