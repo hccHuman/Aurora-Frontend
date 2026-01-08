@@ -27,4 +27,5 @@
 export interface ButtonProps {
   title: string;
   id: number;
+  category_id?: number;
 }

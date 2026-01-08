@@ -5,6 +5,15 @@ import { userStore } from '@/store/userStore';
 import { paymentService } from '@/services/paymentService';
 import { goTo } from '@/lib/navigation';
 
+/**
+ * CheckoutComponent Component
+ *
+ * Manages the final checkout process including order review and Stripe payment initiation.
+ * Handles route protection (ensuring user is logged in), responsive loading states,
+ * and cart synchronization with the global cartStore.
+ *
+ * @component
+ */
 export default function CheckoutComponent() {
   const [cart, setCart] = useAtom(cartStore);
   const [user] = useAtom(userStore);
@@ -15,7 +24,7 @@ export default function CheckoutComponent() {
   const [mounted, setMounted] = useState(false);
 
   const total = cart.items.reduce(
-    (acc, it) => acc + (it.price || 0) * (it.quantity || 1),
+    (acc: number, it: any) => acc + (it.price || 0) * (it.quantity || 1),
     0
   );
 
@@ -54,10 +63,11 @@ export default function CheckoutComponent() {
       return;
     }
 
-    const items = cart.items.map(it => ({
+    const items = cart.items.map((it: any) => ({
       id: it.productId,
       price: Math.round((it.price || 0) * 100),
       quantity: it.quantity,
+      category_id: it.category_id,
     }));
 
     const payload = {
@@ -65,8 +75,9 @@ export default function CheckoutComponent() {
       items,
     };
 
+
     try {
-      const res = await paymentService.Order(payload);
+      const res = await (paymentService.Order as any)(payload);
 
       if (res?.clientSecret) {
         setSuccess('Pago iniciado correctamente.');
@@ -78,6 +89,9 @@ export default function CheckoutComponent() {
     } catch (err: any) {
       setError(err.message || 'Error iniciando pago');
       console.error(err);
+      if (err.status === 401 || err.message.includes('401') || err.message.includes('Unauthorized')) {
+        goTo('/account/login');
+      }
     } finally {
       setLoading(false);
     }
@@ -86,7 +100,7 @@ export default function CheckoutComponent() {
   /* ================================
      LOADING / BLOQUEO VISUAL
   ================================= */
-  if (!mounted || !user?.ready) {
+  if ((!mounted || !user?.ready) && !success) {
     return (
       <div className="max-w-3xl mx-auto p-6 text-center text-slate-500">
         Cargando checkout…
@@ -94,7 +108,7 @@ export default function CheckoutComponent() {
     );
   }
 
-  if (cart.items.length === 0) {
+  if (cart.items.length === 0 && !success) {
     return (
       <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-slate-900 border rounded-xl">
         <h2 className="text-2xl font-bold mb-4">Revisar pedido</h2>
@@ -113,7 +127,7 @@ export default function CheckoutComponent() {
       <h2 className="text-2xl font-bold">Revisar pedido</h2>
 
       <div className="divide-y max-h-96 overflow-y-auto">
-        {cart.items.map(it => (
+        {cart.items.map((it: any) => (
           <div key={it.productId} className="py-3 flex justify-between">
             <div>
               <div className="font-semibold">{it.title}</div>
