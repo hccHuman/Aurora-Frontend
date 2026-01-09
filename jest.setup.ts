@@ -7,7 +7,7 @@
  */
 
 // Importar matchers de Testing Library
-require("@testing-library/jest-dom");
+import "@testing-library/jest-dom";
 
 // ===== MATCHMEDIA MOCK =====
 Object.defineProperty(window, 'matchMedia', {

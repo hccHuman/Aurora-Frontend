@@ -4,29 +4,33 @@
 
 Aurora es una plataforma de e-commerce revolucionaria que combina la potencia del comercio electrónico tradicional con un sistema de inteligencia artificial emocionalmente consciente. Diseñada para ofrecer experiencias de usuario personalizadas y empáticas.
 
-### 🤖 **Sistema Multi-Modal de IA**
+## 🎯 Características Principales
 
-- **🧠 LUCIA** - Lógica Unificada de Comprensión e Interfaz Accesible (Mente Cognitiva)
-- **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación (Corazón Operativo)
-- **💖 ANA** - Analizador de Niveles Afectivos (Alma Emocional)
-- **🛠️ ALBA** - Aviso Logístico de Bloqueo y Anomalías (Sistema de Resiliencia)
+### 🤖 **Sistema Tri-Modal de IA**
 
-### 🛒 **Funcionalidades E-commerce & Admin**
+- **🧠 LUCIA** - Lógica Unificada de Comprensión e Interfaz Accesible
+- **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación
+- **💖 ANA** - Analizador de Niveles Afectivos
+- **📡 YOLI** - Yector Omnilingüe de Lenguajes Inyectables
 
-- Catálogo de productos inteligente con IA.
-- Interfaz altamente animada y responsiva (Framer Motion).
-- **Dashboard de Administración**: Gestión total de productos, usuarios y pedidos.
-- **Accesibilidad Avanzada**: Modos para TDAH, Epilepsia y Daltonismo.
+### 🛒 **Funcionalidades E-commerce**
+
+- Catálogo de productos inteligente
+- Carrito de compras dinámico
+- Proceso de checkout
+- Interfaz adaptable a las necesidades del usuario
 
 ## 📚 Documentación
 
 ### 📖 **Documentación Técnica** ([Ver en Markdown](./doc/markdown/))
 
-- [🏗️ Arquitectura del Sistema](./doc/markdown/arquitectura.md)
+- [🏗️ Arquitectura del Sistema](./doc/markdown/arquitectura.md) - Descripción detallada de la arquitectura
+- [📁 Estructura del Proyecto](./doc/markdown/estructura.md)
+- [⚙️ Guía de Instalación](./doc/markdown/instalacion.md) - Instrucciones de configuración
 - [✨ Catálogo de Animaciones](./doc/markdown/animaciones.md)
 - [👤 Avatar Virtual (Live2D)](./doc/markdown/avatar.md)
 - [📊 Dashboard de Administración](./doc/markdown/dashboard.md)
-- [⚙️ Guía de Instalación](./doc/markdown/instalacion.md)
+- [📋 README Principal](./doc/markdown/README.md) - Documentación general
 
 ### 📄 **Documentos en PDF** ([Ver en PDF](./doc/pdf/))
 
@@ -69,14 +73,17 @@ Es responsable de la gestión de procesos, coordinación entre módulos y manten
 import { appState, navigateTo } from "./modules/MARIA/context";
 ```
 
-## 💖 ANA - El Alma Emocional
-
 A.N.A. constituye la **capa emocional** de la IA.  
 Su función es detectar, interpretar y regular las expresiones emocionales en el avatar, manteniendo un equilibrio emocional natural y coherente.
 
+## 📡 YOLI - El Traductor Universal
+
+Y.O.L.I. actúa como el **motor de internacionalización (i18n) dinámico**.  
+Su función es inyectar en componentes y páginas el texto correspondiente de un archivo JSON específico para el idioma activo.
+
 ```typescript
 // Ejemplo de uso
-import { detectEmotionFromText } from "./modules/ANA/detector";
+import { t } from "./modules/YOLI/injector";
 ```
 
 ## 🌌 Integración General
@@ -116,24 +123,22 @@ npm run build
 
 ## 🌌 Integración General
 
-| Módulo | Rol Principal | Tipo de Procesamiento | Interacción |
-| :--- | :--- | :--- | :--- |
-| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico | Coordina y gestiona todos los módulos |
-| **L.U.C.I.A.** | Comprensión e interfaz accesible | Cognitivo / Lingüístico | Comunica la IA con el usuario |
-| **A.N.A.** | Análisis y regulación emocional | Afectivo / Adaptativo | Equilibra las emociones del sistema |
-| **A.L.B.A.** | Aviso Logístico de Bloqueo y Anomalías | Gestión de Errores | Provee feedback visual de anomalías |
+| Módulo         | Rol Principal                        | Tipo de Procesamiento   | Interacción                           |
+| :------------- | :----------------------------------- | :---------------------- | :------------------------------------ |
+| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico      | Coordina y gestiona todos los módulos |
+| **L.U.C.I.A.** | Comprensión e interfaz accesible     | Cognitivo / Lingüístico | Comunica la IA con el usuario         |
+| **A.N.A.**     | Análisis y regulación emocional      | Afectivo / Adaptativo   | Equilibra las emociones del sistema   |
+| **Y.O.L.I.**   | Inyección de lenguaje y traducción  | Contextual / Dinámico   | Adapta el idioma del sistema al usuario|
 
 ---
 
 ### 💫 Filosofía del Sistema
 
 > “La razón guía, la gestión equilibra y la emoción conecta.”
+>
+> Este tríptico de módulos conforma una IA con **mente, cuerpo y alma**, capaz de pensar con precisión, actuar con coherencia y sentir con empatía.
 
-Este ecosistema de módulos conforma una IA con **mente, cuerpo y alma**, capaz de pensar con precisión, actuar con coherencia y sentir con empatía.
-
-### 📁 Estructura del Proyecto
-
-Aurora sigue una arquitectura modular y escalable para facilitar el mantenimiento y la expansión:
+### Estructura del proyecto
 
 ```
 📦 Aurora/
@@ -169,13 +174,17 @@ Aurora sigue una arquitectura modular y escalable para facilitar el mantenimient
 │   │   │   ├── routes.ts       # Gestión dinámica de rutas y navegación
 │   │   │   ├── context.ts      # Estado global de la app y sesiones
 │   │   │   └── index.ts
+│   │   ├── ANA/                # Analizador de Niveles Afectivos 💗
+│   │   │   ├── detector.ts     # Detección emocional (texto, voz, patrones)
+│   │   │   ├── manager.ts      # Control y ajuste de estados emocionales
+│   │   │   ├── data/           # Diccionarios, perfiles emocionales, datasets
+│   │   │   └── index.ts
 │   │   │
-│   │   └── ANA/                # Analizador de Niveles Afectivos 💗
-│   │       ├── detector.ts     # Detección emocional (texto, voz, patrones)
-│   │       ├── manager.ts      # Control y ajuste de estados emocionales
-│   │       ├── data/           # Diccionarios, perfiles emocionales, datasets
-│   │       └── index.ts
+│   │   └── YOLI/               # Yector Omnilingüe de Lenguajes Inyectables 🌍
+│   │       ├── injector.ts     # Inyección de textos i18n
+│   │       └── data/           # Diccionarios JSON por idioma
 │   │
+│   ├── 📁 services/            # Conexión con APIs (backend, IA, pasarelas de pago)
 │   ├── 📁 services/            # Conexión con APIs (backend, IA, pasarelas de pago)
 │   │   ├── apiClient.ts
 │   │   ├── paymentService.ts

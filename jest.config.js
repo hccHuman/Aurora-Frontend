@@ -14,9 +14,10 @@ export default {
     testMatch: ["**/__tests__/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)"],
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
     moduleNameMapper: {
+        "^@/utils/envWrapper$": "<rootDir>/tests/mocks/envWrapper.cjs",
         "^@/(.*)$": "<rootDir>/src/$1",
     },
-    setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
     collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts", "!src/pages/**", "!src/**/*.astro"],
     transform: {
         "^.+\\.tsx?$": [
