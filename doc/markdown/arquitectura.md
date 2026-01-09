@@ -65,13 +65,53 @@ A.N.A. es el **alma emocional** de la IA: la responsable de que sus respuestas s
 
 ---
 
+## 📡 Y.O.L.I.
+
+### **Yector Omnilingüe de Lenguajes Inyectables**
+
+**Descripción:**  
+Y.O.L.I. actúa como el **motor de internacionalización (i18n) dinámico** del sistema.  
+Su función es inyectar en componentes y páginas el texto correspondiente de un archivo JSON específico para el idioma activo, permitiendo una experiencia multilingüe fluida y desacoplada del código.
+
+**Funciones principales:**
+
+- 💉 **Inyección de lenguaje:** carga y distribuye cadenas de texto desde diccionarios JSON según el contexto.
+- 🌍 **Soporte omnilingüe:** facilita la expansión a nuevos idiomas mediante el sistema de inyección dinámica.
+- 🧩 **Abstracción de contenido:** separa la lógica técnica del componente de los literales de texto, mejorando la mantenibilidad.
+- 🔄 **Sincronización en tiempo real:** permite cambiar el idioma de la interfaz sin recargas pesadas.
+
+**Propósito:**  
+Y.O.L.I. es el **traductor universal** de la IA: la encargada de asegurar que la voz de Aurora llegue a todos los usuarios, sin importar su idioma, de manera natural y eficiente.
+
+---
+
 ## 🌌 Integración General
 
-| Módulo         | Rol Principal                        | Tipo de Procesamiento   | Interacción                           |
-| :------------- | :----------------------------------- | :---------------------- | :------------------------------------ |
-| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico      | Coordina y gestiona todos los módulos |
-| **L.U.C.I.A.** | Comprensión e interfaz accesible     | Cognitivo / Lingüístico | Comunica la IA con el usuario         |
-| **A.N.A.**     | Análisis y regulación emocional      | Afectivo / Adaptativo   | Equilibra las emociones del sistema   |
+| Módulo | Rol Principal | Tipo de Procesamiento | Interacción |
+| :--- | :--- | :--- | :--- |
+| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico | Coordina y gestiona todos los módulos |
+| **L.U.C.I.A.** | Comprensión e interfaz accesible | Cognitivo / Lingüístico | Comunica la IA con el usuario |
+| **A.N.A.** | Análisis y regulación emocional | Afectivo / Adaptativo | Equilibra las emociones del sistema |
+| **Y.O.L.I.** | Inyección de lenguaje y traducción | Contextual / Dinámico | Adapta el idioma del sistema al usuario |
+| **A.L.B.A.** | Aviso Logístico de Bloqueo y Anomalías | Gestión de Errores | Provee feedback visual (Toasts) de errores |
+
+---
+
+## ☁️ Gestión de Estado Global (Jotai)
+
+Aurora utiliza **Jotai** para una gestión de estado atómica y eficiente. Esto permite que componentes desacoplados (como el Carrito, el Header y el Chatbot) reaccionen instantáneamente a cambios sin renderizados innecesarios.
+
+- `cartStore.ts`: Estado sincronizado de productos, cantidades y totales.
+- `uiStore.ts`: Control de visibilidad del chatbot, tema (oscuro/claro) y preferencias de accesibilidad.
+
+---
+
+## 🛠️ Aviso Logístico de Bloqueo y Anomalías (A.L.B.A.)
+
+A.L.B.A. es el subsistema encargado de la resiliencia del frontend. Captura errores de red, fallos en la IA o excepciones en los servicios y los traduce en notificaciones visuales (Toasts) para el usuario.
+
+- **Toast System**: Implementado en `ToastContainer.tsx`, asegura que los errores críticos sean visibles sin interrumpir el flujo del usuario.
+- **Jerarquía**: Se posiciona por encima de otros elementos (z-index optimizado) para garantizar su visibilidad en cualquier contexto.
 
 > “La razón guía, la gestión equilibra y la emoción conecta.”
 >
@@ -104,9 +144,14 @@ A.N.A. es el **alma emocional** de la IA: la responsable de que sus respuestas s
 │   │   ├── MARIA/              # Módulo Administrador y Redireccionador Interno de Aplicación
 │   │   │   ├── context.ts      # Estado global de la app y sesiones
 │   │   │   └── index.ts
+│   │   ├── ANA/                # Analizador de Niveles Afectivos
+│   │   │   ├── detector.ts     # Detección emocional (texto, voz, patrones)
+│   │   │   └── manager.ts      # Control y ajuste de estados emocionales
 │   │   │
-│   │       ├── detector.ts     # Detección emocional (texto, voz, patrones)
-│   │       ├── manager.ts      # Control y ajuste de estados emocionales
+│   │   ├── YOLI/               # Yector Omnilingüe de Lenguajes Inyectables
+│   │   │   ├── data/           # Diccionarios JSON por idioma
+│   │   │   └── injector.ts     # Lógica de inyección de textos
+│   │   │
 │   │   ├── paymentService.ts
 │   │   └── productService.ts
 │   │

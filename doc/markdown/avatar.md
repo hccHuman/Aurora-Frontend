@@ -30,11 +30,26 @@ Coloca nuevos archivos en `public/models/haru/runtime/` respetando la estructura
 3. Cargar el modelo con `await Live2DModel.from(modelPath)`. Este método descarga y parsea el `model3.json` y sus recursos relacionados.
 4. Escuchar el evento `model.once('load', ...)` para ejecutar tareas post-carga (detener motions, reset de expresión, detectar parámetros expuestos).
 5. Registrar el ticker necesario: `Live2DModel.registerTicker(Ticker)`. Esto enlaza la runtime de Live2D con el sistema de tiempo de PIXI.
+
+## 4) Posicionamiento y Escalado Adaptativo
+
+Para garantizar que el avatar se vea perfecto en cualquier dispositivo, se han implementado ajustes específicos de escala y posición en `VtuberLive2D.tsx`:
+
+### Configuraciones por Dispositivo:
+- **PC (Escritorio)**: El avatar se escala a un tamaño mayor (0.28 aprox) y se posiciona para mostrar desde la cabeza hasta el abdomen, centrado lateralmente.
+- **Tablets**: Ajuste intermedio de escala y posición vertical.
+- **Móviles**: El avatar se escala ligeramente menos y se ajusta su posición vertical para que la interfaz de chat no tape áreas críticas del rostro.
+
+### Sistema de Recorte (Clipping):
+En dispositivos móviles, para evitar que las piernas del modelo Live2D se vean "flotando" detrás del área de chat cuando este se abre, se aplica una máscara de recorte (`CSS clip-path` o contenedor con `overflow-hidden`).
+- **Función**: Corta visualmente el modelo a la altura de la cintura.
+- **Beneficio**: Mantiene la limpieza visual de la interfaz y evita solapamientos antiestéticos con el historial de mensajes.
+
 6. Añadir el modelo al `app.stage`, fijar `model.scale`, `model.x`, `model.y` y propiedades como `interactive` si se requiere.
 7. (Opcional) Añadir un `PIXI.Sprite` como fondo para estética.
 8. Añadir un `app.ticker` adicional que invoque `model.update(...)` como redundancia en entornos donde la integración automática no funcione.
 
-## 4) Lip-sync (cómo se mueve la boca)
+## 6) Lip-sync (cómo se mueve la boca)
 
 Explicación técnica:
 
@@ -70,7 +85,7 @@ Consejos prácticos:
 - Si la boca no responde, inspecciona `console.log` de parámetros detectados (el componente intentará listar parámetros expuestos al cargar).
 - Ajusta el factor de escala si la apertura es demasiado intensa (`0.9` por defecto funciona bien en varios modelos).
 
-## 5) Expresiones y motions: estructura y uso
+## 7) Expresiones y motions: estructura y uso
 
 - Expresiones (.exp3.json): describen combinaciones de parámetros para una expresión facial. Se aplican con `expressionManager.setExpression(url)`.
 - Motions (.motion3.json): contienen animaciones (parpadeos, movimientos corporales). Se reproducen con `motionManager.startMotion(url, group, priority)`; el componente normalmente detiene todas las motions antes de iniciar una nueva (`stopAllMotions`).
@@ -84,7 +99,7 @@ Buenas prácticas:
 - Nombres consistentes: usar convenciones claras (ej. `smile`, `neutral`, `haru_g_idle`) para que el código que solicita motions/expressions no necesite mapeos adicionales.
 - Validar que las rutas relativas dentro de `model3.json` y los assets coinciden con `public/models/...`.
 
-## 6) Integración con la IA y flujo de control
+## 8) Integración con la IA y flujo de control
 
 Flujo típico:
 
