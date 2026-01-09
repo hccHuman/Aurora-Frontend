@@ -1,0 +1,25 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ProfileView from "@/components/tsx/Profile/ProfileView";
+import LoginReader from "@/components/tsx/statement/loginReader";
+import UserOnly from "@/components/tsx/statement/UserOnly";
+
+const lang = "es";
+---
+
+<Layout
+  lang={lang}
+  title="Mi Perfil - HCC Shop"
+  description="Gestiona tu perfil y preferencias en HCC Shop"
+  canonicalUrl="https://miweb.com/es/account/profile"
+  previewImage="/assets/preview.png"
+  home={true}
+>
+  <!-- Authentication check -->
+  <LoginReader client:load />
+
+  <!-- Profile content -->
+  <UserOnly client:load>
+    <ProfileView client:only="react" lang={lang} />
+  </UserOnly>
+</Layout>
