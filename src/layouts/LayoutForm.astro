@@ -1,5 +1,6 @@
 ---
 import AccessibilityMenu from "@/components/tsx/AccessibilityMenu/AccessibilityMenu";
+import { t } from "@/modules/YOLI/injector";
 
 // src/layouts/Layout.astro
 const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = Astro.props;
@@ -84,6 +85,7 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
       <a
         href={`/${lang}/`}
         class="flex items-center text-slate-700 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 transition"
+        aria-label={t("header.aria.back", lang)}
       >
         <!-- Icono de flecha -->
         <svg
@@ -96,7 +98,7 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage } = 
         >
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Volver
+        {t("common.back", lang)}
       </a>
 
       <!-- Botón de cambio de tema / Menú Accesibilidad -->

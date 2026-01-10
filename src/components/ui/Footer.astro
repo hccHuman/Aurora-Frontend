@@ -1,5 +1,15 @@
 ---
+/**
+ * Footer Component
+ *
+ * Modern footer with legal information displayed in premium modals.
+ * Features improved typography, layout, and visual design.
+ *
+ * @param {string} lang - The current language code (e.g., "es", "en").
+ */
 const { lang = "es" } = Astro.props;
+
+import { t } from "@/modules/YOLI/injector";
 
 // IMPORT ESTÁTICO
 import TermsES from "../../content/legal/terms.es.md";
@@ -10,107 +20,160 @@ import CookiesES from "../../content/legal/cookies.es.md";
 import CookiesEN from "../../content/legal/cookies.en.md";
 
 // Seleccionamos según idioma
-const rendered = {
-  terms: lang === "es" ? TermsES : TermsEN,
-  privacy: lang === "es" ? PrivacyES : PrivacyEN,
-  cookies: lang === "es" ? CookiesES : CookiesEN,
-};
+const TermsComponent = lang === "es" ? TermsES : TermsEN;
+const PrivacyComponent = lang === "es" ? PrivacyES : PrivacyEN;
+const CookiesComponent = lang === "es" ? CookiesES : CookiesEN;
 
 const text = {
-  es: {
-    terms: "Términos y Condiciones",
-    privacy: "Política de Privacidad",
-    cookies: "Política de Cookies",
-    rights: "Todos los derechos reservados",
-  },
-  en: {
-    terms: "Terms & Conditions",
-    privacy: "Privacy Policy",
-    cookies: "Cookie Policy",
-    rights: "All rights reserved",
-  },
-}[lang];
+  rights: t("footer.rights", lang),
+  terms: t("footer.terms", lang),
+  privacy: t("footer.privacy", lang),
+  cookies: t("footer.cookies", lang),
+};
 ---
 
-<footer class="w-full bg-slate-900 text-white border-t border-slate-700 py-10 mt-16">
+<!-- Hidden content for legal documents -->
+<div id="legal-content-terms" class="hidden prose prose-invert max-w-none">
+  <TermsComponent />
+</div>
+<div id="legal-content-privacy" class="hidden prose prose-invert max-w-none">
+  <PrivacyComponent />
+</div>
+<div id="legal-content-cookies" class="hidden prose prose-invert max-w-none">
+  <CookiesComponent />
+</div>
+
+<footer
+  class="w-full bg-gradient-to-b from-slate-900 to-slate-950 text-white border-t border-slate-700/50 py-12 mt-16"
+>
   <div class="max-w-7xl mx-auto px-6">
-    <!-- TOP: 3 buttons -->
-    <div class="flex flex-wrap gap-6 justify-center text-sm font-medium">
-      <button data-panel="terms" class="footer-btn hover:text-red-400 transition">
-        {text.terms}
-      </button>
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <!-- Brand Section -->
+      <div class="flex flex-col gap-4">
+        <h3 class="text-xl font-bold text-slate-100">HCC Shop</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          {t("footer.brand_desc", lang)}
+        </p>
+      </div>
 
-      <button data-panel="privacy" class="footer-btn hover:text-red-400 transition">
-        {text.privacy}
-      </button>
+      <!-- Quick Links -->
+      <div class="flex flex-col gap-4">
+        <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-400">
+          {t("footer.quick_links", lang)}
+        </h4>
+        <div class="flex flex-col gap-2">
+          <a
+            href={`/${lang}/products/allproducts`}
+            class="text-slate-300 hover:text-red-400 transition-colors text-sm"
+          >
+            {t("header.products", lang)}
+          </a>
+          <a
+            href={`/${lang}/account/profile`}
+            class="text-slate-300 hover:text-red-400 transition-colors text-sm"
+          >
+            {t("header.profile", lang)}
+          </a>
+        </div>
+      </div>
 
-      <button data-panel="cookies" class="footer-btn hover:text-red-400 transition">
-        {text.cookies}
-      </button>
+      <!-- Legal Links -->
+      <div class="flex flex-col gap-4">
+        <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-400">
+          {t("footer.legal", lang)}
+        </h4>
+        <div class="flex flex-col gap-2">
+          <button
+            data-modal="terms"
+            class="legal-btn text-left text-slate-300 hover:text-red-400 transition-colors text-sm"
+          >
+            {text.terms}
+          </button>
+          <button
+            data-modal="privacy"
+            class="legal-btn text-left text-slate-300 hover:text-red-400 transition-colors text-sm"
+          >
+            {text.privacy}
+          </button>
+          <button
+            data-modal="cookies"
+            class="legal-btn text-left text-slate-300 hover:text-red-400 transition-colors text-sm"
+          >
+            {text.cookies}
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- COLLAPSIBLE PANELS -->
-    <div id="footer-panels" class="mt-6 space-y-4">
-      <!-- TERMS -->
-      <div id="panel-terms" class="footer-panel hidden">
-        <div
-          class="p-6 bg-slate-800 rounded-xl border border-slate-600 prose prose-invert max-w-none"
-        >
-          <h2 class="text-xl font-semibold mb-4">{text.terms}</h2>
-          <article>
-            <rendered.terms/>
-          </article>
-        </div>
-      </div>
+    <!-- Divider -->
+    <div class="h-px bg-slate-700/50 my-8"></div>
 
-      <!-- PRIVACY -->
-      <div id="panel-privacy" class="footer-panel hidden">
-        <div
-          class="p-6 bg-slate-800 rounded-xl border border-slate-600 prose prose-invert max-w-none"
-        >
-          <h2 class="text-xl font-semibold mb-4">{text.privacy}</h2>
-          <article>
-            <rendered.privacy/>
-          </article>
-        </div>
-      </div>
-
-      <!-- COOKIES -->
-      <div id="panel-cookies" class="footer-panel hidden">
-        <div
-          class="p-6 bg-slate-800 rounded-xl border border-slate-600 prose prose-invert max-w-none"
-        >
-          <h2 class="text-xl font-semibold mb-4">{text.cookies}</h2>
-          <article>
-            <rendered.cookies/>
-          </article>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div class="text-center">
+      <p class="text-slate-400 text-sm">
+        © {new Date().getFullYear()} HCC Shop — {text.rights}
+      </p>
     </div>
-
-    <!-- COPYRIGHT -->
-    <p class="text-center text-xs opacity-70 mt-10">
-      © {new Date().getFullYear()} HCC Shop — {text.rights}
-    </p>
   </div>
+</footer>
 
-  <!-- INLINE SCRIPT -->
-  <script is:inline>
-    const buttons = document.querySelectorAll(".footer-btn");
-    const panels = document.querySelectorAll(".footer-panel");
+<!-- Legal Modals (React component) - will be populated by script -->
+<div id="legal-modals-root"></div>
 
+<!-- Client-side script for modal handling -->
+<script>
+  import { createRoot } from "react-dom/client";
+  import { createElement } from "react";
+  import LegalModalsWrapper from "../tsx/Modal/LegalModalsWrapper";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Get the HTML content from hidden divs
+    const termsContent = document.getElementById("legal-content-terms")?.innerHTML || "";
+    const privacyContent = document.getElementById("legal-content-privacy")?.innerHTML || "";
+    const cookiesContent = document.getElementById("legal-content-cookies")?.innerHTML || "";
+
+    // Get titles from data attributes or default text
+    const termsTitle =
+      document.querySelector('[data-modal="terms"]')?.textContent || "Terms & Conditions";
+    const privacyTitle =
+      document.querySelector('[data-modal="privacy"]')?.textContent || "Privacy Policy";
+    const cookiesTitle =
+      document.querySelector('[data-modal="cookies"]')?.textContent || "Cookie Policy";
+
+    // Get current language from document
+    const currentLang = document.documentElement.lang || "es";
+
+    // Render the React component
+    const root = document.getElementById("legal-modals-root");
+    if (root) {
+      const reactRoot = createRoot(root);
+      reactRoot.render(
+        createElement(LegalModalsWrapper, {
+          termsTitle,
+          termsContent,
+          privacyTitle,
+          privacyContent,
+          cookiesTitle,
+          cookiesContent,
+          lang: currentLang,
+        })
+      );
+    }
+
+    // Attach event listeners to legal buttons
+    const buttons = document.querySelectorAll(".legal-btn");
     buttons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const target = "panel-" + btn.dataset.panel;
-
-        panels.forEach((p) => {
-          if (p.id === target) {
-            p.classList.toggle("hidden");
-          } else {
-            p.classList.add("hidden");
-          }
-        });
+        const modalType = (btn as any).dataset.modal;
+        if (modalType) {
+          window.dispatchEvent(
+            new CustomEvent("openLegalModal", {
+              detail: { type: modalType },
+            })
+          );
+        }
       });
     });
-  </script>
-</footer>
+  });
+</script>

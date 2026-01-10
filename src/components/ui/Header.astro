@@ -40,6 +40,8 @@ import AccessibilityMenu from "../tsx/AccessibilityMenu/AccessibilityMenu";
 import CartCount from "../tsx/Header/CartCount";
 const { lang, home, showSearch = false, searchCategoryId = null } = Astro.props;
 
+import { t } from "@/modules/YOLI/injector";
+
 import iconImg from "@/assets/icon.png";
 import accountImg from "@/assets/Icons/dark/account.png";
 import cartImg from "@/assets/Icons/dark/cart.png";
@@ -53,9 +55,9 @@ import cartImg from "@/assets/Icons/dark/cart.png";
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
     <!-- LOGO SECTION -->
     <a
-      href="/"
+      href={`/${lang}/`}
       class="flex items-center gap-2 font-bold text-xl tracking-wide hover:opacity-80 transition"
-      aria-label="Aurora Shop Home"
+      aria-label={t("header.home", lang)}
     >
       <Image
         src={iconImg}
@@ -73,12 +75,13 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         {
           home && (
             <a href={`/${lang}/`} class="hover:text-red-400 transition">
-              Inicio
+              {t("header.home", lang)}
             </a>
           )
         }
-        <a href={`/${lang}/products/allproducts`} class="hover:text-red-400 transition">Productos</a
-        >
+        <a href={`/${lang}/products/allproducts`} class="hover:text-red-400 transition">
+          {t("header.products", lang)}
+        </a>
       </nav>
 
       <div class="flex items-center gap-4">
@@ -88,7 +91,8 @@ import cartImg from "@/assets/Icons/dark/cart.png";
             <div role="search">
               <HeaderSearch
                 client:load
-                placeholder="Buscar productos"
+                placeholder={t("header.search_placeholder", lang)}
+                ariaLabel={t("header.aria.search", lang)}
                 categoryId={searchCategoryId}
               />
             </div>
@@ -99,7 +103,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         <div class="relative flex-shrink-0">
           <button
             id="account-toggle"
-            aria-label="Cuenta"
+            aria-label={t("header.aria.account", lang)}
             aria-expanded="false"
             class="hover:opacity-75 transition"
           >
@@ -131,7 +135,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         <div class="relative flex-shrink-0">
           <button
             id="cart-toggle"
-            aria-label="Carrito"
+            aria-label={t("header.aria.cart", lang)}
             aria-expanded="false"
             class="hover:opacity-75 transition relative"
           >
@@ -158,7 +162,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
               <h3
                 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2"
               >
-                CARRITO
+                {t("header.cart", lang)}
               </h3>
               <a
                 href={`/${lang}/products/checkout`}
@@ -179,7 +183,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
                   ><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path
                     d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg
                 >
-                <span>Ver carrito</span>
+                <span>{t("header.view_cart", lang)}</span>
               </a>
               <div class="h-px bg-slate-700/50 my-1 mx-2"></div>
               <a
@@ -204,7 +208,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
                     y1="10"
                     y2="10"></line></svg
                 >
-                <span>Finalizar compra</span>
+                <span>{t("header.checkout", lang)}</span>
               </a>
             </div>
           </div>
@@ -221,8 +225,11 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     <div class="flex items-center gap-4 md:hidden">
       <AccessibilityMenu client:load />
       {/* Mobile menu hamburger button */}
-      <button id="mobile-toggle" class="text-2xl" aria-label="Abrir menú" aria-expanded="false"
-        >☰</button
+      <button
+        id="mobile-toggle"
+        class="text-2xl"
+        aria-label={t("header.aria.open_menu", lang)}
+        aria-expanded="false">☰</button
       >
     </div>
   </div>
@@ -234,11 +241,11 @@ import cartImg from "@/assets/Icons/dark/cart.png";
   >
     {/* Quick links section */}
     <div class="flex items-center gap-4">
-      <p class="dark:text-slate-100">Enlaces rapidos:</p>
+      <p class="dark:text-slate-100">{t("header.quick_links", lang)}</p>
       {
         home && (
           <a href={`/${lang}/`} class="hover:text-red-400 transition">
-            Inicio
+            {t("header.home", lang)}
           </a>
         )
       }
@@ -246,7 +253,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         href={`/${lang}/products/allproducts`}
         class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
       >
-        Productos
+        {t("header.products", lang)}
       </a>
     </div>
 
@@ -254,7 +261,12 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     {
       showSearch && (
         <div role="search" class="w-full">
-          <HeaderSearch client:load placeholder="Buscar productos" categoryId={searchCategoryId} />
+          <HeaderSearch
+            client:load
+            placeholder={t("header.search_placeholder", lang)}
+            ariaLabel={t("header.aria.search", lang)}
+            categoryId={searchCategoryId}
+          />
         </div>
       )
     }
@@ -263,11 +275,11 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     <div class="relative mt-2">
       <button
         id="account-toggle-mobile"
-        aria-label="Cuenta"
+        aria-label={t("header.aria.account", lang)}
         aria-expanded="false"
         class="hover:bg-slate-800 bg-slate-900/50 backdrop-blur-sm transition-all w-full text-left py-3 px-4 border border-slate-700/50 rounded-xl text-slate-100 font-medium flex justify-between items-center"
       >
-        <span>Cuenta</span>
+        <span>{t("header.account", lang)}</span>
         <span class="opacity-50">▼</span>
       </button>
       <div
@@ -283,7 +295,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     <div class="relative mt-2">
       <button
         id="cart-toggle-mobile"
-        aria-label="Carrito"
+        aria-label={t("header.aria.cart", lang)}
         aria-expanded="false"
         class="hover:bg-slate-800 bg-slate-900/50 backdrop-blur-sm transition-all w-full text-left py-1.5 px-4 border border-slate-700/50 rounded-xl text-slate-100 font-medium"
       >
@@ -298,7 +310,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
           <h3
             class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2"
           >
-            CARRITO
+            {t("header.cart", lang)}
           </h3>
           <a
             href={`/${lang}/products/checkout`}
@@ -319,7 +331,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
               ><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"
               ></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg
             >
-            <span>Ver carrito</span>
+            <span>{t("header.view_cart", lang)}</span>
           </a>
           <div class="h-px bg-slate-700/50 my-1 mx-2"></div>
           <a
@@ -344,7 +356,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
                 y1="10"
                 y2="10"></line></svg
             >
-            <span>Finalizar compra</span>
+            <span>{t("header.checkout", lang)}</span>
           </a>
         </div>
       </div>
@@ -473,7 +485,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
       const target = e.target;
 
       // Don't close if clicking on search field
-      if (target.closest("input") || target.closest("button[aria-label='Buscar']")) {
+      if (target.closest("input") || target.closest("button[type='submit']")) {
         return;
       }
 
