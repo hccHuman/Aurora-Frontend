@@ -1,0 +1,108 @@
+{
+    "profile": {
+        "title": "Mi Perfil",
+        "subtitle": "Gestiona tu información personal y preferencias",
+        "edit": "Editar",
+        "save": "Guardar Cambios",
+        "cancel": "Cancelar",
+        "login_required": "Por favor, inicia sesión para ver tu perfil.",
+        "labels": {
+            "name": "Nombre",
+            "email": "Email",
+            "new_password": "Nueva Contraseña (opcional)",
+            "admin": "Administrador",
+            "account_info": "Información de la Cuenta",
+            "member_since": "Miembro desde",
+            "last_update": "Última actualización",
+            "quick_actions": "Acciones Rápidas",
+            "view_cart": "Ver Carrito",
+            "admin_dashboard": "Dashboard Admin",
+            "logout": "Cerrar Sesión"
+        },
+        "placeholders": {
+            "password_hint": "Dejar en blanco para no cambiar"
+        },
+        "errors": {
+            "password_invalid": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.",
+            "date_unavailable": "Fecha no disponible"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Inicia sesión",
+            "button": "Iniciar sesión",
+            "success": "¡Login exitoso! Redirigiendo… 💖",
+            "connected": "¡Conectado exitosamente! 💖",
+            "no_account": "¿No tienes cuenta?",
+            "register_here": "Regístrate aquí"
+        },
+        "register": {
+            "title": "Crear cuenta",
+            "button": "Registrarse",
+            "button_loading": "Creando cuenta...",
+            "success": "¡Cuenta creada con éxito! 🌸 Redirigiendo…",
+            "have_account": "¿tienes cuenta?",
+            "login_here": "Haz Login aquí"
+        },
+        "labels": {
+            "email": "Email",
+            "password": "Contraseña",
+            "confirm_password": "Repetir contraseña",
+            "name": "Nombre"
+        },
+        "errors": {
+            "invalid_name": "El nombre no es válido 💔",
+            "invalid_email": "El email no es válido 💔",
+            "invalid_password": "La contraseña debe tener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial 💔",
+            "passwords_dont_match": "Las contraseñas no coinciden 💔",
+            "unknown": "Error desconocido",
+            "unknown_register": "Error desconocido durante el registro"
+        }
+    },
+    "header": {
+        "home": "Inicio",
+        "products": "Productos",
+        "search_placeholder": "Buscar productos",
+        "account": "Cuenta",
+        "my_account": "MI CUENTA",
+        "profile": "Perfil",
+        "logout": "Cerrar Sesión",
+        "login": "Iniciar Sesión",
+        "cart": "CARRITO",
+        "view_cart": "Ver carrito",
+        "checkout": "Finalizar compra",
+        "quick_links": "Enlaces rápidos:",
+        "aria": {
+            "account": "Cuenta",
+            "cart": "Carrito",
+            "open_menu": "Abrir menú",
+            "search": "Buscar productos",
+            "back": "Volver"
+        }
+    },
+    "footer": {
+        "brand_desc": "Tu tienda online de confianza con los mejores productos y atención al cliente.",
+        "quick_links": "Enlaces Rápidos",
+        "legal": "Legal",
+        "rights": "Todos los derechos reservados",
+        "terms": "Términos y Condiciones",
+        "privacy": "Política de Privacidad",
+        "cookies": "Política de Cookies"
+    },
+    "common": {
+        "back": "Volver",
+        "close": "Cerrar"
+    },
+    "products": {
+        "list_title": "Productos de ",
+        "list_description": "Listado de productos de la categoría",
+        "no_products": "No hay productos en esta categoría 💔",
+        "category_not_found": "Categoría no encontrada 💔",
+        "view_details": "Ver detalles",
+        "add_to_cart": "Añadir al carrito",
+        "added": "¡Añadido!",
+        "loading_config": "Cargando configuración...",
+        "loading_products": "Cargando productos...",
+        "aria_add_to_cart": "Añadir {title} al carrito"
+    }
+}
