@@ -1,5 +1,16 @@
 import ApexCharts from "apexcharts";
 
+/**
+ * Initializes the ApexCharts instance for the Visitors Chart (Area chart with gradient).
+ * Features rotated X-axis labels and customized markers/tooltips.
+ *
+ * @param {HTMLElement} el - The DOM element where the chart will be rendered.
+ * @param {Object} [data] - The initial series and categories for the chart.
+ * @param {any[]} [data.series] - Initial visitor data series.
+ * @param {string[]} [data.categories] - Initial X-axis categories.
+ * @param {boolean} [data.darkMode] - Initial dark mode state (defaults to false).
+ * @returns {Object | null} An object with `update` and `destroy` methods, or null if data is insufficient.
+ */
 export default function initVisitorsChart(
   el: HTMLElement,
   data?: { series?: any[]; categories?: string[]; darkMode?: boolean }

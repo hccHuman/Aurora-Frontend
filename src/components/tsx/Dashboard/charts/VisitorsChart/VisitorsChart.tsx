@@ -3,6 +3,16 @@ import initVisitorsChart from "./VisitorsChart.client";
 import { fetchVisitorsStats } from "@/services/dashboardService";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
 
+/**
+ * VisitorsChart Component
+ *
+ * Visualizes the history of site visitors using an area chart.
+ * Fetches data from `dashboardService` and dynamically tracks the latest visitor count.
+ * Integrates with `VisitorsChart.client` for theme-compatible ApexCharts rendering and gradient fill effects.
+ * Includes a stylized overlay showing the most recent visitor statistics.
+ *
+ * @component
+ */
 const VisitorsChart: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<any | null>(null);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Category } from "@/models/dashboardProps/DashboardCategoriesProps";
 import {
   fetchCategories,
@@ -9,6 +10,16 @@ import {
 import Pagination from "@/components/tsx/Dashboard/ui/Pagination";
 import { getResponsivePageSize } from "@/services/deviceService";
 
+/**
+ * CategoryTable Component
+ *
+ * Provides a management interface for product categories in the dashboard.
+ * Supports CRUD operations: fetching, creating, updating, and deleting categories.
+ * Integrates with `dashboardCategoriesService` for data persistence.
+ * Features responsive pagination and framer-motion animations for row transitions.
+ *
+ * @component
+ */
 export default function CategoryTable() {
   const [items, setItems] = useState<Category[]>([]);
   const [page, setPage] = useState(1);
@@ -35,6 +46,13 @@ export default function CategoryTable() {
     loadCategories(page, pageSize);
   }, [page, pageSize]);
 
+  /**
+   * Loads a paginated list of categories from the server.
+   * Maps `img_url` to `img` for internal component consistency.
+   *
+   * @param {number} currentPage - The page number to fetch.
+   * @param {number} size - The number of categories per page.
+   */
   async function loadCategories(currentPage: number, size: number) {
     setLoading(true);
     const res = await fetchCategories(currentPage, size);
@@ -51,6 +69,11 @@ export default function CategoryTable() {
   }
 
   /* ✏️ Start editing */
+  /**
+   * Initializes the editing state for a specific category.
+   *
+   * @param {Category} c - The category object to edit.
+   */
   function onStartEdit(c: Category) {
     setEditingId(c.id);
     setDraftName(c.nombre);
@@ -58,6 +81,9 @@ export default function CategoryTable() {
   }
 
   /* ✚ Crear nueva categoría */
+  /**
+   * Prepares the interface for creating a new category.
+   */
   function onStartCreate() {
     setEditingId("new");
     setDraftName("");
@@ -65,6 +91,12 @@ export default function CategoryTable() {
   }
 
   /* 💾 Save category */
+  /**
+   * Persists changes to a category or creates a new one.
+   * Handles both creation (`c` is null) and updates (`c` is provided).
+   *
+   * @param {Category | null} c - The category to update, or null if creating a new one.
+   */
   async function onSave(c: Category | null) {
     if (c) {
       // Actualización
@@ -94,6 +126,11 @@ export default function CategoryTable() {
   }
 
   /* 🗑 Delete */
+  /**
+   * Deletes a category by its ID.
+   *
+   * @param {string} id - The unique identifier of the category to delete.
+   */
   async function onDelete(id: string) {
     await deleteCategory(id);
     setItems((prev) => prev.filter((c) => c.id !== id));
@@ -131,123 +168,138 @@ export default function CategoryTable() {
                 </td>
               </tr>
             ) : (
-              items.map((c) => (
-                <tr key={c.id} className="border-t dark:border-slate-700">
-                  <td className="p-2 text-sm">{c.id}</td>
+              <AnimatePresence mode="popLayout">
+                {items.map((c, idx) => (
+                  <motion.tr
+                    key={c.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.2, delay: idx * 0.04 }}
+                    className="border-t dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
+                    <td className="p-2 text-sm">{c.id}</td>
 
-                  <td className="p-2 text-sm">
-                    {editingId === c.id ? (
+                    <td className="p-2 text-sm">
+                      {editingId === c.id ? (
+                        <input
+                          value={draftName}
+                          onChange={(e) => setDraftName(e.target.value)}
+                          className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
+                        />
+                      ) : (
+                        c.nombre
+                      )}
+                    </td>
+
+                    <td className="p-2 text-sm">
+                      {editingId === c.id ? (
+                        <input
+                          value={draftImg}
+                          onChange={(e) => setDraftImg(e.target.value)}
+                          className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
+                          placeholder="Image URL"
+                        />
+                      ) : c.img ? (
+                        <img
+                          src={c.img}
+                          alt={c.nombre}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                      ) : null}
+                    </td>
+
+                    <td className="p-2 text-sm">
+                      {c.actualizado_en ? new Date(c.actualizado_en).toLocaleString() : "-"}
+                    </td>
+
+                    <td className="p-2 text-sm">
+                      {editingId === c.id ? (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => onSave(c)}
+                            className="px-2 py-1 rounded-md bg-blue-600 text-white text-sm"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingId(null)}
+                            className="px-2 py-1 rounded-md bg-gray-200 dark:bg-slate-700 text-sm"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => onStartEdit(c)}
+                            className="px-2 py-1 rounded-md bg-indigo-600 text-white text-sm"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => onDelete(c.id)}
+                            className="px-2 py-1 rounded-md bg-red-600 text-white text-sm"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </motion.tr>
+                ))}
+
+                {/* Fila de creación */}
+                {editingId === "new" && (
+                  <motion.tr
+                    key="new-category"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="bg-gray-50 dark:bg-slate-800"
+                  >
+                    <td className="p-2 text-sm">-</td>
+                    <td className="p-2">
                       <input
                         value={draftName}
                         onChange={(e) => setDraftName(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
+                        placeholder="Category name"
                       />
-                    ) : (
-                      c.nombre
-                    )}
-                  </td>
-
-                  <td className="p-2 text-sm">
-                    {editingId === c.id ? (
+                    </td>
+                    <td className="p-2">
                       <input
                         value={draftImg}
                         onChange={(e) => setDraftImg(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
                         placeholder="Image URL"
                       />
-                    ) : c.img ? (
-                      <img
-                        src={c.img}
-                        alt={c.nombre}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
-                    ) : null}
-                  </td>
-
-                  <td className="p-2 text-sm">
-                    {c.actualizado_en ? new Date(c.actualizado_en).toLocaleString() : "-"}
-                  </td>
-
-                  <td className="p-2 text-sm">
-                    {editingId === c.id ? (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => onSave(c)}
-                          className="px-2 py-1 rounded-md bg-blue-600 text-white text-sm"
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="px-2 py-1 rounded-md bg-gray-200 dark:bg-slate-700 text-sm"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => onStartEdit(c)}
-                          className="px-2 py-1 rounded-md bg-indigo-600 text-white text-sm"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => onDelete(c.id)}
-                          className="px-2 py-1 rounded-md bg-red-600 text-white text-sm"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-
-            {/* Fila de creación */}
-            {editingId === "new" && (
-              <tr className="bg-gray-50 dark:bg-slate-800">
-                <td className="p-2 text-sm">-</td>
-                <td className="p-2">
-                  <input
-                    value={draftName}
-                    onChange={(e) => setDraftName(e.target.value)}
-                    className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
-                    placeholder="Category name"
-                  />
-                </td>
-                <td className="p-2">
-                  <input
-                    value={draftImg}
-                    onChange={(e) => setDraftImg(e.target.value)}
-                    className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
-                    placeholder="Image URL"
-                  />
-                  {draftImg && (
-                    <img
-                      src={draftImg}
-                      alt="Preview"
-                      className="w-16 h-16 object-cover rounded-md mt-1"
-                    />
-                  )}
-                </td>
-                <td className="p-2">-</td>
-                <td className="p-2 flex gap-2">
-                  <button
-                    onClick={() => onSave(null)}
-                    className="px-2 py-1 rounded-md bg-green-600 text-white text-sm"
-                  >
-                    Add
-                  </button>
-                  <button
-                    onClick={() => setEditingId(null)}
-                    className="px-2 py-1 rounded-md bg-gray-200 dark:bg-slate-700 text-sm"
-                  >
-                    Cancel
-                  </button>
-                </td>
-              </tr>
+                      {draftImg && (
+                        <img
+                          src={draftImg}
+                          alt="Preview"
+                          className="w-16 h-16 object-cover rounded-md mt-1"
+                        />
+                      )}
+                    </td>
+                    <td className="p-2">-</td>
+                    <td className="p-2 flex gap-2">
+                      <button
+                        onClick={() => onSave(null)}
+                        className="px-2 py-1 rounded-md bg-green-600 text-white text-sm"
+                      >
+                        Add
+                      </button>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="px-2 py-1 rounded-md bg-gray-200 dark:bg-slate-700 text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </td>
+                  </motion.tr>
+                )}
+              </AnimatePresence>
             )}
           </tbody>
         </table>

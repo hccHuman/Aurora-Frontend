@@ -1,5 +1,14 @@
 import ApexCharts from "apexcharts";
 
+/**
+ * Initializes the ApexCharts instance for the New Products Chart (Bar chart).
+ *
+ * @param {HTMLElement} el - The DOM element to render the chart in.
+ * @param {Object} [data] - Optional initial series and categories.
+ * @param {any[]} [data.series] - Initial data series.
+ * @param {string[]} [data.categories] - Initial X-axis categories.
+ * @returns {Object} An object with `update` and `destroy` methods.
+ */
 export default function initNewProductsChart(
   el: HTMLElement,
   data?: {

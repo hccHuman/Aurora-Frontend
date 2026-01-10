@@ -1,5 +1,16 @@
 import ApexCharts from "apexcharts";
 
+/**
+ * Initializes the ApexCharts instance for the Traffic By Device Chart (Donut chart).
+ * Features custom label formatting, percentage calculations in the legend, and theme-aware styling.
+ *
+ * @param {HTMLElement} el - The DOM element to render the chart in.
+ * @param {Object} [data] - Initial data and theme configuration.
+ * @param {number[]} [data.series] - Traffic counts for each device.
+ * @param {string[]} [data.labels] - Device type labels.
+ * @param {boolean} [data.darkMode] - Initial theme state.
+ * @returns {Object} An object providing `update` and `destroy` methods.
+ */
 export default function initTrafficByDeviceChart(
   el: HTMLElement,
   data?: { series?: number[]; labels?: string[]; darkMode?: boolean }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Product } from "@/models/dashboardProps/DashboardProductProps";
 import {
   fetchProducts,
@@ -11,10 +12,20 @@ import Pagination from "@/components/tsx/Dashboard/ui/Pagination";
 import { getResponsivePageSize } from "@/services/deviceService";
 
 interface Category {
-  id: number;
+  id: string | number;
   nombre: string;
 }
 
+/**
+ * ProductsTable Component
+ *
+ * Provides a management interface for products in the dashboard.
+ * Supports CRUD operations: fetching, creating, updating, and deleting products.
+ * Includes category integration for product classification.
+ * Features a dynamic creation row, row-level editing, responsive pagination, and animations.
+ *
+ * @component
+ */
 export default function ProductsTable() {
   const [items, setItems] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -31,7 +42,7 @@ export default function ProductsTable() {
   const [draftPrice, setDraftPrice] = useState<string | number>("");
   const [draftStock, setDraftStock] = useState<string | number>("");
   const [draftImg, setDraftImg] = useState("");
-  const [draftCategory, setDraftCategory] = useState<number>(1);
+  const [draftCategory, setDraftCategory] = useState<string | number>(1);
 
   /* 📐 Responsive */
   useEffect(() => {
@@ -49,6 +60,12 @@ export default function ProductsTable() {
     loadCategories();
   }, [page, pageSize]);
 
+  /**
+   * Loads a paginated list of products from the server.
+   *
+   * @param {number} p - The page number to fetch.
+   * @param {number} size - The number of products per page.
+   */
   async function loadProducts(p: number, size: number) {
     setLoading(true);
     const res = await fetchProducts(p, size);
@@ -59,10 +76,18 @@ export default function ProductsTable() {
     setLoading(false);
   }
 
+  /**
+   * Fetches the list of all categories for product classification.
+   * Defaults to a "Default" category if fetching fails.
+   */
   async function loadCategories() {
     try {
       const res = await fetchCategories();
-      setCategories(res.data ?? []);
+      if (res && res.data) {
+        setCategories(res.data);
+      } else {
+        setCategories([{ id: 1, nombre: "Default" }]);
+      }
     } catch (e) {
       console.error("Failed to load categories", e);
       setCategories([{ id: 1, nombre: "Default" }]);
@@ -70,6 +95,9 @@ export default function ProductsTable() {
   }
 
   /* ➕ CREATE */
+  /**
+   * Initializes the interface for creating a new product.
+   */
   function onStartCreate() {
     setIsCreating(true);
     setEditingId(null);
@@ -81,6 +109,9 @@ export default function ProductsTable() {
     setDraftCategory(1);
   }
 
+  /**
+   * Persists a new product to the server and refreshes the list.
+   */
   async function onCreate() {
     await saveProduct({
       nombre: draftName,
@@ -97,6 +128,11 @@ export default function ProductsTable() {
   }
 
   /* ✏️ EDIT */
+  /**
+   * Initializes the editing state for a specific product.
+   *
+   * @param {Product} p - The product object to edit.
+   */
   function onStartEdit(p: Product) {
     setEditingId(p.id);
     setIsCreating(false);
@@ -108,6 +144,11 @@ export default function ProductsTable() {
     setDraftCategory(p.product_category);
   }
 
+  /**
+   * Persists changes to an existing product and refreshes the list.
+   *
+   * @param {Product} p - The product object containing updated data.
+   */
   async function onSave(p: Product) {
     await saveProductUpdate({
       id: p.id,
@@ -125,6 +166,11 @@ export default function ProductsTable() {
   }
 
   /* 🗑 DELETE */
+  /**
+   * Deletes a product by its ID and refreshes the list.
+   *
+   * @param {string} id - The unique identifier of the product to delete.
+   */
   async function onDelete(id: string) {
     await deleteProduct(id);
     loadProducts(page, pageSize);
@@ -167,9 +213,15 @@ export default function ProductsTable() {
                 </td>
               </tr>
             ) : (
-              <>
+              <AnimatePresence mode="popLayout">
                 {isCreating && (
-                  <tr className="border-t dark:border-slate-700 bg-green-50 dark:bg-slate-800/40">
+                  <motion.tr
+                    key="create-row"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="border-t dark:border-slate-700 bg-green-50 dark:bg-slate-800/40"
+                  >
                     <td className="p-2">-</td>
                     <td className="p-2">
                       <input
@@ -235,11 +287,18 @@ export default function ProductsTable() {
                         Cancel
                       </button>
                     </td>
-                  </tr>
+                  </motion.tr>
                 )}
 
-                {items.map((p) => (
-                  <tr key={p.id} className="border-t dark:border-slate-700">
+                {items.map((p, idx) => (
+                  <motion.tr
+                    key={p.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.2, delay: idx * 0.03 }}
+                    className="border-t dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
                     <td className="p-2 text-sm">{p.id}</td>
                     <td className="p-2 text-sm">
                       {editingId === p.id ? (
@@ -264,24 +323,24 @@ export default function ProductsTable() {
                       )}
                     </td>
                     <td className="p-2 text-sm">{editingId === p.id ? (
-                        <input
-                          value={draftPrice}
-                          onChange={(e) => setDraftPrice(e.target.value)}
-                          className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
-                        />
-                      ) : (
-                        `${p.precio} €`
-                      )}
+                      <input
+                        value={draftPrice}
+                        onChange={(e) => setDraftPrice(e.target.value)}
+                        className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
+                      />
+                    ) : (
+                      `${p.precio} €`
+                    )}
                     </td>
                     <td className="p-2 text-sm">{editingId === p.id ? (
-                        <input
-                          value={draftStock}
-                          onChange={(e) => setDraftStock(e.target.value)}
-                          className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
-                        />
-                      ) : (
-                        p.stock
-                      )}
+                      <input
+                        value={draftStock}
+                        onChange={(e) => setDraftStock(e.target.value)}
+                        className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
+                      />
+                    ) : (
+                      p.stock
+                    )}
                     </td>
                     <td className="p-2 text-sm">
                       {editingId === p.id ? (
@@ -350,9 +409,9 @@ export default function ProductsTable() {
                         </>
                       )}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
-              </>
+              </AnimatePresence>
             )}
           </tbody>
         </table>

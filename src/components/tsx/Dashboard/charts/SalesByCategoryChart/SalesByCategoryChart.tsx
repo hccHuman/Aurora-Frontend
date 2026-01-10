@@ -3,6 +3,16 @@ import initSalesByCategoryChart from "./SalesByCategoryChart.client";
 import { fetchSalesByCategoryStats } from "@/services/dashboardService";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
 
+/**
+ * SalesByCategoryChart Component
+ *
+ * Displays a bar chart visualizing sales distribution across different product categories.
+ * Fetches data from `dashboardService` and dynamically calculates the top-performing category.
+ * Integrates with `SalesByCategoryChart.client` for theme-aware ApexCharts management.
+ * Supports real-time theme switching (dark/light mode).
+ *
+ * @component
+ */
 const SalesByCategoryChart: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<any | null>(null);

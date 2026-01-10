@@ -27,6 +27,7 @@
  * }
  */
 export interface CategoryCard {
+  id?: number | string;
   lang: string;
   title: string;
   img: string;

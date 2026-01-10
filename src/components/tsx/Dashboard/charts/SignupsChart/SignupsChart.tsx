@@ -3,6 +3,16 @@ import initSignupsChart from "./SignupsChart.client";
 import { fetchSignupsStats } from "@/services/dashboardService";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
 
+/**
+ * SignupsChart Component
+ *
+ * Visualizes the history of user registrations through a bar chart.
+ * Fetches signup data from `dashboardService` based on a selectable time range.
+ * Calculates and displays the total number of signups in a stylized overlay.
+ * Integrates with `SignupsChart.client` for theme-compatible ApexCharts rendering.
+ *
+ * @component
+ */
 const SignupsChart: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<any | null>(null);
