@@ -1,7 +1,7 @@
 ---
 /**
  * Main Layout Component
- * 
+ *
  * This is the root layout wrapper for all pages in the application.
  * Responsibilities:
  * - SEO metadata handling (Open Graph, Twitter Cards, canonical URLs)
@@ -14,9 +14,20 @@ import Header from "@/components/ui/Header.astro";
 import Footer from "@/components/ui/Footer.astro";
 import LoginReader from "@/components/tsx/statement/loginReader";
 import ProductModalWrapper from "@/components/tsx/Modal/ProductModalWrapper";
+import ToastContainer from "@/modules/ALBA/components/ToastContainer";
 
 // Destructure props: language, titles, URLs, and preview image for SEO
-const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage, home, showSearch = false, searchCategoryId = null } = Astro.props;
+const {
+  lang,
+  title,
+  metaTitle,
+  metaDescription,
+  canonicalUrl,
+  previewImage,
+  home,
+  showSearch = false,
+  searchCategoryId = null,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -60,31 +71,84 @@ const { lang, title, metaTitle, metaDescription, canonicalUrl, previewImage, hom
        * Prevents flash of unstyled content (FOUC) when switching themes
        */
       (function () {
-        // Check localStorage for saved theme preference
+        // --- Theme (Light/Dark) ---
         const theme = localStorage.getItem("theme");
-        // Check system color scheme preference (OS dark mode setting)
         const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        // Determine if dark mode should be enabled
-        // Priority: saved theme > system preference > light mode
         const shouldBeDark = theme === "dark" || (theme === null && systemDark);
 
-        // Apply dark class to HTML element if needed
         if (shouldBeDark) {
           document.documentElement.classList.add("dark");
         } else {
           document.documentElement.classList.remove("dark");
         }
+
+        // --- Accessibility Modes (ADHD & Epilepsy) ---
+        if (localStorage.getItem("mode-epilepsy") === "true") {
+          document.documentElement.classList.add("mode-epilepsy");
+        }
+        if (localStorage.getItem("mode-adhd") === "true") {
+          document.documentElement.classList.add("mode-adhd");
+        }
+
+        // --- CVD Mode (Color Vision Deficiency) ---
+        const cvdMode = localStorage.getItem("cvd-mode");
+        const validCvdModes = [
+          "cvd-protanopia",
+          "cvd-deuteranopia",
+          "cvd-tritanopia",
+          "cvd-achromatopsia",
+        ];
+
+        document.documentElement.classList.remove(...validCvdModes);
+
+        if (cvdMode && validCvdModes.includes(cvdMode)) {
+          document.documentElement.classList.add(cvdMode);
+        }
       })();
     </script>
   </head>
   <body
-    class="bg-sky-50 dark:bg-slate-800 text-slate-900 dark:text-slate-50 transition-colors duration-300 h-fit"
+    class="bg-sky-50 dark:bg-slate-800 text-slate-900 dark:text-slate-50 transition-colors duration-300 h-fit overflow-x-hidden"
   >
-    <Header cartCount={3} lang={lang} home={home} showSearch={showSearch} searchCategoryId={searchCategoryId} />
-    <slot />
+    <Header
+      cartCount={3}
+      lang={lang}
+      home={home}
+      showSearch={showSearch}
+      searchCategoryId={searchCategoryId}
+    />
+    <main class="flex-1 flex flex-col pt-4 animate-pageChange">
+      <slot />
+    </main>
     <Footer lang={lang} />
     <LoginReader client:load />
     <!-- Global product modal wrapper: mounts on client, exposes openProductModal(id) -->
     <ProductModalWrapper client:load />
+    <ToastContainer client:load />
+
+    <!-- SVG Filters for Color Vision Deficiency (CVD) -->
+    <svg style="display: none;">
+      <!-- Protanopia: Red-blindness simulation -->
+      <filter id="protanopia-filter">
+        <feColorMatrix
+          type="matrix"
+          values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0"
+        ></feColorMatrix>
+      </filter>
+      <!-- Deuteranopia: Green-blindness simulation -->
+      <filter id="deuteranopia-filter">
+        <feColorMatrix
+          type="matrix"
+          values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0"
+        ></feColorMatrix>
+      </filter>
+      <!-- Tritanopia: Blue-blindness simulation -->
+      <filter id="tritanopia-filter">
+        <feColorMatrix
+          type="matrix"
+          values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0"
+        ></feColorMatrix>
+      </filter>
+    </svg>
   </body>
 </html>
