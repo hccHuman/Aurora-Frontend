@@ -7,6 +7,15 @@ import { searchStateAtom } from '@/store/searchStore';
 import ProductCardComponent from "../ProductCard/ProductCardComponent";
 import type { Product, AllProductsListProps } from "@/models/EcommerceProps/ProductsProps";
 
+/**
+ * AllProductsListComponent Component
+ *
+ * Displays a paginated grid of all products in the store.
+ * Integrates with the global search state to display filtered results when a search is active.
+ * Handles responsive page sizing and client-side initialization to avoid hydration mismatches.
+ *
+ * @component
+ */
 export default function AllProductsListComponent({
   lang = "es",
   onOpenModal,
@@ -35,6 +44,7 @@ export default function AllProductsListComponent({
     try {
       const res = await fetchPaginatedProducts(pageToLoad, size);
       const data = res?.data || [];
+      console.log('DEBUG PRODUCTS:', data); // Debugging category_id
       const totalPages = res?.totalPages ?? 1;
 
       setProducts(data);
@@ -96,6 +106,7 @@ export default function AllProductsListComponent({
             description={p.descripcion}
             price={p.precio}
             img={p.img_url}
+            category_id={p.product_category}
             onOpenModal={onOpenModal}
           />
         ))}
