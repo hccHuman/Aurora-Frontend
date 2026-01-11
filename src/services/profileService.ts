@@ -5,7 +5,7 @@ import type { User } from '@/models/dashboardProps/DashboardUsersProps';
 /** Fetch the currently authenticated user's profile */
 export async function fetchUserProfile(): Promise<User | null> {
     try {
-        const endpoint = `${PUBLIC_API_URL}/api/users/profile`;
+        const endpoint = `${PUBLIC_API_URL}/users/profile`;
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -24,7 +24,7 @@ export async function fetchUserProfile(): Promise<User | null> {
 /** Update the currently authenticated user's profile */
 export async function updateUserProfile(data: Partial<User>): Promise<User | null> {
     try {
-        const endpoint = `${PUBLIC_API_URL}/api/users/update`;
+        const endpoint = `${PUBLIC_API_URL}/users/update`;
         const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

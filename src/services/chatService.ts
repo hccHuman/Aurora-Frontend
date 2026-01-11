@@ -5,7 +5,8 @@
  * Sends user messages and receives AI responses with error handling.
  */
 
-import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
+import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
 /**
  * Send a user message to the Aurora chatbot and receive a response
@@ -20,30 +21,28 @@ import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
  */
 export async function fetchBackendResponse(message: string) {
   try {
-    // Get API URL from environment (browser or server-side)
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    // TEST TRIGGER: Re-enabled for verifying UI Fix
+    if (message === "testerror") {
+      const mockError = { status: 400, code: 642, error: "Simulated Backend Error via Magic Word" };
+      const { handleInternalError } = await import("@/modules/ALBA/ErrorHandler");
+      handleInternalError(mockError);
+      throw new Error(mockError.error);
+    }
 
+    // Get API URL from environment (browser or server-side)
+    const apiUrl = PUBLIC_API_URL;
     // Construct endpoint for Aurora chat messages
     const endpoint = `${apiUrl}/aurora/chats`;
 
-    // Send POST request with user message
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
-
-    // Check for successful response
-    if (!res.ok) {
-      throw new Error(`Backend error: ${res.status}`);
-    }
+    // Send POST request with user message using ALBA Client
+    // AlbaClient handles error interception and dispatching (Toasts)
+    const res = await AlbaClient.post(endpoint, { message });
 
     // Parse and return chatbot response
     return await res.json();
   } catch (error: any) {
-    // Log error with ALBA error handler (code 800 = service timeout/unavailable)
-    handleInternalError("800", error.message || error);
-    // Return fallback message when chat service is unavailable
+    // Error has already been logged and displayed by ALBA Client.
+    // We simply return the fallback message to keep the chat interface functional.
     return { text: "Sorry, I cannot connect to the server 😔" };
   }
 }

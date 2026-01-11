@@ -7,6 +7,7 @@
 
 import type { PaginatedProducts } from "@/models/EcommerceProps/ProductsProps";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
+import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
 /**
  * Fetch all products for a specific category
@@ -25,7 +26,7 @@ export async function fetchProductsByCategory(id: string | number) {
 
   try {
     // Get API URL from environment configuration
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
 
     // Construct endpoint for category products
     const endpoint = `${apiUrl}/products/category/${categoryId}`;
@@ -50,7 +51,7 @@ export async function fetchProductsByCategory(id: string | number) {
     return Array.isArray(data.data) ? data.data : [data.data];
   } catch (error: any) {
     // Log error with ALBA error handler (code 801 = external GET request error)
-    handleInternalError("801", error.message || error);
+    handleInternalError(error);
     // Return empty array as fallback to prevent app crashes
     return [];
   }
@@ -71,7 +72,7 @@ export async function getProductById(id: string | number) {
 
   try {
     // Load API URL from env
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
 
     if (!apiUrl) {
       throw new Error("API URL missing from environment variables");
@@ -98,14 +99,14 @@ export async function getProductById(id: string | number) {
     return data?.data || null;
   } catch (error: any) {
     // Log with ALBA
-    handleInternalError("802", error.message || error); // 802 = GET by ID error
+    handleInternalError(error); // 802 = GET by ID error
     return null; // prevent app crash
   }
 }
 
 export async function fetchPaginatedProducts(page: number = 1, pageSize: number = 5): Promise<PaginatedProducts> {
   try {
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
 
     const res = await fetch(`${apiUrl}/products/paginated?page=${page}&pageSize=${pageSize}`, {
       method: "GET",
@@ -126,7 +127,7 @@ export async function fetchPaginatedProducts(page: number = 1, pageSize: number 
       hasPrev: json.hasPrev ?? false,
     };
   } catch (error: any) {
-    handleInternalError("802", error.message || error);
+    handleInternalError(error);
     console.error("Error en fetchPaginatedProducts:", error);
 
     return {
@@ -149,7 +150,7 @@ export async function fetchPaginatedProductsByCategory(
   pageSize: number = 5
 ): Promise<PaginatedProducts> {
   try {
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
 
     const res = await fetch(
       `${apiUrl}/products/category/${categoryId}?page=${page}&pageSize=${pageSize}`,
@@ -174,7 +175,7 @@ export async function fetchPaginatedProductsByCategory(
       hasPrev: json.hasPrev ?? false,
     };
   } catch (error: any) {
-    handleInternalError("802", error.message || error);
+    handleInternalError(error);
     console.error("Error en fetchPaginatedProductsByCategory:", error);
 
     return {
@@ -197,7 +198,7 @@ export async function searchProducts(
   pageSize: number = 5
 ): Promise<{ success: boolean; data: any[]; total?: number; totalPages?: number; hasNextPage?: boolean; hasPrevPage?: boolean } | null> {
   try {
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
     if (!apiUrl) throw new Error("API URL not configured");
 
     // Basic sanitization for query string
@@ -213,7 +214,8 @@ export async function searchProducts(
     const json = await res.json();
     return json;
   } catch (error: any) {
-    handleInternalError("803", error.message || error); // 803 = search error
+    handleInternalError(error);
+    // 803 = search error
     console.error("Error en searchProducts:", error);
     return null;
   }
@@ -230,7 +232,7 @@ export async function searchProductsByCategory(
   pageSize: number = 5
 ): Promise<{ success: boolean; data: any[]; total?: number; totalPages?: number; hasNextPage?: boolean; hasPrevPage?: boolean } | null> {
   try {
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
     if (!apiUrl) throw new Error("API URL not configured");
 
     const sanitized = encodeURIComponent(String(searchTerm).trim());
@@ -246,7 +248,8 @@ export async function searchProductsByCategory(
     const json = await res.json();
     return json;
   } catch (error: any) {
-    handleInternalError("804", error.message || error); // 804 = category search error
+    handleInternalError(error);
+    // 804 = category search error
     console.error("Error en searchProductsByCategory:", error);
     return null;
   }

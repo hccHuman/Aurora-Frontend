@@ -5,6 +5,8 @@
  * Handles common request configuration, error handling, and token management.
  */
 
+import { PUBLIC_API_URL } from "@/utils/envWrapper";
+
 /**
  * Make an authenticated HTTP request to the backend API
  *
@@ -22,7 +24,9 @@
 export async function apiCall(endpoint: string, options: RequestInit = {}): Promise<any> {
   // Get base API URL from environment configuration
   const baseURL =
-    typeof window !== "undefined" ? window.ENV?.API_URL : import.meta.env.PUBLIC_API_URL;
+    typeof window !== "undefined" && (window as any).ENV?.API_URL
+      ? (window as any).ENV.API_URL
+      : PUBLIC_API_URL;
 
   // Construct full URL
   const url = `${baseURL}${endpoint}`;
