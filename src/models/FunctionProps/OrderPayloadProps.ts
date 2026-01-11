@@ -29,4 +29,10 @@
 export interface OrderPayload {
   total: string;
   currency: string;
+  items?: {
+    id: number | string;
+    price: number;
+    quantity: number;
+    category_id: number;
+  }[];
 }
