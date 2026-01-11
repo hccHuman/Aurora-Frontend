@@ -15,6 +15,18 @@ import { clientService } from "@/services/clientService";
  *
  * Uso: Colocar en cualquier lugar de tu árbol React, incluso en index.astro
  */
+/**
+ * LoginReader Component
+ *
+ * A silent utility component responsible for session restoration and synchronization.
+ * Operates in the following sequence:
+ * 1. Attempts to restore user session from `sessionStorage`.
+ * 2. If unsuccessful, queries the backend `/auth/me` endpoint to validate HttpOnly cookies.
+ * 3. Synchronizes the global `userStore` (Jotai) with the current authentication state.
+ * This component handles its logic silently and does not render any visual elements.
+ *
+ * @component
+ */
 const LoginReader: React.FC = () => {
   const setUser = useSetAtom(userStore);
 
@@ -23,45 +35,43 @@ const LoginReader: React.FC = () => {
 
     const restoreSession = async () => {
       try {
-        // Primero intentamos restaurar desde sessionStorage
+        // First, try to restore the session from sessionStorage
         const loggedIn = sessionStorage.getItem("login") === "true";
         const userData: Profile | null = JSON.parse(sessionStorage.getItem("user") || "null");
 
         if (loggedIn && userData) {
           setUser({ loggedIn: true, user: userData, ready: true });
-          console.log("💖 Sesión restaurada desde sessionStorage");
+          console.log("💖 Session restored from sessionStorage");
           return;
         }
 
-        // Si no hay sesión en sessionStorage, consultamos backend
-        const data = await clientService.me(); // valida cookie HttpOnly
+        // If there is no session in sessionStorage, query the backend
+        const data = await clientService.me(); // validates HttpOnly cookie
         if (data.user) {
           setUser({ loggedIn: true, user: data.user, ready: true });
           sessionStorage.setItem("login", "true");
           sessionStorage.setItem("user", JSON.stringify(data.user));
-          console.log("💖 Sesión restaurada desde backend");
-          console.log("datos: ", data.user);
+          console.log("💖 Session restored from backend");
+          console.log("data: ", data.user);
         } else {
           setUser({ loggedIn: false, user: null, ready: true });
           sessionStorage.setItem("login", "false");
           sessionStorage.setItem("user", JSON.stringify(null));
-          console.log("❌ No hay sesión válida");
+          console.log("❌ No valid session found");
         }
       } catch (err) {
-        // No queremos saturar la consola con errores esperables (token expirado).
-        // Usamos console.debug para mantener la información disponible en depuración
-        // sin alarmar al desarrollador con un error de nivel "error".
+        // Console.debug to keep the information available for debugging
         setUser({ loggedIn: false, user: null, ready: true });
         sessionStorage.setItem("login", "false");
         sessionStorage.setItem("user", JSON.stringify(null));
-        console.debug("❌ Error restaurando sesión:", err);
+        console.debug("❌ Error while restoring session:", err);
       }
     };
 
     restoreSession();
   }, [setUser]);
 
-  return null; // no renderiza nada
+  return null; // renders nothing
 };
 
 export default LoginReader;

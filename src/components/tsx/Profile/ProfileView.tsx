@@ -4,6 +4,7 @@ import { userStore } from "@/store/userStore";
 import { User, Mail, Calendar, ShoppingBag, Shield, Edit2, Save, X, Eye, EyeOff, AlertCircle, Clock } from "lucide-react";
 import { fetchUserProfile, updateUserProfile } from "@/services/profileService";
 import { validatePassword } from "@/utils/validators";
+import { t } from "@/modules/YOLI/injector";
 
 /**
  * ProfileView Component
@@ -76,7 +77,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
     if (!auth.loggedIn || !auth.user) {
         return (
             <div className="text-center py-12">
-                <p className="text-slate-500 dark:text-slate-400">Por favor, inicia sesión para ver tu perfil.</p>
+                <p className="text-slate-500 dark:text-slate-400">{t("profile.login_required", lang)}</p>
             </div>
         );
     }
@@ -87,7 +88,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
         // Validate password if provided
         if (formData.password) {
             if (!validatePassword(formData.password)) {
-                setPasswordError("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.");
+                setPasswordError(t("profile.errors.password_invalid", lang));
                 return;
             }
         }
@@ -132,8 +133,8 @@ export default function ProfileView({ lang }: ProfileViewProps) {
             {/* Header */}
             <div className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">Mi Perfil</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Gestiona tu información personal y preferencias</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">{t("profile.title", lang)}</h1>
+                    <p className="text-slate-500 dark:text-slate-400">{t("profile.subtitle", lang)}</p>
                 </div>
                 {!isEditing && (
                     <button
@@ -141,7 +142,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                         className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 transition-all flex items-center gap-2"
                     >
                         <Edit2 className="w-4 h-4" />
-                        Editar
+                        {t("profile.edit", lang)}
                     </button>
                 )}
             </div>
@@ -165,7 +166,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                             {isEditing ? (
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">Nombre</label>
+                                        <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">{t("profile.labels.name", lang)}</label>
                                         <input
                                             type="text"
                                             value={formData.nombre}
@@ -174,7 +175,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">Email</label>
+                                        <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">{t("profile.labels.email", lang)}</label>
                                         <input
                                             type="email"
                                             value={formData.email}
@@ -183,12 +184,12 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">Nueva Contraseña (opcional)</label>
+                                        <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">{t("profile.labels.new_password", lang)}</label>
                                         <div className="relative">
                                             <input
                                                 type={showPassword ? "text" : "password"}
                                                 value={formData.password}
-                                                placeholder="Dejar en blanco para no cambiar"
+                                                placeholder={t("profile.placeholders.password_hint", lang)}
                                                 onChange={(e) => {
                                                     setFormData({ ...formData, password: e.target.value });
                                                     if (passwordError) setPasswordError(null);
@@ -218,7 +219,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                     {user.admin && (
                                         <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 text-sm font-medium">
                                             <Shield className="w-4 h-4" />
-                                            Administrador
+                                            {t("profile.labels.admin", lang)}
                                         </span>
                                     )}
                                 </>
@@ -229,40 +230,40 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                     {/* User Details */}
                     {!isEditing && (
                         <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Información de la Cuenta</h3>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">{t("profile.labels.account_info", lang)}</h3>
                             <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-transparent">
                                 <User className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider">Nombre</p>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wider">{t("profile.labels.name", lang)}</p>
                                     <p className="text-slate-900 dark:text-slate-200 truncate">{user.nombre}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-transparent">
                                 <Mail className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider">Email</p>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wider">{t("profile.labels.email", lang)}</p>
                                     <p className="text-slate-900 dark:text-slate-200 truncate">{user.email}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-transparent">
                                 <Calendar className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider">Miembro desde</p>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wider">{t("profile.labels.member_since", lang)}</p>
                                     <p className="text-slate-900 dark:text-slate-200">
                                         {(user as any).creado_en
-                                            ? new Date((user as any).creado_en).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
-                                            : "Fecha no disponible"}
+                                            ? new Date((user as any).creado_en).toLocaleDateString(lang === "es" ? "es-ES" : "en-US", { year: "numeric", month: "long", day: "numeric" })
+                                            : t("profile.errors.date_unavailable", lang)}
                                     </p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-transparent">
                                 <Clock className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider">Última actualización</p>
+                                    <p className="text-xs text-slate-500 uppercase tracking-wider">{t("profile.labels.last_update", lang)}</p>
                                     <p className="text-slate-900 dark:text-slate-200">
                                         {(user as any).actualizado_en
-                                            ? new Date((user as any).actualizado_en).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
-                                            : "Fecha no disponible"}
+                                            ? new Date((user as any).actualizado_en).toLocaleDateString(lang === "es" ? "es-ES" : "en-US", { year: "numeric", month: "long", day: "numeric" })
+                                            : t("profile.errors.date_unavailable", lang)}
                                     </p>
                                 </div>
                             </div>
@@ -277,14 +278,14 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                 className="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
                             >
                                 <Save className="w-4 h-4" />
-                                Guardar Cambios
+                                {t("profile.save", lang)}
                             </button>
                             <button
                                 onClick={handleCancel}
                                 className="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 transition-all flex items-center justify-center gap-2"
                             >
                                 <X className="w-4 h-4" />
-                                Cancelar
+                                {t("profile.cancel", lang)}
                             </button>
                         </div>
                     )}
@@ -293,14 +294,14 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                 {/* Sidebar: Quick Actions + Stats en línea */}
                 <div className="flex flex-col md:flex-row md:gap-6 gap-6">
                     <div className="md:flex-1 bg-white/80 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 shadow-xl dark:shadow-2xl">
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Acciones Rápidas</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">{t("profile.labels.quick_actions", lang)}</h3>
                         <div className="space-y-3">
                             <a
                                 href={`/${lang}/products/checkout`}
                                 className="block w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/30 hover:border-red-400/50 rounded-lg text-slate-600 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400 transition-all text-center text-sm md:text-base"
                             >
                                 <ShoppingBag className="w-5 h-5 inline-block mr-2" />
-                                Ver Carrito
+                                {t("profile.labels.view_cart", lang)}
                             </a>
                             {user.admin && (
                                 <a
@@ -308,14 +309,14 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                     className="block w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 transition-all text-center font-medium text-sm md:text-base"
                                 >
                                     <Shield className="w-5 h-5 inline-block mr-2" />
-                                    Dashboard Admin
+                                    {t("profile.labels.admin_dashboard", lang)}
                                 </a>
                             )}
                             <a
                                 href={`/${lang}/account/logout`}
                                 className="block w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/30 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-300 transition-all text-center text-sm md:text-base"
                             >
-                                Cerrar Sesión
+                                {t("profile.labels.logout", lang)}
                             </a>
                         </div>
                     </div>
