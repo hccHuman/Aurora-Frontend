@@ -1,0 +1,108 @@
+{
+    "profile": {
+        "title": "My Profile",
+        "subtitle": "Manage your personal information and preferences",
+        "edit": "Edit",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "login_required": "Please log in to view your profile.",
+        "labels": {
+            "name": "Name",
+            "email": "Email",
+            "new_password": "New Password (optional)",
+            "admin": "Administrator",
+            "account_info": "Account Information",
+            "member_since": "Member since",
+            "last_update": "Last update",
+            "quick_actions": "Quick Actions",
+            "view_cart": "View Cart",
+            "admin_dashboard": "Admin Dashboard",
+            "logout": "Log Out"
+        },
+        "placeholders": {
+            "password_hint": "Leave blank not to change"
+        },
+        "errors": {
+            "password_invalid": "The password must have at least 8 characters, one uppercase, one lowercase, one number, and one special character.",
+            "date_unavailable": "Date unavailable"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Log in",
+            "button": "Log in",
+            "success": "Login successful! Redirecting… 💖",
+            "connected": "Connected successfully! 💖",
+            "no_account": "Don't have an account?",
+            "register_here": "Register here"
+        },
+        "register": {
+            "title": "Create account",
+            "button": "Register",
+            "button_loading": "Creating account...",
+            "success": "Account created successfully! 🌸 Redirecting…",
+            "have_account": "Already have an account?",
+            "login_here": "Login here"
+        },
+        "labels": {
+            "email": "Email",
+            "password": "Password",
+            "confirm_password": "Confirm password",
+            "name": "Name"
+        },
+        "errors": {
+            "invalid_name": "Name is invalid 💔",
+            "invalid_email": "Email is invalid 💔",
+            "invalid_password": "Password must be at least 8 characters with 1 uppercase, 1 lowercase, 1 number, and 1 special character 💔",
+            "passwords_dont_match": "Passwords do not match 💔",
+            "unknown": "Unknown error",
+            "unknown_register": "Unknown error during registration"
+        }
+    },
+    "header": {
+        "home": "Home",
+        "products": "Products",
+        "search_placeholder": "Search products",
+        "account": "Account",
+        "my_account": "MY ACCOUNT",
+        "profile": "Profile",
+        "logout": "Log Out",
+        "login": "Log In",
+        "cart": "CART",
+        "view_cart": "View cart",
+        "checkout": "Checkout",
+        "quick_links": "Quick links:",
+        "aria": {
+            "account": "Account",
+            "cart": "Cart",
+            "open_menu": "Open menu",
+            "search": "Search products",
+            "back": "Back"
+        }
+    },
+    "footer": {
+        "brand_desc": "Your trusted online store with the best products and customer service.",
+        "quick_links": "Quick Links",
+        "legal": "Legal",
+        "rights": "All rights reserved",
+        "terms": "Terms & Conditions",
+        "privacy": "Privacy Policy",
+        "cookies": "Cookie Policy"
+    },
+    "common": {
+        "back": "Back",
+        "close": "Close"
+    },
+    "products": {
+        "list_title": "Products from ",
+        "list_description": "List of products from category",
+        "no_products": "No products in this category 💔",
+        "category_not_found": "Category not found 💔",
+        "view_details": "View details",
+        "add_to_cart": "Add to cart",
+        "added": "Added!",
+        "loading_config": "Loading configuration...",
+        "loading_products": "Loading products...",
+        "aria_add_to_cart": "Add {title} to cart"
+    }
+}

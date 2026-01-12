@@ -7,6 +7,16 @@ interface AdminOnlyProps {
   children: React.ReactNode;
 }
 
+/**
+ * AdminOnly Component
+ *
+ * A specialized wrapper component that restricts access to its children to admin users only.
+ * Checks the global `userStore` for the user's admin status and session readiness.
+ * Redirects non-admin or unauthenticated users to the home page.
+ * Provides a secure layer for administrative interface elements.
+ *
+ * @component
+ */
 const AdminOnly: React.FC<AdminOnlyProps> = ({ children }) => {
   const userState = useAtomValue(userStore);
 

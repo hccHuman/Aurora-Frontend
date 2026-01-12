@@ -3,6 +3,16 @@ import initTrafficByDeviceChart from "./TrafficByDeviceChart.client";
 import { fetchTrafficByDeviceStats } from "@/services/dashboardService";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
 
+/**
+ * TrafficByDeviceChart Component
+ *
+ * Visualizes the distribution of user traffic across different device types using a donut chart.
+ * Fetches data from `dashboardService` and handles automatic theme synchronization.
+ * Integrates with `TrafficByDeviceChart.client` for complex donut chart configuration and legend formatting.
+ * Displays total traffic in a stylized overlay.
+ *
+ * @component
+ */
 const TrafficByDeviceChart: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<any | null>(null);

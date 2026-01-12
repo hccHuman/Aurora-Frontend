@@ -1,5 +1,16 @@
 import ApexCharts from "apexcharts";
 
+/**
+ * Initializes the ApexCharts instance for the Signups Chart (Compact bar chart).
+ * Optimized for small height and minimal grid lines.
+ *
+ * @param {HTMLElement} el - The DOM element where the chart will be rendered.
+ * @param {Object} data - The initial datasets and configuration.
+ * @param {any[]} data.series - Signup data series.
+ * @param {string[]} data.categories - Date or time categories for the X-axis.
+ * @param {boolean} [data.darkMode] - Initial dark mode state (defaults to false).
+ * @returns {Object | null} An object with `update` and `destroy` methods, or null if data is insufficient.
+ */
 export default function initSignupsChart(
   el: HTMLElement,
   data: { series: any[]; categories: string[]; darkMode?: boolean }

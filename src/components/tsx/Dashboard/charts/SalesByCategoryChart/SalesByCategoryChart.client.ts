@@ -1,5 +1,15 @@
 import ApexCharts from "apexcharts";
 
+/**
+ * Initializes the ApexCharts instance for the Sales By Category Chart (Bar chart).
+ * Provides methods for updating both data series and visual themes.
+ *
+ * @param {HTMLElement} el - The DOM element where the chart will be rendered.
+ * @param {Object} [data] - The initial data and theme state.
+ * @param {any[]} data.series - Initial sales data by category.
+ * @param {boolean} data.darkMode - Initial theme state (true for dark mode).
+ * @returns {Object} An interface for controlling the chart instance.
+ */
 export default function initSalesByCategoryChart(
   el: HTMLElement,
   data?: { series: any[]; darkMode: boolean }

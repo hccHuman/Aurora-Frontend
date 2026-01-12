@@ -1,8 +1,16 @@
 ---
+/**
+ * ChatbotLoader Astro Component
+ *
+ * Responsible for loading the necessary Live2D scripts and the `ChatWrapper` React component.
+ * Serves as the entry point for the AI chatbot interface across the site.
+ * Ensures client-side hydration for the Live2D model.
+ */
 import "@/styles/global.css";
 import "@/styles/Components/ChatFrame.css";
 import ChatWrapper from "@/modules/AURORA/components/ChatWrapper";
 ---
+
 <div>
   <script is:inline src="/webpack/live2d.min.js"></script>
   <script is:inline src="/webpack/live2dcubismcore.js"></script>

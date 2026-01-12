@@ -19,6 +19,11 @@ import { atom } from "jotai";
  */
 const STORAGE_KEY = "aurora_cart";
 
+/**
+ * Read the cart state from sessionStorage
+ *
+ * @returns {any} The cart object from storage or empty items array
+ */
 function readSessionCart() {
   try {
     if (typeof window !== "undefined" && window.sessionStorage) {

@@ -5,7 +5,18 @@ import { clientService } from "@/services/clientService";
 import type { Auth } from "@/models/EcommerceProps/UserProps";
 import { validateEmail, validatePassword, validateName } from "@/utils/validators";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { t } from "@/modules/YOLI/injector";
 
+/**
+ * RegisterComponent Component
+ *
+ * Provides a user interface for new users to create an account.
+ * Handles extensive form validation including name check, email format,
+ * password complexity, and password confirmation.
+ * Integrates with clientService.register and updates global auth state.
+ *
+ * @component
+ */
 export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
   const [, setUser] = useAtom(userStore);
 
@@ -30,39 +41,37 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
     setSuccess(null);
 
     if (!validateName(nombre)) {
-      setError("El nombre no es válido 💔");
+      setError(t("auth.errors.invalid_name", lang));
       return;
     }
 
     if (!validateEmail(email)) {
-      setError("El email no es válido 💔");
+      setError(t("auth.errors.invalid_email", lang));
       return;
     }
 
     if (!validatePassword(password)) {
-      setError(
-        "La contraseña debe tener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial 💔"
-      );
+      setError(t("auth.errors.invalid_password", lang));
       return;
     }
 
     if (password !== password2) {
-      setError("Las contraseñas no coinciden 💔");
+      setError(t("auth.errors.passwords_dont_match", lang));
       return;
     }
 
     setLoading(true);
     try {
       const data = await clientService.register({ nombre, email, password });
-      setUser({ loggedIn: true, user: data.user });
+      setUser({ loggedIn: true, user: data.user, ready: true });
       sessionStorage.setItem("login", "true");
       sessionStorage.setItem("user", JSON.stringify(data.user));
-      setSuccess("¡Cuenta creada con éxito! 🌸 Redirigiendo…");
+      setSuccess(t("auth.register.success", lang));
       setTimeout(() => {
         window.location.href = "/";
       }, 1500);
     } catch (err: any) {
-      setError(err.message || "Error desconocido durante el registro");
+      setError(err.message || t("auth.errors.unknown_register", lang));
     } finally {
       setLoading(false);
     }
@@ -70,7 +79,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
 
   return (
     <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl mx-auto mt-12 p-6 sm:px-8 md:px-12 border rounded-lg shadow-md bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Crear cuenta</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">{t("auth.register.title", lang)}</h2>
 
       {error && <p className="text-red-500 mb-3 text-center">{error}</p>}
       {success && <p className="text-green-500 mb-3 text-center">{success}</p>}
@@ -79,7 +88,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         {/* Name */}
         <input
           type="text"
-          placeholder="Nombre"
+          placeholder={t("auth.labels.name", lang)}
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           required
@@ -89,7 +98,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         {/* Email */}
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t("auth.labels.email", lang)}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -100,7 +109,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Contraseña"
+            placeholder={t("auth.labels.password", lang)}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -119,7 +128,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         <div className="relative">
           <input
             type={showPassword2 ? "text" : "password"}
-            placeholder="Repetir contraseña"
+            placeholder={t("auth.labels.confirm_password", lang)}
             value={password2}
             onChange={(e) => setPassword2(e.target.value)}
             required
@@ -139,16 +148,16 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
           disabled={loading}
           className="bg-sky-700 dark:bg-sky-500 text-white py-3 rounded hover:bg-sky-600 dark:hover:bg-sky-400 transition text-lg disabled:opacity-50"
         >
-          {loading ? "Creando cuenta..." : "Registrarse"}
+          {loading ? t("auth.register.button_loading", lang) : t("auth.register.button", lang)}
         </button>
 
         <p className="mt-6 text-center text-slate-700 dark:text-slate-300">
-          ¿tienes cuenta?{" "}
+          {t("auth.register.have_account", lang)}{" "}
           <a
             href={`/${lang}/account/login`}
             className="text-sky-600 dark:text-sky-400 hover:underline font-semibold"
           >
-            Haz Login aquí
+            {t("auth.register.login_here", lang)}
           </a>
         </p>
       </form>

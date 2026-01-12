@@ -1,3 +1,4 @@
+process.env.PUBLIC_API_URL = 'https://api.test';
 import { paymentService } from '@/services/paymentService';
 
 describe('paymentService.createPaymentIntent', () => {

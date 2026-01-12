@@ -1,27 +1,24 @@
-// src/services/paymentService.ts
+/**
+ * Payment Service
+ *
+ * Handles financial transactions and payment intent creation with the backend.
+ * Integrates with Stripe/PayPal flows via the server API.
+ */
 import type { OrderPayload } from "@/models/FunctionProps/OrderPayloadProps";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
-
-function getEnv() {
-  if (typeof window !== "undefined" && (window as any).ENV) {
-    return (window as any).ENV;
-  }
-
-  // Safe access to process.env (may be undefined in the browser)
-  if (typeof process !== "undefined" && process?.env) {
-    return {
-      API_URL: (process.env.PUBLIC_API_URL as string) || "",
-    };
-  }
-
-  // Fallback - empty API URL to avoid ReferenceError in client-side code
-  // Default to the known backend server so frontend can work even when ENV isn't populated
-  return { API_URL: "https://aurora-back-qsx9.onrender.com" };
-}
+import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
 export const paymentService = {
+  /**
+   * Submit an order and create a payment intent
+   *
+   * @async
+   * @param {OrderPayload} payload - Order details (total, currency, items)
+   * @returns {Promise<any>} Response containing the client secret for payment
+   * @throws {Error} If the order fails or the payment is not authorized
+   */
   Order: async (payload: OrderPayload): Promise<any> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
 
     try {
       const res = await fetch(`${API_URL}/api/payments/create-payment-intent`, {
@@ -32,7 +29,6 @@ export const paymentService = {
       });
 
       if (!res.ok) {
-        // 🧩 Intentar leer el código interno desde la respuesta
         let errorData: any = null;
         try {
           errorData = await res.json();
@@ -40,25 +36,31 @@ export const paymentService = {
           throw new Error(`Error HTTP ${res.status}`);
         }
 
-        // Si el backend te devuelve algo como { code: 703, message: "PAYMENT_NOT_AUTHORIZED" }
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
-        // Si no hay código interno, lanzar error HTTP genérico
         throw new Error(`Error HTTP ${res.status}`);
       }
 
       return await res.json();
     } catch (err: any) {
-      // 🌐 Error de red, servidor caído, etc.
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error de conexión con el servidor");
     }
   },
+
+  /**
+   * Create a payment intent for a list of items (generic helper)
+   *
+   * @async
+   * @param {Array<{ price: number; quantity: number }>} items - List of products to pay for
+   * @returns {Promise<any>} Payment intent details
+   * @throws {Error} If creation fails or authentication is missing (401)
+   */
   createPaymentIntent: async (items: Array<{ price: number; quantity: number }>): Promise<any> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
 
     try {
       const res = await fetch(`${API_URL}/api/payments/create-payment-intent`, {
@@ -72,16 +74,16 @@ export const paymentService = {
         let errData: any = null;
         try {
           errData = await res.json();
-        } catch {}
-        // If the backend returned 401, create a specialized error carrying the status
+        } catch { }
+
         if (res.status === 401) {
           const e: any = new Error(errData?.message || 'Unauthorized');
           e.status = 401;
-          handleInternalError("401", errData || { message: 'Unauthorized' });
+          handleInternalError(errData || { message: 'Unauthorized', status: 401, code: 401 });
           throw e;
         }
 
-        handleInternalError("700", errData || { message: `Payment intent HTTP ${res.status}` });
+        handleInternalError(errData || { message: `Payment intent HTTP ${res.status}`, code: res.status });
         const e: any = new Error(errData?.message || `Error creating payment intent: ${res.status}`);
         e.status = res.status;
         throw e;
@@ -89,7 +91,7 @@ export const paymentService = {
 
       return await res.json();
     } catch (err: any) {
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw err;
     }
   },

@@ -4,10 +4,20 @@ import { userStore } from "@/store/userStore";
 import { clientService } from "@/services/clientService";
 import type { Auth } from "@/models/EcommerceProps/UserProps";
 import { validateEmail, validatePassword } from "@/utils/validators";
+import { t } from "@/modules/YOLI/injector";
 
 // 👁️ Importar iconos (Heroicons)
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
+/**
+ * LoginComponent Component
+ *
+ * Provides a user interface for existing users to log in to their account.
+ * Handles form validation (email/password format) and integration with clientService.login.
+ * Updates the global userStore and persists login state in sessionStorage and localStorage.
+ *
+ * @component
+ */
 export const LoginComponent: React.FC<Auth> = ({ lang }) => {
   const [user, setUser] = useAtom(userStore);
 
@@ -23,7 +33,7 @@ export const LoginComponent: React.FC<Auth> = ({ lang }) => {
       const loggedIn = localStorage.getItem("login") === "true";
       const userData = JSON.parse(localStorage.getItem("user") || "null");
       if (loggedIn && userData) {
-        setUser({ loggedIn: true, user: userData });
+        setUser({ loggedIn: true, user: userData, ready: true });
       }
     }
   }, []);
@@ -34,32 +44,30 @@ export const LoginComponent: React.FC<Auth> = ({ lang }) => {
     setSuccess(null);
 
     if (!validateEmail(email)) {
-      setError("El email no es válido 💔");
+      setError(t("auth.errors.invalid_email", lang));
       return;
     }
 
     if (!validatePassword(password)) {
-      setError(
-        "La contraseña debe tener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial 💔"
-      );
+      setError(t("auth.errors.invalid_password", lang));
       return;
     }
 
     try {
-      const data = await clientService.login({ email, password });
-      setUser({ loggedIn: true, user: data.user });
+      const data = (await clientService.login({ email, password })) as any;
+      setUser({ loggedIn: true, user: data.user, ready: true });
       sessionStorage.setItem("login", "true");
       sessionStorage.setItem("user", JSON.stringify(data.user));
-      setSuccess("¡Login exitoso! Redirigiendo… 💖");
+      setSuccess(t("auth.login.success", lang));
       setTimeout(() => (window.location.href = "/"), 1000);
     } catch (err: any) {
-      setError(err.message || "Error desconocido");
+      setError(err.message || t("auth.errors.unknown", lang));
     }
   };
 
   return (
     <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl mx-auto mt-12 p-6 sm:px-8 md:px-12 border rounded-lg shadow-md bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Inicia sesión</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">{t("auth.login.title", lang)}</h2>
 
       {error && <p className="text-red-500 mb-2 text-center">{error}</p>}
       {success && <p className="text-green-500 mb-2 text-center">{success}</p>}
@@ -68,7 +76,7 @@ export const LoginComponent: React.FC<Auth> = ({ lang }) => {
         {/* Email */}
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t("auth.labels.email", lang)}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -79,7 +87,7 @@ export const LoginComponent: React.FC<Auth> = ({ lang }) => {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Contraseña"
+            placeholder={t("auth.labels.password", lang)}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -103,23 +111,23 @@ export const LoginComponent: React.FC<Auth> = ({ lang }) => {
           type="submit"
           className="bg-sky-700 dark:bg-sky-500 text-white py-3 sm:py-4 rounded hover:bg-sky-600 dark:hover:bg-sky-400 transition text-lg sm:text-xl"
         >
-          Iniciar sesión
+          {t("auth.login.button", lang)}
         </button>
       </form>
 
       {user.loggedIn && (
         <p className="mt-4 text-center text-green-600 text-lg sm:text-xl">
-          ¡Conectado exitosamente! 💖
+          {t("auth.login.connected", lang)}
         </p>
       )}
 
       <p className="mt-6 text-center text-slate-700 dark:text-slate-300">
-        ¿No tienes cuenta?{" "}
+        {t("auth.login.no_account", lang)}{" "}
         <a
           href={`/${lang}/account/register`}
           className="text-sky-600 dark:text-sky-400 hover:underline font-semibold"
         >
-          Regístrate aquí
+          {t("auth.login.register_here", lang)}
         </a>
       </p>
     </div>

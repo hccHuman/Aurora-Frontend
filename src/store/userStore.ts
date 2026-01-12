@@ -20,10 +20,11 @@ import type { Profile } from "@/models/EcommerceProps/UserProps";
  * - User logs out (set loggedIn=false, clear user data)
  * - User profile is fetched (update user object)
  *
- * @type {Atom<{loggedIn: boolean, user: Profile | null}>}
+ * @type {Atom<{loggedIn: boolean, user: Profile | null, ready: boolean}>}
  *
  * @property {boolean} loggedIn - Authentication status flag
  * @property {Profile | null} user - User profile data (null if not authenticated)
+ * @property {boolean} ready - Whether the user state has been initialized from storage/session
  *
  * @example
  * // In a component:
@@ -36,10 +37,10 @@ import type { Profile } from "@/models/EcommerceProps/UserProps";
  * }
  *
  * // Login user
- * setUser({ loggedIn: true, user: { id: 1, email: "test@example.com", rolId: 1 } });
+ * setUser({ loggedIn: true, user: { id: 1, email: "test@example.com", rolId: 1 }, ready: true });
  *
  * // Logout user
- * setUser({ loggedIn: false, user: null });
+ * setUser({ loggedIn: false, user: null, ready: true });
  */
 export const userStore = atom<{ loggedIn: boolean; user: Profile | null; ready: boolean }>({
   loggedIn: false,

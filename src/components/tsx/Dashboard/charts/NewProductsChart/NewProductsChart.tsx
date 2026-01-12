@@ -3,6 +3,16 @@ import initNewProductsChart from "./NewProductsChart.client";
 import { fetchNewProductsStats } from "@/services/dashboardService";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
 
+/**
+ * NewProductsChart Component
+ *
+ * Visualizes the stock levels of the most recently added products using a bar chart.
+ * Fetches data from `dashboardService` based on a selectable time range (30d, 1y).
+ * Limits display to the last 7 items for optimal visualization.
+ * Integrates with `NewProductsChart.client` for ApexCharts management.
+ *
+ * @component
+ */
 const NewProductsChart: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<any | null>(null);

@@ -7,7 +7,43 @@
  */
 
 // Importar matchers de Testing Library
-require("@testing-library/jest-dom");
+import "@testing-library/jest-dom";
+
+// ===== MATCHMEDIA MOCK =====
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // Deprecated
+    removeListener: jest.fn(), // Deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+// ===== MUTATION OBSERVER MOCK =====
+global.MutationObserver = class {
+  constructor(callback) { }
+  disconnect() { }
+  observe(element, init) { }
+  takeRecords() {
+    return [];
+  }
+};
+
+// ===== INTERSECTION OBSERVER MOCK =====
+global.IntersectionObserver = class {
+  constructor(callback) { }
+  disconnect() { }
+  observe(element) { }
+  unobserve(element) { }
+  takeRecords() {
+    return [];
+  }
+};
 
 // ===== WEB ANIMATIONS API MOCK =====
 // Mock the Element.animate() method for testing theme transitions
@@ -49,7 +85,7 @@ const mockStartViewTransition = (callback) => {
     ready: Promise.resolve(),
     finished: Promise.resolve(),
     updateCallbackDone: Promise.resolve(),
-    skipTransition: () => {},
+    skipTransition: () => { },
   };
 };
 
@@ -67,10 +103,10 @@ globalThis.speechSynthesis = {
     },
   ],
   onvoiceschanged: null,
-  speak: () => {},
-  cancel: () => {},
-  pause: () => {},
-  resume: () => {},
+  speak: () => { },
+  cancel: () => { },
+  pause: () => { },
+  resume: () => { },
   pending: false,
   paused: false,
 };
@@ -89,7 +125,14 @@ globalThis.SpeechSynthesisUtterance = class {
 };
 
 // Mock de fetch para API calls
-globalThis.fetch = jest.fn();
+globalThis.fetch = jest.fn().mockResolvedValue({
+  ok: true,
+  status: 200,
+  json: async () => ({ text: "Default AI Response" }),
+  clone: function () {
+    return this;
+  },
+});
 
 beforeEach(() => {
   jest.clearAllMocks();

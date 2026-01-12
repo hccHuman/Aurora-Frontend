@@ -1,15 +1,49 @@
+/**
+ * HeaderSearch Component
+ *
+ * A global search input for the application header.
+ * Performs debounced searches and updates the shared search state atom.
+ * Connects to the ProductService for data fetching.
+ *
+ * @component
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import { searchProducts } from '@/services/productService';
 import { useAtom } from 'jotai';
 import { searchStateAtom } from '@/store/searchStore';
 
-// Simple client-side sanitizer for search terms
+/**
+ * Sanitizes search terms by removing potentially dangerous HTML characters.
+ *
+ * @param {string} s - Raw search string
+ * @returns {string} Sanitized search string
+ */
 function sanitizeForSearch(s: string) {
   return s.replace(/[<>"'`]/g, '').trim();
 }
 
-export default function HeaderSearch({ placeholder = 'Buscar productos', pageSize = 5, categoryId = null }: { placeholder?: string; pageSize?: number; categoryId?: number | null }) {
-  const [query, setQuery] = useState('');
+/**
+ * Props for the HeaderSearch component
+ */
+interface HeaderSearchProps {
+  /** Accessibility placeholder text */
+  placeholder?: string;
+  /** Accessibility label for the search input */
+  ariaLabel?: string;
+  /** Number of results to fetch per page */
+  pageSize?: number;
+  /** Optional category ID to filter search (handled by page logic) */
+  categoryId?: number | null;
+}
+
+export default function HeaderSearch({
+  placeholder = "Buscar productos",
+  ariaLabel = "Search products",
+  pageSize = 5,
+  categoryId = null,
+}: HeaderSearchProps) {
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   // no local dropdown used: search results are stored in the shared atom
   const timer = useRef<number | null>(null);
@@ -19,14 +53,14 @@ export default function HeaderSearch({ placeholder = 'Buscar productos', pageSiz
   useEffect(() => {
     // Only activate/search on the AllProducts page: /products/allproducts
     if (!window || !window.location) return;
-    if (!window.location.pathname.includes('/products/allproducts')) return;
+    if (!window.location.pathname.includes("/products/allproducts")) return;
   }, []);
 
   const doSearch = async (term: string) => {
     const sanitized = sanitizeForSearch(term);
     if (!sanitized) {
       // clear global search state
-      setSearchState({ query: '', results: [] });
+      setSearchState({ query: "", results: [] });
       return;
     }
 
@@ -90,7 +124,7 @@ export default function HeaderSearch({ placeholder = 'Buscar productos', pageSiz
         onFocus={onFocus}
         type="search"
         placeholder={placeholder}
-        aria-label="Buscar productos"
+        aria-label={ariaLabel}
         className="w-full rounded px-2 py-1 text-sm bg-transparent border border-gray-300 dark:border-gray-600"
       />
 

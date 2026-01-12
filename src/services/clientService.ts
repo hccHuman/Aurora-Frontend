@@ -1,20 +1,23 @@
-// src/services/clientService.ts
+/**
+ * Client Service
+ *
+ * Handles user authentication and profile management including login,
+ * registration, token refresh, and logout.
+ */
 import type { LoginPayload, LoginResponse, Profile, RegisterPayload, RegisterResponse } from "@/models/EcommerceProps/UserProps";
-
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
-
-function getEnv() {
-  if (typeof window !== "undefined" && window.ENV) {
-    return window.ENV;
-  }
-  return {
-    API_URL: import.meta.env.PUBLIC_API_URL,
-  };
-}
+import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
 export const clientService = {
+  /**
+   * Authenticate a user with email and password
+   *
+   * @param {LoginPayload} payload - User credentials (email and password)
+   * @returns {Promise<LoginResponse>} Auth tokens (accessToken and refreshToken)
+   * @throws {Error} If authentication fails
+   */
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
@@ -32,7 +35,7 @@ export const clientService = {
         }
 
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
@@ -41,13 +44,20 @@ export const clientService = {
 
       return await res.json();
     } catch (err: any) {
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error de conexión con el servidor");
     }
   },
 
+  /**
+   * Register a new user
+   *
+   * @param {RegisterPayload} payload - New user details
+   * @returns {Promise<RegisterResponse>} Confirmation message and user profile
+   * @throws {Error} If registration fails
+   */
   register: async (payload: RegisterPayload): Promise<RegisterResponse> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
 
     try {
       const res = await fetch(`${API_URL}/auth/register`, {
@@ -66,7 +76,7 @@ export const clientService = {
         }
 
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
@@ -75,13 +85,20 @@ export const clientService = {
 
       return await res.json();
     } catch (err: any) {
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error de conexión con el servidor");
     }
   },
 
+  /**
+   * Refresh the access token using the refresh token cookie
+   *
+   * @async
+   * @returns {Promise<{ accessToken: string }>} Object containing the new access token
+   * @throws {Error} If token refresh fails
+   */
   refreshToken: async (): Promise<{ accessToken: string }> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
     try {
       const res = await fetch(`${API_URL}/auth/refresh`, {
         method: "POST",
@@ -99,7 +116,7 @@ export const clientService = {
         }
 
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
@@ -108,13 +125,20 @@ export const clientService = {
 
       return await res.json();
     } catch (err: any) {
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error al refrescar token");
     }
   },
 
+  /**
+   * Log out the current user by clearing the cookies on the server
+   *
+   * @async
+   * @returns {Promise<{ message: string }>} Logout confirmation message
+   * @throws {Error} If logout fails
+   */
   logout: async (): Promise<{ message: string }> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
     try {
       const res = await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
@@ -134,7 +158,7 @@ export const clientService = {
         }
 
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
@@ -143,14 +167,20 @@ export const clientService = {
 
       return await res.json();
     } catch (err: any) {
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error de conexión al cerrar sesión");
     }
   },
 
-  //ya veremos si lo usamos
+  /**
+   * Fetch the current user profile details
+   *
+   * @async
+   * @returns {Promise<Profile>} User profile data
+   * @throws {Error} If fetching profile fails
+   */
   getProfile: async (): Promise<Profile> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
     try {
       const res = await fetch(`${API_URL}/profile`, {
         method: "GET",
@@ -170,7 +200,7 @@ export const clientService = {
         }
 
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
@@ -179,52 +209,51 @@ export const clientService = {
 
       return await res.json();
     } catch (err: any) {
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error al obtener el perfil del usuario");
     }
   },
+
+  /**
+   * Get information about the currently authenticated user session
+   *
+   * @async
+   * @returns {Promise<{ user: Profile | null }>} Object containing the user profile or null if not authenticated
+   * @throws {Error} If an unexpected error occurs during the session check
+   */
   me: async (): Promise<{ user: Profile }> => {
-    const { API_URL } = getEnv();
+    const API_URL = PUBLIC_API_URL;
     try {
       const res = await fetch(`${API_URL}/auth/me`, {
-        method: "POST", // o GET si tu backend permite GET
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Muy importante para enviar cookies HttpOnly
-        body: JSON.stringify({}), // si usas POST, sino eliminar en GET
+        credentials: "include",
+        body: JSON.stringify({}),
       });
-      
-      // Si la respuesta indica que no hay sesión válida (401), devolvemos
-      // { user: null } silenciosamente para que el consumidor (LoginReader)
-      // pueda manejar el estado sin que se imprima un error en consola.
+
       if (!res.ok) {
-        // Intentamos parsear el body para obtener detalles (no obligatorio)
         let errorData: any = null;
         try {
           errorData = await res.json();
-        } catch {}
+        } catch { }
 
-        // Si es un 401 (token inválido o expirado), devolvemos un objeto vacío
-        // en lugar de lanzar una excepción que luego se vea como error en consola.
         if (res.status === 401) {
           return { user: null } as any;
         }
 
-        // Para otros errores, usamos el sistema de errores internos si viene código
         if (errorData?.code) {
-          handleInternalError(errorData.code, errorData);
+          handleInternalError(errorData);
           throw new Error(errorData.message || `Error interno ${errorData.code}`);
         }
 
         throw new Error(`Error HTTP ${res.status}`);
       }
 
-      return await res.json(); // aquí recibirás { response: 200, user: { ... } }
+      return await res.json();
     } catch (err: any) {
-      // Si ocurre un error de red u otro error inesperado, registrarlo en ALBA
-      // y propagar la excepción para que el caller pueda reaccionar.
-      handleInternalError("800", { message: "EXTERNAL_SERVICE_ERROR", details: err.message });
+      handleInternalError(err);
       throw new Error(err.message || "Error al obtener datos de /auth/me");
     }
   },

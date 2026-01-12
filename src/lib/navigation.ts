@@ -1,6 +1,18 @@
+/**
+ * Navigation Utilities
+ *
+ * Provides abstracted navigation functions to simplify URL updates
+ * and improve testability by mocking global location changes.
+ */
+
+/**
+ * Redirects the browser to the specified URL.
+ * Works across different environments (browser and tests).
+ *
+ * @param {string} url - Target URL
+ */
 export function goTo(url: string) {
   // Single place to perform navigation; abstracted for easier testing
-  // Default implementation uses window.location.assign
   if (typeof window !== 'undefined' && window.location && typeof window.location.assign === 'function') {
     window.location.assign(url);
   } else if (typeof window !== 'undefined') {

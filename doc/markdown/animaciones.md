@@ -1,112 +1,69 @@
-# Catálogo de Animaciones del Avatar
+# Catálogo de Animaciones
 
-Este documento detalla todas las animaciones y expresiones disponibles para el avatar Live2D de Aurora.
+Este documento detalla todas las animaciones disponibles en Aurora, tanto para el avatar Live2D como para la interfaz de usuario (UI), incluyendo el sistema de accesibilidad.
 
-## Motions (animaciones)
+## 1. Animaciones del Avatar (Live2D)
 
+### Motions (movimientos corporales)
 Archivos en `public/models/haru/runtime/motion/`:
 
-| Archivo                                        | Descripción               | Uso típico                                                |
-| ---------------------------------------------- | ------------------------- | --------------------------------------------------------- |
-| `haru_g_idle.motion3.json`                     | Animación neutral/reposo  | Estado por defecto, parpadeo suave y pequeños movimientos |
-| `haru_g_m01.motion3.json`                      | Saludo alegre             | Saludar al usuario, inicio de conversación                |
-| `haru_g_m02.motion3.json`                      | Inclinación curiosa       | Mostrar interés o confusión                               |
-| `haru_g_m03.motion3.json`                      | Gesto afirmativo          | Asentir, mostrar acuerdo                                  |
-| `haru_g_m04.motion3.json`                      | Negación suave            | Negar, mostrar desacuerdo amable                          |
-| `haru_g_m05.motion3.json`                      | Sorpresa                  | Reacción a información inesperada                         |
-| `haru_g_m06.motion3.json`                      | Risa contenida            | Respuesta a algo gracioso                                 |
-| `haru_g_m07.motion3.json`                      | Pensativa                 | Durante procesamiento o reflexión                         |
-| `haru_g_m08.motion3.json`                      | Tímida/avergonzada        | Reacción a cumplidos o situaciones incómodas              |
-| `haru_g_m09.motion3.json`                      | Energética                | Momentos de entusiasmo                                    |
-| `haru_g_m17.motion3.json`                      | Gesto explicativo         | Al dar explicaciones o instrucciones                      |
-| `haru_g_m18.motion3.json`                      | Duda/confusión            | Cuando no entiende algo                                   |
-| `haru_g_m19.motion3.json`                      | Satisfacción              | Tras completar una tarea exitosamente                     |
-| `haru_g_m20.motion3.json`                      | Disculpa                  | Para momentos de error o confusión                        |
-| `haru_g_m21.motion3.json` - `m26.motion3.json` | Variaciones de reacciones | Diferentes intensidades de emociones básicas              |
+| Archivo | Descripción | Uso típico |
+| :--- | :--- | :--- |
+| `haru_g_idle.motion3.json` | Reposo | Estado por defecto, parpadeo suave. |
+| `haru_g_m01.motion3.json` | Saludo | Inicio de conversación. |
+| ... | ... | ... | (Ver tabla completa en el archivo original si es necesario) |
 
-## Expresiones
-
+### Expresiones (faciales)
 Archivos en `public/models/haru/runtime/expressions/`:
+`neutral`, `smile`, `happy`, `sad`, `surprised`, `angry`, `worried`, `doubt`.
 
-| Expresión             | Descripción            | Uso común                        |
-| --------------------- | ---------------------- | -------------------------------- |
-| `neutral.exp3.json`   | Expresión neutral/base | Estado por defecto               |
-| `smile.exp3.json`     | Sonrisa suave          | Interacciones positivas          |
-| `happy.exp3.json`     | Alegría                | Momentos de éxito o felicitación |
-| `sad.exp3.json`       | Tristeza suave         | Empatía o disculpas              |
-| `surprised.exp3.json` | Sorpresa               | Reacción a novedades             |
-| `angry.exp3.json`     | Molestia leve          | Correcciones o advertencias      |
-| `worried.exp3.json`   | Preocupación           | Alertas o advertencias           |
-| `doubt.exp3.json`     | Duda                   | Cuando necesita clarificación    |
+---
 
-## Notas de implementación
+## 2. Animaciones de Interfaz (UI)
 
-### Características clave
+Aurora utiliza una combinación de **Framer Motion** para componentes React y **CSS Transitions/Keyframes** para componentes Astro y globales.
 
-- Las expresiones son instantáneas (cambios de parámetros), mientras que los motions son animaciones en el tiempo.
-- Puedes combinar expresiones con motions: por ejemplo, `smile.exp3.json` con `haru_g_m01.motion3.json` para un saludo muy amigable.
-- El idle (`haru_g_idle.motion3.json`) se usa como base y las demás motions lo interrumpen temporalmente.
-- Las expresiones persisten hasta que se cambian, los motions vuelven a idle al terminar.
+### Componentes de Navegación
+- **Header**: El menú móvil tiene transiciones suaves de deslizamiento y opacidad. Los menús desplegables (cuenta, carrito) usan una animación de escala y desvanecimiento (`dropdown-animate`).
+- **Transiciones de Página**: Se aplica un efecto de deslizamiento vertical suave (`animate-pageChange`) al cambiar de ruta, proporcionando continuidad visual.
 
-### Ejemplos de uso
+### Experiencia E-commerce
+- **Tarjetas de Producto**: Las imágenes aparecen con un ligero escalado y desvanecimiento al entrar en el viewport (`motion.img`).
+- **Botón de Carrito**: Feedback visual inmediato al añadir un producto (cambio a color verde con texto "¡Añadido!" y animación de pulsación).
+- **Contador de Carrito**: El globo de notificación se anima (pop inline) cada vez que el total de productos cambia.
+- **Listados de Categorías**: Uso de *staggered animations* (animaciones escalonadas) para que las tarjetas aparezcan una tras otra de forma fluida.
 
-```javascript
-// Probar una motion
-playMotion("haru_g_m01"); // saludo
+### Chatbot
+- **Ventana de Chat**: Animaciones de entrada/salida (scale & fade) mediante `AnimatePresence`.
+- **Icono Flotante**: Efecto de pulsación rítmica para atraer la atención del usuario de forma sutil.
 
-// Probar una expresión
-playExpression("smile"); // sonrisa
+---
 
-// Combinar ambas
-playExpression("happy");
-playMotion("haru_g_m06"); // risa feliz
+## 3. Animaciones del Dashboard (Admin)
+
+El panel de administración incluye animaciones premium para la visualización de datos:
+
+- **Entrada de Secciones**: Cada gráfico y tabla utiliza el componente `FadeIn`, que desliza el contenido hacia arriba con un retraso escalonado.
+- **Interactividad en Tablas**: Las filas de las tablas (Pedidos, Productos, Usuarios, Categorías) se animan horizontalmente al cargar los datos o cambiar de página, facilitando el seguimiento visual de la información.
+- **Feedback de CRUD**: La aparición de filas de creación o edición utiliza transiciones de escala para destacar la acción actual.
+
+---
+
+## 4. Accesibilidad y Seguridad
+
+Aurora prioriza la seguridad del usuario. Todas las animaciones (Avatar, UI, Dashboard) están vinculadas al **Menú de Accesibilidad**.
+
+- **Modo Anti-Epilepsia**: Al activar este modo, se añade la clase `.Mode-Anti-Epilepsia` al elemento `<html>`.
+- **Efecto**: Mediante CSS global, todas las animaciones y transiciones se desactivan instantáneamente (`animation: none !important`, `transition: none !important`), garantizando una experiencia segura para usuarios con fotosensibilidad o epilepsia.
+
+---
+
+## Uso Técnico (Framer Motion)
+
+Para crear nuevas animaciones de entrada, se recomienda usar el componente `FadeIn`:
+
+```tsx
+<FadeIn delay={0.2} direction="up">
+  <div>Tu Contenido</div>
+</FadeIn>
 ```
-
-### Guía de combinaciones recomendadas
-
-Para lograr efectos más naturales y expresivos, se recomiendan las siguientes combinaciones:
-
-1. Saludo inicial:
-   - Motion: `haru_g_m01` (saludo)
-   - Expresión: `smile` o `happy`
-
-2. Procesamiento/pensando:
-   - Motion: `haru_g_m07` (pensativa)
-   - Expresión: `neutral` o `doubt`
-
-3. Explicación:
-   - Motion: `haru_g_m17` (explicativa)
-   - Expresión: `smile`
-
-4. Error o confusión:
-   - Motion: `haru_g_m20` (disculpa)
-   - Expresión: `worried` o `sad`
-
-5. Respuesta positiva:
-   - Motion: `haru_g_m03` (afirmativo)
-   - Expresión: `happy`
-
-6. Respuesta negativa:
-   - Motion: `haru_g_m04` (negación)
-   - Expresión: `worried` o `doubt`
-
-## Uso en el código
-
-Para implementar estas animaciones en el componente VtuberLive2D, se utilizan las funciones:
-
-```typescript
-// En VtuberLive2D.tsx
-const playMotion = (motionId: string) => {
-  if (model?.current) {
-    model.current.motion(motionId);
-  }
-};
-
-const playExpression = (expressionId: string) => {
-  if (model?.current) {
-    model.current.expression(expressionId);
-  }
-};
-```
-
-Las animaciones se pueden llamar desde cualquier parte del código que tenga acceso al componente del avatar, típicamente a través de refs o mediante el sistema de gestión de estado.

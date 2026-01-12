@@ -13,6 +13,7 @@
 
 /* Layer base: defines fundamental styles for HTML elements */
 @layer base {
+
   /* Root elements: set full height and width with no margins/padding */
   html,
   body {
@@ -21,22 +22,185 @@
 
   /* HTML: light background with smooth scrolling and theme transition */
   html {
-    @apply scroll-smooth bg-sky-50 dark:bg-slate-950 transition-colors duration-300;
+    @apply scroll-smooth transition-colors duration-300;
+
+    /* Default Theme Variables (Light Mode) */
+    --color-background: 240 59% 96%;
+    /* sky-50 */
+    --color-text: 215 27% 17%;
+    /* slate-900 */
+
+    /* Semantic Colors default (can be mapped to Tailwind palette) */
+    --color-primary: 217 91% 60%;
+    /* blue-500 */
+    --color-secondary: 262 83% 58%;
+    /* purple-500 */
+    --color-accent: 330 81% 60%;
+    /* pink-500 */
+    --color-success: 142 71% 45%;
+    /* green-500 */
+    --color-warning: 37 91% 55%;
+    /* amber-500 */
+    --color-danger: 0 84% 60%;
+    /* red-500 */
   }
 
   html.dark {
-    @apply bg-slate-950 text-slate-50 transition-colors duration-300;
+    --color-background: 222 47% 11%;
+    /* slate-950 */
+    --color-text: 210 40% 98%;
+    /* slate-50 */
+
+    /* Adjust for dark mode visibility/contrast if needed */
+    --color-primary: 217 91% 60%;
+    /* blue-500 */
+    --color-secondary: 262 83% 58%;
+    /* purple-500 */
+    --color-accent: 330 81% 60%;
+    /* pink-500 */
+    --color-success: 142 71% 45%;
+    /* green-500 */
+    --color-warning: 37 91% 55%;
+    /* amber-500 */
+    --color-danger: 0 84% 60%;
+    /* red-500 */
   }
 
-  /* Body: flexbox column layout with full height and theme-aware colors */
-  /* This creates a vertical layout that stretches to fill viewport height */
+  /* Apply background and text color variables */
+  html {
+    background-color: hsl(var(--color-background));
+    color: hsl(var(--color-text));
+  }
+
+  /* 
+   * Color Vision Deficiency (CVD) Overrides 
+   * Values adapted to be distinguishable for each condition
+   */
+
+  /* Protanopia (Red-blind): Shift reds to darker/yellowish, greens to bluish */
+  html.cvd-protanopia {
+    filter: url('#protanopia-filter');
+    --color-primary: 225 80% 60%;
+    /* Modified Blue */
+    --color-secondary: 260 70% 60%;
+    /* Modified Purple */
+    --color-accent: 290 60% 60%;
+    /* Modified Pink/Violet */
+    --color-success: 180 60% 45%;
+    /* Teal instead of Green */
+    --color-warning: 50 90% 60%;
+    /* Brighter Yellow */
+    --color-danger: 30 70% 50%;
+    /* Brownish/Orange instead of Red */
+  }
+
+  /* Deuteranopia (Green-blind): Similar issues with Red/Green distinction */
+  html.cvd-deuteranopia {
+    filter: url('#deuteranopia-filter');
+    --color-primary: 210 90% 60%;
+    /* Clear Blue */
+    --color-secondary: 270 70% 60%;
+    /* Deep Purple */
+    --color-accent: 310 60% 60%;
+    /* Magenta */
+    --color-success: 30 80% 50%;
+    /* Orange/Amber for success (distinguishable from 'red' danger) */
+    --color-warning: 60 90% 60%;
+    /* Bright Yellow */
+    --color-danger: 0 50% 50%;
+    /* Muted Red */
+  }
+
+  /* Tritanopia (Blue-blind): Confuses Blue/Green and Yellow/Violet */
+  html.cvd-tritanopia {
+    filter: url('#tritanopia-filter');
+    --color-primary: 180 80% 40%;
+    /* Teal/Cyan instead of Blue */
+    --color-secondary: 0 70% 60%;
+    /* Reddish */
+    --color-accent: 10 70% 60%;
+    /* Salmon */
+    --color-success: 120 60% 50%;
+    /* Clear Green */
+    --color-warning: 0 60% 70%;
+    /* Light Red/Pinkish */
+    --color-danger: 20 80% 50%;
+    /* Orange-Red */
+  }
+
+  /* Achromatopsia (Monochromacy): Grayscale */
+  html.cvd-achromatopsia {
+    filter: grayscale(100%);
+  }
+
+  /* Body: flexbox column layout with full height */
   body {
-    @apply h-full w-full m-0 p-0 flex flex-col bg-sky-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300;
+    @apply h-full w-full m-0 p-0 flex flex-col transition-colors duration-300;
+    /* Background and Text are inherited/set on HTML, but ensure defaults here too if needed */
+    background-color: hsl(var(--color-background));
+    color: hsl(var(--color-text));
   }
 
   /* Universal selector: smooth color transitions for all elements (300ms) */
-  /* This ensures consistent animation when switching between light/dark themes */
   * {
     @apply transition-colors duration-300;
+  }
+
+  /* 
+   * Accessibility Modes (Epilepsy & ADHD): Disables all animations and transitions 
+   */
+  html.mode-epilepsy,
+  html.mode-epilepsy *,
+  html.mode-adhd,
+  html.mode-adhd * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  /*
+   * ADHD / Focus Mode: Reduces visual noise/distractions
+   */
+  html.mode-adhd {
+    --color-background: 210 20% 98%;
+    /* More neutral light background */
+  }
+
+  html.mode-adhd * {
+    box-shadow: none !important;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ADHD: Highlight interactive elements more subtly but clearly */
+  html.mode-adhd a:hover,
+  html.mode-adhd button:hover {
+    outline: 2px solid hsl(var(--color-primary));
+    outline-offset: 2px;
+  }
+
+  /* 
+   * Theme Switch Animation (Circular Expansion)
+   * Only works in browsers supporting View Transition API
+   */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 9999;
+  }
+
+  .dark::view-transition-old(root) {
+    z-index: 9999;
+  }
+
+  .dark::view-transition-new(root) {
+    z-index: 1;
   }
 }

@@ -15,6 +15,13 @@ describe("AuroraMessageManager", () => {
     });
 
     it('debe detectar palabra "feliz" y responder apropiadamente', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ text: "I am happy! ✨" }),
+        clone: function () {
+          return this;
+        },
+      });
       const input = "Me siento feliz";
       const result = await processUserInput(input);
       // Response may be in Spanish or English; accept keyword or emoji
@@ -22,6 +29,13 @@ describe("AuroraMessageManager", () => {
     });
 
     it('debe detectar palabra "triste" y responder apropiadamente', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ text: "I am here for you 💗" }),
+        clone: function () {
+          return this;
+        },
+      });
       const input = "Me siento triste";
       const result = await processUserInput(input);
       // Accept comforting replies or keywords in English/Spanish
@@ -62,6 +76,13 @@ describe("AuroraMessageManager", () => {
     });
 
     it("debe ser case-insensitive en detección de emociones", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ text: "Happy! ✨" }),
+        clone: function () {
+          return this;
+        },
+      });
       const input = "FELIZ FELIZ FELIZ";
       const result = await processUserInput(input);
       expect(result).toMatch(/feliz|happy|✨|💫/i);

@@ -12,6 +12,7 @@ import ProductsTable from "@/components/tsx/Dashboard/ChartsTables/ProductsTable
 import CategoryTable from "@/components/tsx/Dashboard/ChartsTables/CategoryTable/CategoryTable";
 import UsersList from "@/components/tsx/Dashboard/ChartsTables/UsersList/UsersList";
 import AdminOnly from "@/components/tsx/statement/AdminOnly";
+import FadeIn from "@/components/tsx/Dashboard/ui/FadeIn";
 
 let lang = "es";
 ---
@@ -30,75 +31,95 @@ let lang = "es";
     <div class="space-y-8 p-5">
       <!-- Chart principal -->
       <section class="gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <MainChart client:only />
-        </div>
+        <FadeIn client:load delay={0.1}>
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <MainChart client:only />
+          </div>
+        </FadeIn>
       </section>
       <section class="gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <VisitorsChart client:only />
-        </div>
+        <FadeIn client:load delay={0.2}>
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <VisitorsChart client:only />
+          </div>
+        </FadeIn>
       </section>
       <!-- Segunda fila -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <NewProductsChart client:only />
-        </div>
+        <FadeIn client:load delay={0.3} direction="right">
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <NewProductsChart client:only />
+          </div>
+        </FadeIn>
 
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <SingupsChart client:only />
-        </div>
+        <FadeIn client:load delay={0.4} direction="left">
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <SingupsChart client:only />
+          </div>
+        </FadeIn>
       </section>
 
       <!-- Tercera fila -->
       <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <SalesByCategoryChart client:only />
-        </div>
+        <FadeIn client:load delay={0.5} direction="right">
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <SalesByCategoryChart client:only />
+          </div>
+        </FadeIn>
 
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <TrafficByDeviceChart client:only />
-        </div>
+        <FadeIn client:load delay={0.6} direction="left">
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <TrafficByDeviceChart client:only />
+          </div>
+        </FadeIn>
       </section>
       <section class="gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <OrdersTable client:only />
-        </div>
+        <FadeIn client:load delay={0.7}>
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <OrdersTable client:only />
+          </div>
+        </FadeIn>
       </section>
       <section class="gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <CategoryTable client:only />
-        </div>
+        <FadeIn client:load delay={0.8}>
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <CategoryTable client:only />
+          </div>
+        </FadeIn>
       </section>
       <section class="gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <ProductsTable client:only />
-        </div>
+        <FadeIn client:load delay={0.9}>
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <ProductsTable client:only />
+          </div>
+        </FadeIn>
       </section>
       <section class="gap-6">
-        <div
-          class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-        >
-          <UsersList client:only />
-        </div>
+        <FadeIn client:load delay={1.0}>
+          <div
+            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
+          >
+            <UsersList client:only />
+          </div>
+        </FadeIn>
       </section>
     </div>
   </AdminOnly>

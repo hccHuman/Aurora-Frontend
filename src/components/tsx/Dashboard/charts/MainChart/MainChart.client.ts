@@ -1,5 +1,15 @@
 import ApexCharts from "apexcharts";
 
+/**
+ * Initializes the ApexCharts instance for the Main Chart.
+ * Handles the initial rendering and provides an update interface for dynamic data and theme changes.
+ *
+ * @param {HTMLElement} el - The DOM element where the chart will be rendered.
+ * @param {Object} initialData - The initial series and categories for the chart.
+ * @param {any[]} initialData.series - Initial data series.
+ * @param {string[]} initialData.categories - Initial X-axis categories.
+ * @returns {Object} An object containing `update` and `destroy` methods for chart management.
+ */
 export default function initMainChart(
   el: HTMLElement,
   initialData = { series: [] as any[], categories: [] as string[] }

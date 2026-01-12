@@ -12,6 +12,7 @@ div {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -20,4 +21,20 @@ div {
 
 .animate-fadeIn {
   animation: fadeIn 0.25s ease-out;
+}
+
+.animate-pageChange {
+  animation: pageSlide 0.4s ease-out;
+}
+
+@keyframes pageSlide {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

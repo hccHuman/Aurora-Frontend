@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Order } from "@/models/dashboardProps/DashboardOrderProps";
 import { fetchOrders } from "@/services/dashboardService";
 import Pagination from "@/components/tsx/Dashboard/ui/Pagination";
@@ -6,6 +7,15 @@ import { getResponsivePageSize } from "@/services/deviceService";
 
 type RangeType = "7d" | "30d" | "90d";
 
+/**
+ * OrdersTable Component
+ *
+ * Displays a paginated list of recent orders with filtering by date range.
+ * Fetches order data from `dashboardService` and maps it to the `Order` model.
+ * Features a range selector (7d, 30d, 90d) and responsive pagination.
+ *
+ * @component
+ */
 export default function OrdersTable() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [page, setPage] = useState(1);
@@ -30,6 +40,13 @@ export default function OrdersTable() {
     loadOrders(page, pageSize, range);
   }, [page, pageSize, range]);
 
+  /**
+   * Fetches and maps order data from the server.
+   *
+   * @param {number} currentPage - The page number to fetch.
+   * @param {number} size - The number of records per page.
+   * @param {RangeType} range - The time range for filtering orders.
+   */
   const loadOrders = async (
     currentPage: number,
     size: number,
@@ -71,11 +88,10 @@ export default function OrdersTable() {
                   setRange(r);
                   setPage(1);
                 }}
-                className={`px-3 py-1 text-xs rounded transition ${
-                  range === r
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300"
-                }`}
+                className={`px-3 py-1 text-xs rounded transition ${range === r
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300"
+                  }`}
                 disabled={loading}
               >
                 {r}
@@ -111,16 +127,25 @@ export default function OrdersTable() {
                   </td>
                 </tr>
               ) : (
-                orders.map((o, idx) => (
-                  <tr key={`order-${idx}`}>
-                    <td className="p-2 text-sm">{o.transaction}</td>
-                    <td className="p-2 text-sm text-gray-500">{o.datetime}</td>
-                    <td className="p-2 text-sm font-semibold">{o.amount}</td>
-                    <td className="p-2 text-sm text-gray-500">{o.reference}</td>
-                    <td className="p-2 text-sm text-gray-500">{o.method}</td>
-                    <td className="p-2 text-sm text-gray-500">{o.status}</td>
-                  </tr>
-                ))
+                <AnimatePresence mode="popLayout">
+                  {orders.map((o, idx) => (
+                    <motion.tr
+                      key={o.transaction}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      transition={{ duration: 0.2, delay: idx * 0.05 }}
+                      className="border-t dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
+                    >
+                      <td className="p-2 text-sm">{o.transaction}</td>
+                      <td className="p-2 text-sm text-gray-500">{o.datetime}</td>
+                      <td className="p-2 text-sm font-semibold">{o.amount}</td>
+                      <td className="p-2 text-sm text-gray-500">{o.reference}</td>
+                      <td className="p-2 text-sm text-gray-500">{o.method}</td>
+                      <td className="p-2 text-sm text-gray-500">{o.status}</td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
               )}
             </tbody>
           </table>

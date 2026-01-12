@@ -36,14 +36,17 @@
 import { Image } from "astro:assets";
 import AccountMenu from "../tsx/AccountMenu/AccountMenu";
 import HeaderSearch from "../tsx/Header/HeaderSearch";
-import ThemeToggle from "../tsx/ThemeToggle/ThemeToggle";
+import AccessibilityMenu from "../tsx/AccessibilityMenu/AccessibilityMenu";
 import CartCount from "../tsx/Header/CartCount";
 const { lang, home, showSearch = false, searchCategoryId = null } = Astro.props;
+
+import { t } from "@/modules/YOLI/injector";
 
 import iconImg from "@/assets/icon.png";
 import accountImg from "@/assets/Icons/dark/account.png";
 import cartImg from "@/assets/Icons/dark/cart.png";
 ---
+
 <link rel="stylesheet" href="/src/styles/Components/Header.css" />
 
 <header
@@ -52,9 +55,9 @@ import cartImg from "@/assets/Icons/dark/cart.png";
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
     <!-- LOGO SECTION -->
     <a
-      href="/"
+      href={`/${lang}/`}
       class="flex items-center gap-2 font-bold text-xl tracking-wide hover:opacity-80 transition"
-      aria-label="Aurora Shop Home"
+      aria-label={t("header.home", lang)}
     >
       <Image
         src={iconImg}
@@ -72,28 +75,35 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         {
           home && (
             <a href={`/${lang}/`} class="hover:text-red-400 transition">
-              Inicio
+              {t("header.home", lang)}
             </a>
           )
         }
-        <a href={`/${lang}/products/allproducts`} class="hover:text-red-400 transition">Productos</a
-        >
-        <a href={`/${lang}/products/offer`} class="hover:text-red-400 transition">Ofertas</a>
+        <a href={`/${lang}/products/allproducts`} class="hover:text-red-400 transition">
+          {t("header.products", lang)}
+        </a>
       </nav>
 
       <div class="flex items-center gap-4">
         <!-- Search component (desktop) -->
-        { showSearch && (
-          <div role="search">
-            <HeaderSearch client:load placeholder="Buscar productos" categoryId={searchCategoryId} />
-          </div>
-        ) }
+        {
+          showSearch && (
+            <div role="search">
+              <HeaderSearch
+                client:load
+                placeholder={t("header.search_placeholder", lang)}
+                ariaLabel={t("header.aria.search", lang)}
+                categoryId={searchCategoryId}
+              />
+            </div>
+          )
+        }
 
         {/* Account menu dropdown - desktop */}
         <div class="relative flex-shrink-0">
           <button
             id="account-toggle"
-            aria-label="Cuenta"
+            aria-label={t("header.aria.account", lang)}
             aria-expanded="false"
             class="hover:opacity-75 transition"
           >
@@ -112,10 +122,12 @@ import cartImg from "@/assets/Icons/dark/cart.png";
           </button>
           <div
             id="account-menu"
-            class="hidden absolute right-0 mt-2 h-48 w-48 border border-slate-300 dark:border-slate-600 rounded-md shadow-lg z-50 bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+            class="hidden absolute right-0 mt-2 z-50 dropdown-animate"
             role="menu"
           >
-            <AccountMenu client:load lang={lang} />
+            <div class="w-56">
+              <AccountMenu client:load lang={lang} />
+            </div>
           </div>
         </div>
 
@@ -123,7 +135,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         <div class="relative flex-shrink-0">
           <button
             id="cart-toggle"
-            aria-label="Carrito"
+            aria-label={t("header.aria.cart", lang)}
             aria-expanded="false"
             class="hover:opacity-75 transition relative"
           >
@@ -143,44 +155,81 @@ import cartImg from "@/assets/Icons/dark/cart.png";
           </button>
           <div
             id="cart-menu"
-            class="hidden absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-md shadow-lg z-50 bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+            class="hidden absolute right-0 mt-3 w-72 bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl z-50 p-5 transition-all animate-in fade-in zoom-in-95 duration-300"
             role="menu"
           >
-          <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
-            <a
-              href={`/${lang}/products/checkout`}
-              class="finalize-purchase"
-              class="block px-4 hover:bg-slate-800 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
-              role="menuitem"
-            >
-              Ver carrito
-            </a>
-            <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
-            <a
-              href={`/${lang}/products/checkout`}
-              class="finalize-purchase"
-              class="block px-4 hover:bg-slate-800 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
-              role="menuitem"
-            >
-              Finalizar compra
-            </a>
-            <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
+            <div class="flex flex-col gap-2">
+              <h3
+                class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2"
+              >
+                {t("header.cart", lang)}
+              </h3>
+              <a
+                href={`/${lang}/products/checkout`}
+                class="finalize-purchase flex items-center gap-3 px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/30 hover:border-slate-600 rounded-lg text-slate-200 transition-all duration-200 group"
+                role="menuitem"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"
+                  ><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path
+                    d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg
+                >
+                <span>{t("header.view_cart", lang)}</span>
+              </a>
+              <div class="h-px bg-slate-700/50 my-1 mx-2"></div>
+              <a
+                href={`/${lang}/products/checkout`}
+                class="finalize-purchase flex items-center gap-3 px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 transition-all duration-200 group"
+                role="menuitem"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"
+                  ><rect width="20" height="14" x="2" y="5" rx="2"></rect><line
+                    x1="2"
+                    x2="22"
+                    y1="10"
+                    y2="10"></line></svg
+                >
+                <span>{t("header.checkout", lang)}</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Theme toggle button */}
+        {/* Accessibility Menu */}
         <div class="flex-shrink-0">
-          <ThemeToggle client:load />
+          <AccessibilityMenu client:load />
         </div>
       </div>
     </div>
 
     {/* Mobile header (visible only on mobile) */}
     <div class="flex items-center gap-4 md:hidden">
-      <ThemeToggle client:load />
+      <AccessibilityMenu client:load />
       {/* Mobile menu hamburger button */}
-      <button id="mobile-toggle" class="text-2xl" aria-label="Abrir menú" aria-expanded="false"
-        >☰</button
+      <button
+        id="mobile-toggle"
+        class="text-2xl"
+        aria-label={t("header.aria.open_menu", lang)}
+        aria-expanded="false">☰</button
       >
     </div>
   </div>
@@ -188,15 +237,15 @@ import cartImg from "@/assets/Icons/dark/cart.png";
   {/* MOBILE NAVIGATION MENU (hidden by default, toggled with hamburger) */}
   <nav
     id="mobile-menu"
-    class="md:hidden hidden flex-col gap-4 px-4 py-4 bg-slate-900 text-white border-sky-100 dark:border-slate-600 border-t bg-sky-50 dark:bg-slate-950 transition-colors duration-300"
+    class="md:hidden flex flex-col gap-4 px-4 py-4 bg-slate-900 text-white border-sky-100 dark:border-slate-600 border-t bg-sky-50 dark:bg-slate-950 transition-colors duration-300"
   >
     {/* Quick links section */}
     <div class="flex items-center gap-4">
-      <p class="dark:text-slate-100">Enlaces rapidos:</p>
+      <p class="dark:text-slate-100">{t("header.quick_links", lang)}</p>
       {
         home && (
           <a href={`/${lang}/`} class="hover:text-red-400 transition">
-            Inicio
+            {t("header.home", lang)}
           </a>
         )
       }
@@ -204,36 +253,38 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         href={`/${lang}/products/allproducts`}
         class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
       >
-        Productos
-      </a>
-      <a
-        href={`/${lang}/products/offer`}
-        class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
-      >
-        Ofertas
+        {t("header.products", lang)}
       </a>
     </div>
 
     <!-- Mobile search (client) -->
-    { showSearch && (
-      <div role="search" class="w-full">
-        <HeaderSearch client:load placeholder="Buscar productos" categoryId={searchCategoryId} />
-      </div>
-    ) }
+    {
+      showSearch && (
+        <div role="search" class="w-full">
+          <HeaderSearch
+            client:load
+            placeholder={t("header.search_placeholder", lang)}
+            ariaLabel={t("header.aria.search", lang)}
+            categoryId={searchCategoryId}
+          />
+        </div>
+      )
+    }
 
     {/* Mobile account dropdown */}
     <div class="relative mt-2">
       <button
         id="account-toggle-mobile"
-        aria-label="Cuenta"
+        aria-label={t("header.aria.account", lang)}
         aria-expanded="false"
-        class="hover:opacity-75 bg-slate-900 transition w-full text-left py-2 px-2 border border-slate-300 dark:border-slate-600 rounded dark:text-slate-100"
+        class="hover:bg-slate-800 bg-slate-900/50 backdrop-blur-sm transition-all w-full text-left py-3 px-4 border border-slate-700/50 rounded-xl text-slate-100 font-medium flex justify-between items-center"
       >
-        Cuenta
+        <span>{t("header.account", lang)}</span>
+        <span class="opacity-50">▼</span>
       </button>
       <div
         id="account-menu-mobile"
-        class="hidden mt-1 w-full border border-slate-300 bg-slate-900 dark:border-slate-600 rounded-md shadow-lg z-50 bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+        class="hidden mt-2 w-full bg-slate-950/50 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl z-[60] p-1 transition-all duration-300"
         role="menu"
       >
         <AccountMenu client:load lang={lang} />
@@ -241,38 +292,73 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     </div>
 
     {/* Mobile cart dropdown */}
-      <div class="relative mt-2">
+    <div class="relative mt-2">
       <button
         id="cart-toggle-mobile"
-        aria-label="Carrito"
+        aria-label={t("header.aria.cart", lang)}
         aria-expanded="false"
-        class="hover:opacity-75 transition w-full text-left py-2 px-2 border border-slate-300 dark:border-slate-600 rounded text-white bg-slate-900 dark:text-slate-100"
+        class="hover:bg-slate-800 bg-slate-900/50 backdrop-blur-sm transition-all w-full text-left py-1.5 px-4 border border-slate-700/50 rounded-xl text-slate-100 font-medium"
       >
         <CartCount client:load variant="button" />
       </button>
       <div
         id="cart-menu-mobile"
-        class="hidden mt-1 w-full border border-slate-300 bg-slate-900 dark:border-slate-600 rounded-md shadow-lg z-50 bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+        class="hidden mt-2 w-full bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl z-50 p-5 transition-all duration-300"
         role="menu"
       >
-        <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
-        <a
-          href={`/${lang}/products/checkout`}
-          class="finalize-purchase"
-          class="block px-4 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
-          role="menuitem"
-        >
-          Ver carrito
-        </a>
-        <hr class="border-t border-slate-300 dark:border-slate-600 my-1" />
-        <a
-          href={`/${lang}/products/checkout`}
-          class="finalize-purchase"
-          class="block px-4 py-2 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-300"
-          role="menuitem"
-        >
-          Finalizar compra
-        </a>
+        <div class="flex flex-col gap-2">
+          <h3
+            class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2"
+          >
+            {t("header.cart", lang)}
+          </h3>
+          <a
+            href={`/${lang}/products/checkout`}
+            class="finalize-purchase flex items-center gap-3 px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/30 hover:border-slate-600 rounded-lg text-slate-200 transition-all duration-200 group"
+            role="menuitem"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"
+              ><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"
+              ></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg
+            >
+            <span>{t("header.view_cart", lang)}</span>
+          </a>
+          <div class="h-px bg-slate-700/50 my-1 mx-2"></div>
+          <a
+            href={`/${lang}/products/checkout`}
+            class="finalize-purchase flex items-center gap-3 px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 transition-all duration-200 group"
+            role="menuitem"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"
+              ><rect width="20" height="14" x="2" y="5" rx="2"></rect><line
+                x1="2"
+                x2="22"
+                y1="10"
+                y2="10"></line></svg
+            >
+            <span>{t("header.checkout", lang)}</span>
+          </a>
+        </div>
       </div>
     </div>
   </nav>
@@ -289,10 +375,10 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     const mobileMenu = document.getElementById("mobile-menu");
     mobileToggle?.addEventListener("click", (e) => {
       e.stopPropagation();
-      mobileMenu.classList.toggle("hidden");
+      mobileMenu.classList.toggle("open");
       mobileToggle.setAttribute(
         "aria-expanded",
-        mobileMenu.classList.contains("hidden") ? "false" : "true"
+        mobileMenu.classList.contains("open") ? "true" : "false"
       );
     });
 
@@ -399,7 +485,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
       const target = e.target;
 
       // Don't close if clicking on search field
-      if (target.closest("input") || target.closest("button[aria-label='Buscar']")) {
+      if (target.closest("input") || target.closest("button[type='submit']")) {
         return;
       }
 
@@ -429,10 +515,10 @@ import cartImg from "@/assets/Icons/dark/cart.png";
     });
   </script>
   <script type="module">
-    import { setupFinalizeLinks } from '/src/lib/headerNavigation.ts';
+    import { setupFinalizeLinks } from "/src/lib/headerNavigation.ts";
     // initialize finalize purchase handlers for header links
     try {
-      const lang = document.documentElement.lang || 'es';
+      const lang = document.documentElement.lang || "es";
       setupFinalizeLinks(lang);
     } catch (e) {
       // ignore errors during setup

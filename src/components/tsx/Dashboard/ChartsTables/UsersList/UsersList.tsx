@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Shield, User as UserIcon } from "lucide-react";
 import type { User } from "@/models/dashboardProps/DashboardUsersProps";
 import { fetchUsers, saveUser, saveUserUpdate, deleteUser } from "@/services/dashboardUsersService";
 import Pagination from "@/components/tsx/Dashboard/ui/Pagination";
 import { getResponsivePageSize } from "@/services/deviceService";
 
+/**
+ * UsersList Component
+ *
+ * Provides a management interface for users in the dashboard.
+ * Supports CRUD operations: fetching, creating, updating, and deleting users.
+ * Handles role management, account activation, and password updates.
+ * Features a dynamic creation row, row-level editing, toggleable password visibility, and responsive pagination.
+ *
+ * @component
+ */
 export default function UsersList() {
   const [items, setItems] = useState<User[]>([]);
   const [page, setPage] = useState(1);
@@ -34,6 +46,12 @@ export default function UsersList() {
     loadUsers(page, pageSize);
   }, [page, pageSize]);
 
+  /**
+   * Loads a paginated list of users from the server.
+   *
+   * @param {number} currentPage - The page number to fetch.
+   * @param {number} size - The number of users per page.
+   */
   async function loadUsers(currentPage: number, size: number) {
     setLoading(true);
     const res = await fetchUsers(currentPage, size);
@@ -44,7 +62,31 @@ export default function UsersList() {
     setLoading(false);
   }
 
+  /* Role Helper */
+  const getRoleLabel = (isAdmin: boolean) => {
+    if (isAdmin) return (
+      <span className="flex items-center gap-1.5 text-red-400 font-medium">
+        <Shield className="w-3.5 h-3.5" />
+        Admin
+      </span>
+    );
+    return (
+      <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+        <UserIcon className="w-3.5 h-3.5" />
+        User
+      </span>
+    );
+  };
+
+  const ROLE_OPTIONS = [
+    { value: 1, label: "Admin" },
+    { value: 2, label: "User" },
+  ];
+
   /* ➕ CREATE */
+  /**
+   * Initializes the interface for creating a new user.
+   */
   function onStartCreate() {
     setEditingId("new");
     setDraftName("");
@@ -55,16 +97,27 @@ export default function UsersList() {
   }
 
   /* ✏️ EDIT */
+  /**
+   * Initializes the editing state for a specific user.
+   *
+   * @param {User} u - The user object to edit.
+   */
   function onStartEdit(u: User) {
     setEditingId(u.id);
     setDraftName(u.nombre);
     setDraftEmail(u.email);
-    setDraftRolId(u.rol_id);
+    setDraftRolId(u.admin ? 1 : 2); // Map boolean to ID for the select
     setDraftActivo(u.activo);
-    setDraftPassword(""); // vacío, para permitir cambiarlo
+    setDraftPassword(u.password_hash || ""); // Start with hash/existing
   }
 
   /* 💾 SAVE */
+  /**
+   * Persists changes to an existing user or creates a new one.
+   * Refreshes the user list upon success.
+   *
+   * @param {User} [u] - The user to update, or undefined if creating a new one.
+   */
   async function onSave(u?: User) {
     if (editingId === "new") {
       // ➕ CREATE (password obligatorio)
@@ -84,7 +137,9 @@ export default function UsersList() {
         rol_id: draftRolId,
         activo: draftActivo,
       };
-      if (draftPassword) payload.password = draftPassword; // solo si se escribió
+      if (draftPassword && draftPassword !== u.password_hash) {
+        payload.password = draftPassword;
+      }
       await saveUserUpdate(payload);
     }
 
@@ -93,6 +148,11 @@ export default function UsersList() {
   }
 
   /* 🗑 DELETE */
+  /**
+   * Deletes a user by their ID and refreshes the list.
+   *
+   * @param {string} id - The unique identifier of the user to delete.
+   */
   async function onDelete(id: string) {
     await deleteUser(id);
     loadUsers(page, pageSize);
@@ -134,10 +194,16 @@ export default function UsersList() {
                 </td>
               </tr>
             ) : (
-              <>
+              <AnimatePresence mode="popLayout">
                 {/* Nueva fila */}
                 {editingId === "new" && (
-                  <tr className="border-t dark:border-slate-700 bg-gray-50 dark:bg-slate-800/40">
+                  <motion.tr
+                    key="new-user"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="border-t dark:border-slate-700 bg-gray-50 dark:bg-slate-800/40"
+                  >
                     <td className="p-2">-</td> {/* ID */}
                     <td className="p-2">
                       <input
@@ -173,12 +239,19 @@ export default function UsersList() {
                       </button>
                     </td>
                     <td className="p-2">
-                      <input
-                        type="number"
-                        value={draftRolId}
-                        onChange={(e) => setDraftRolId(Number(e.target.value))}
-                        className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
-                      />
+                      <div className="relative">
+                        <select
+                          value={draftRolId}
+                          onChange={(e) => setDraftRolId(Number(e.target.value))}
+                          className="w-full appearance-none rounded-md border pl-8 pr-2 py-1 text-sm dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-red-400 focus:border-red-400 outline-none transition-colors cursor-pointer"
+                        >
+                          <option value={1}>Admin</option>
+                          <option value={2}>User</option>
+                        </select>
+                        <div className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                          {Number(draftRolId) === 1 ? <Shield className="w-3.5 h-3.5" /> : <UserIcon className="w-3.5 h-3.5" />}
+                        </div>
+                      </div>
                     </td>
                     <td className="p-2">
                       <input
@@ -206,12 +279,19 @@ export default function UsersList() {
                         </button>
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 )}
 
                 {/* Filas existentes */}
-                {items.map((u) => (
-                  <tr key={u.id} className="border-t dark:border-slate-700">
+                {items.map((u, idx) => (
+                  <motion.tr
+                    key={u.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.2, delay: idx * 0.05 }}
+                    className="border-t dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
                     <td className="p-2 text-sm">{u.id}</td>
                     <td className="p-2 text-sm">
                       {editingId === u.id ? (
@@ -235,13 +315,15 @@ export default function UsersList() {
                         u.email
                       )}
                     </td>
-                    {/* Password Hash: mostrar hash si no se edita, input si se edita */}
                     <td className="p-2 flex gap-1 items-center">
                       {editingId === u.id ? (
                         <>
                           <input
                             type={draftShowPassword ? "text" : "password"}
                             value={draftPassword}
+                            onFocus={() => {
+                              if (draftPassword === u.password_hash) setDraftPassword("");
+                            }}
                             onChange={(e) => setDraftPassword(e.target.value)}
                             placeholder="New Password"
                             className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -260,14 +342,21 @@ export default function UsersList() {
                     </td>
                     <td className="p-2 text-sm">
                       {editingId === u.id ? (
-                        <input
-                          type="number"
-                          value={draftRolId}
-                          onChange={(e) => setDraftRolId(Number(e.target.value))}
-                          className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
-                        />
+                        <div className="relative">
+                          <select
+                            value={draftRolId}
+                            onChange={(e) => setDraftRolId(Number(e.target.value))}
+                            className="w-full appearance-none rounded-md border pl-8 pr-2 py-1 text-sm dark:bg-slate-800 dark:text-white focus:ring-1 focus:ring-red-400 focus:border-red-400 outline-none transition-colors cursor-pointer"
+                          >
+                            <option value={1}>Admin</option>
+                            <option value={2}>User</option>
+                          </select>
+                          <div className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            {Number(draftRolId) === 1 ? <Shield className="w-3.5 h-3.5" /> : <UserIcon className="w-3.5 h-3.5" />}
+                          </div>
+                        </div>
                       ) : (
-                        u.rol_id
+                        getRoleLabel(u.admin)
                       )}
                     </td>
                     <td className="p-2 text-sm">
@@ -321,9 +410,9 @@ export default function UsersList() {
                         </div>
                       )}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
-              </>
+              </AnimatePresence>
             )}
           </tbody>
         </table>

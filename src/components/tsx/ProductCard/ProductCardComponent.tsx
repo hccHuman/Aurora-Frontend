@@ -1,19 +1,47 @@
 import React from "react";
+import { motion } from "framer-motion";
 import ProductCardButton from "./ProductCardButton";
 import type { ProductCardProps } from "@/models/EcommerceProps/ProductsProps";
+import { t } from "@/modules/YOLI/injector";
 
+/**
+ * ProductCardReact Component
+ *
+ * A versatile product card used in various grids and lists.
+ * Displays product image, title, description, and price.
+ * Provides actions to "Ver detalles" (open modal) and "Añadir al carrito".
+ *
+ * @component
+ */
 export default function ProductCardReact({
   id,
   title,
   description,
   price,
   img,
+  category_id,
   onOpenModal,
-}: ProductCardProps) {
+  lang = "es",
+}: ProductCardProps & { lang?: string }) {
   return (
-    <div className="w-full rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+    <motion.div
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.4 }}
+      className="w-full rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+    >
       {/* Imagen del producto */}
-      <img src={img} alt={title} className="w-full h-48 object-cover" />
+      <motion.div className="overflow-hidden">
+        <motion.img
+          initial={{ opacity: 0, scale: 1.05 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.05 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          src={img}
+          alt={title}
+          className="w-full h-48 object-cover"
+        />
+      </motion.div>
 
       {/* Contenido del producto */}
       <div className="p-6 flex flex-col gap-4">
@@ -38,12 +66,12 @@ export default function ProductCardReact({
               }
             }}
           >
-            Ver detalles
+            {t("products.view_details", lang)}
           </button>
 
-          <ProductCardButton title={title} id={id} price={price} />
+          <ProductCardButton title={title} id={id} price={price} category_id={category_id} lang={lang} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

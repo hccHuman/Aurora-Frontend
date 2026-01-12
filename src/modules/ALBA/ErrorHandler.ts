@@ -11,66 +11,70 @@
  * - 600+: Internal processing errors
  */
 
-import type { ErrorCategories } from "@/modules/ALBA/models/ErrorCategories";
 import { ERROR_CODES } from "@/modules/ALBA/data/ErrorCodes";
+import { dispatchToast } from "@/modules/ALBA/store/toastStore";
+import type { ErrorCategories } from "@/modules/ALBA/models/ErrorCategories";
+
+// Pact definition with Backend
+export interface BackendError {
+  status: number;
+  error: string;
+  code: number;
+}
 
 /**
- * Map error code to human-readable error name
+ * Get human-readable error name from a code by searching all categories.
  *
- * Searches error code registry across all error categories and returns
- * a categorized error name. Provides fallback for unknown error codes.
- *
- * @param code - Numeric or string error code
- * @returns Formatted error name in "CATEGORY.ERROR_NAME" format or "UNKNOWN_ERROR_CODE_XXX"
- *
- * @example
- * getErrorName(800) → "CHAT.SERVICE_TIMEOUT"
- * getErrorName(801) → "API.CATEGORY_NOT_FOUND"
- * getErrorName(999) → "UNKNOWN_ERROR_CODE_999"
+ * @param {number | string} code - The error code to look up
+ * @returns {string} The formatted category and error name, or UNKNOWN_ERROR_CODE
  */
 export function getErrorName(code: number | string): string {
-  // Iterate through all error categories (CHAT, API, INTERNAL, etc.)
   for (const [category, errors] of Object.entries(ERROR_CODES) as [
     ErrorCategories,
     Record<string, string>,
   ][]) {
-    // Check if error code exists in this category
     if (errors[code]) {
-      // Return formatted error name like "CHAT.SERVICE_TIMEOUT"
       return `${category}.${errors[code]}`;
     }
   }
-  // No match found - return generic unknown error identifier
   return `UNKNOWN_ERROR_CODE_${code}`;
 }
 
 /**
- * Log error to console with categorized error name and optional details
+ * Main Error Handler Entrypoint
  *
- * Converts error code to human-readable name and outputs to console.error.
- * Includes optional context-specific details (error stack, parameter values, etc.).
+ * Inspects the error object, determines the type (Backend Pact, System Error, or Fallback),
+ * and executes reactions like logging to console and dispatching a UI Toast.
  *
- * Current behavior: Console-only logging
- * Future enhancements: Remote logging integration, error dispatch to UI, analytics
- *
- * @param code - Numeric error code or string identifier
- * @param extra - Optional additional context (error object, request params, etc.)
- *
- * @example
- * handleInternalError(800)
- * // Output: 🚨 [ERROR 800] CHAT.SERVICE_TIMEOUT
- *
- * handleInternalError(801, { categoryId: 5, reason: 'Not found' })
- * // Output: 🚨 [ERROR 801] API.CATEGORY_NOT_FOUND
- * //         Detalles: { categoryId: 5, reason: 'Not found' }
+ * @param {any} error - The error object to handle
  */
-export function handleInternalError(code: number | string, extra?: any) {
-  // Convert code to readable error name with category prefix
-  const errorName = getErrorName(code);
+export function handleInternalError(error: any) {
+  let code: number | string = 'UNKNOWN';
+  let message = 'An unexpected error occurred';
 
-  // Log error with visual indicator and formatted message
-  console.error(`🚨 [ERROR ${code}] ${errorName}`);
+  // 1. Check if it matches the Backend Pact { status, error, code }
+  if (error && typeof error === 'object' && 'code' in error && 'status' in error) {
+    const backendError = error as BackendError;
+    code = backendError.code;
+    message = backendError.error || getErrorName(code);
 
-  // If context details provided, log them for debugging
-  if (extra) console.error("Detalles:", extra);
+    // Log with clear identification
+    console.error(`🚨 [ALBA] Backend Error ${code}:`, backendError);
+
+    // Dispatch Toast
+    dispatchToast(`Error ${code}: ${message}`, 'error');
+    return;
+  }
+
+  // 2. Handle standard Error objects (Network errors, etc caused by fetch failure before response)
+  if (error instanceof Error) {
+    message = error.message;
+    console.error(`🚨 [ALBA] System Error:`, error);
+    dispatchToast(message, 'error');
+    return;
+  }
+
+  // 3. Fallback
+  console.error(`🚨 [ALBA] Unknown Error:`, error);
+  dispatchToast('An unknown error occurred', 'error');
 }

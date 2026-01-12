@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import { ProductModal } from "./ProductModal";
 import { getProductById } from "@/services/productService";
 
+/**
+ * ProductModalWrapper Component
+ *
+ * Global singleton wrapper for the ProductModal.
+ * Exposes a global window function `openProductModal(id)` to trigger
+ * the modal from anywhere in the application (even from non-React code).
+ *
+ * @component
+ */
 export default function ProductModalWrapper() {
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState(null);

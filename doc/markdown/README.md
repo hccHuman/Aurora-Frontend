@@ -11,6 +11,7 @@ Aurora es una plataforma de e-commerce revolucionaria que combina la potencia de
 - **🧠 LUCIA** - Lógica Unificada de Comprensión e Interfaz Accesible
 - **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación
 - **💖 ANA** - Analizador de Niveles Afectivos
+- **📡 YOLI** - Yector Omnilingüe de Lenguajes Inyectables
 
 ### 🛒 **Funcionalidades E-commerce**
 
@@ -24,7 +25,11 @@ Aurora es una plataforma de e-commerce revolucionaria que combina la potencia de
 ### 📖 **Documentación Técnica** ([Ver en Markdown](./doc/markdown/))
 
 - [🏗️ Arquitectura del Sistema](./doc/markdown/arquitectura.md) - Descripción detallada de la arquitectura
+- [📁 Estructura del Proyecto](./doc/markdown/estructura.md)
 - [⚙️ Guía de Instalación](./doc/markdown/instalacion.md) - Instrucciones de configuración
+- [✨ Catálogo de Animaciones](./doc/markdown/animaciones.md)
+- [👤 Avatar Virtual (Live2D)](./doc/markdown/avatar.md)
+- [📊 Dashboard de Administración](./doc/markdown/dashboard.md)
 - [📋 README Principal](./doc/markdown/README.md) - Documentación general
 
 ### 📄 **Documentos en PDF** ([Ver en PDF](./doc/pdf/))
@@ -68,14 +73,17 @@ Es responsable de la gestión de procesos, coordinación entre módulos y manten
 import { appState, navigateTo } from "./modules/MARIA/context";
 ```
 
-## 💖 ANA - El Alma Emocional
-
 A.N.A. constituye la **capa emocional** de la IA.  
 Su función es detectar, interpretar y regular las expresiones emocionales en el avatar, manteniendo un equilibrio emocional natural y coherente.
 
+## 📡 YOLI - El Traductor Universal
+
+Y.O.L.I. actúa como el **motor de internacionalización (i18n) dinámico**.  
+Su función es inyectar en componentes y páginas el texto correspondiente de un archivo JSON específico para el idioma activo.
+
 ```typescript
 // Ejemplo de uso
-import { detectEmotionFromText } from "./modules/ANA/detector";
+import { t } from "./modules/YOLI/injector";
 ```
 
 ## 🌌 Integración General
@@ -120,6 +128,7 @@ npm run build
 | **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico      | Coordina y gestiona todos los módulos |
 | **L.U.C.I.A.** | Comprensión e interfaz accesible     | Cognitivo / Lingüístico | Comunica la IA con el usuario         |
 | **A.N.A.**     | Análisis y regulación emocional      | Afectivo / Adaptativo   | Equilibra las emociones del sistema   |
+| **Y.O.L.I.**   | Inyección de lenguaje y traducción  | Contextual / Dinámico   | Adapta el idioma del sistema al usuario|
 
 ---
 
@@ -165,13 +174,17 @@ npm run build
 │   │   │   ├── routes.ts       # Gestión dinámica de rutas y navegación
 │   │   │   ├── context.ts      # Estado global de la app y sesiones
 │   │   │   └── index.ts
+│   │   ├── ANA/                # Analizador de Niveles Afectivos 💗
+│   │   │   ├── detector.ts     # Detección emocional (texto, voz, patrones)
+│   │   │   ├── manager.ts      # Control y ajuste de estados emocionales
+│   │   │   ├── data/           # Diccionarios, perfiles emocionales, datasets
+│   │   │   └── index.ts
 │   │   │
-│   │   └── ANA/                # Analizador de Niveles Afectivos 💗
-│   │       ├── detector.ts     # Detección emocional (texto, voz, patrones)
-│   │       ├── manager.ts      # Control y ajuste de estados emocionales
-│   │       ├── data/           # Diccionarios, perfiles emocionales, datasets
-│   │       └── index.ts
+│   │   └── YOLI/               # Yector Omnilingüe de Lenguajes Inyectables 🌍
+│   │       ├── injector.ts     # Inyección de textos i18n
+│   │       └── data/           # Diccionarios JSON por idioma
 │   │
+│   ├── 📁 services/            # Conexión con APIs (backend, IA, pasarelas de pago)
 │   ├── 📁 services/            # Conexión con APIs (backend, IA, pasarelas de pago)
 │   │   ├── apiClient.ts
 │   │   ├── paymentService.ts

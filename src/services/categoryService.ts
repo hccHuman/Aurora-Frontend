@@ -6,6 +6,7 @@
  */
 
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
+import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
 /**
  * Fetch all product categories from the backend API
@@ -26,8 +27,8 @@ import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
  */
 export async function fetchCategories() {
   try {
-    // Get API URL from environment variables (PUBLIC_API_URL or fallback to process.env)
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    // Get API URL from environment variables
+    const apiUrl = PUBLIC_API_URL;
 
     // Construct endpoint URL for categories list
     const endpoint = `${apiUrl}/categories`;
@@ -51,16 +52,26 @@ export async function fetchCategories() {
     return data.data;
   } catch (error: any) {
     // Log error using ALBA error handler (code 801 = external fetch GET error)
-    handleInternalError("801", error.message || error);
+    handleInternalError(error);
 
     // Return empty array as fallback to prevent app crashes
     return [];
   }
 }
 
+/**
+ * Fetch a paginated list of product categories
+ *
+ * @param {number} page - Page number (default: 1)
+ * @param {number} pageSize - Number of categories per page (default: 10)
+ * @returns {Promise<Object>} Object containing data array and pagination metadata
+ *
+ * @example
+ * const { data, total } = await fetchPaginatedCategories(1, 5);
+ */
 export async function fetchPaginatedCategories(page = 1, pageSize = 10) {
   try {
-    const apiUrl = import.meta.env.PUBLIC_API_URL || process.env.PUBLIC_API_URL;
+    const apiUrl = PUBLIC_API_URL;
 
     const endpoint = `${apiUrl}/categories/paginated?page=${page}&pageSize=${pageSize}`;
 
@@ -78,7 +89,7 @@ export async function fetchPaginatedCategories(page = 1, pageSize = 10) {
       totalPages: json.totalPages || 1,
     };
   } catch (error: any) {
-    handleInternalError("801", error.message || error);
-    return { items: [], pagination: null };
+    handleInternalError(error);
+    return { data: [], total: 0, totalPages: 1 };
   }
 }

@@ -3,7 +3,7 @@ import { LoginComponent } from "@/components/tsx/AuthForm/LoginComponent";
 import Layout from "@/layouts/LayoutForm.astro";
 ---
 
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Login Aurora 💖</title>
@@ -12,14 +12,14 @@ import Layout from "@/layouts/LayoutForm.astro";
   </head>
   <body>
     <Layout
-      lang="es"
-      title="Aurora Chat - Español"
-      description="Plataforma de chat con IA en español"
-      canonicalUrl="https://miweb.com/es/"
+      lang="en"
+      title="Aurora Chat - English"
+      description="AI Chat platform in English"
+      canonicalUrl="https://miweb.com/en/"
       previewImage="/assets/preview.png"
     >
       <!-- Montamos el componente React solo en cliente -->
-      <LoginComponent client:load lang="es"/>
+      <LoginComponent client:load lang="en" />
     </Layout>
   </body>
 </html>

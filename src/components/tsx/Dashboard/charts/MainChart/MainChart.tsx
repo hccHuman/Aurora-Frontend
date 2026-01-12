@@ -3,6 +3,16 @@ import initMainChart from "./MainChart.client";
 import { fetchSalesStats } from "@/services/dashboardService";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
 
+/**
+ * MainChart Component
+ *
+ * A specialized visualization component for displaying historical sales revenue.
+ * Integrates with `dashboardService` to fetch sales statistics based on a selectable time range.
+ * Uses `MainChart.client` for low-level ApexCharts initialization and management.
+ * Features automatic theme synchronization (dark/light mode) and revenue total calculation.
+ *
+ * @component
+ */
 const MainChart: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<any | null>(null);

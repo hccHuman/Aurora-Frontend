@@ -1,6 +1,15 @@
 import type { Pagination } from "@/models/EcommerceProps/PaginationProps";
 import { useState } from "react";
 
+/**
+ * Paginator Component
+ *
+ * A reusable pagination control with "Previous" and "Next" buttons.
+ * Displays current page and total page count.
+ * Communicates page changes back to the parent via the `onPageChange` callback.
+ *
+ * @component
+ */
 export default function Paginator({
   initialPage = 1,
   totalPages,

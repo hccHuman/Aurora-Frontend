@@ -6,12 +6,21 @@ import { searchStateAtom } from '@/store/searchStore';
 import { getResponsivePageSize } from "@/services/deviceService";
 import ProductCardComponent from "../ProductCard/ProductCardComponent";
 import type { Product } from "@/models/EcommerceProps/ProductsProps";
+import { t } from "@/modules/YOLI/injector";
 
 interface Props {
   categoryId: number;
   lang?: string;
 }
 
+/**
+ * CategoryProductsListComponent Component
+ *
+ * Displays a paginated grid of products belonging to a specific category.
+ * Also supports category-scoped search queries from the global search store.
+ *
+ * @component
+ */
 export default function CategoryProductsListComponent({ categoryId, lang = "es" }: Props) {
   const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
@@ -50,7 +59,7 @@ export default function CategoryProductsListComponent({ categoryId, lang = "es" 
       const loadSearch = async () => {
         setLoading(true);
         try {
-          const res = await searchProductsByCategory(categoryId, q, page, pageSize as number);
+          const res = (await searchProductsByCategory(categoryId, q, page, pageSize as number)) as any;
           if (res && Array.isArray(res.data)) {
             setProducts(res.data);
             setTotalPages(res.totalPages ?? Math.ceil((res.total ?? res.totalProducts ?? res.data.length) / (pageSize as number)));
@@ -80,8 +89,8 @@ export default function CategoryProductsListComponent({ categoryId, lang = "es" 
     if (q && page !== 1) setPage(1);
   }, [searchState?.query, categoryId]);
 
-  if (pageSize === null) return <p className="text-center my-8">Cargando configuración...</p>;
-  if (loading) return <p className="text-center my-8">Cargando productos...</p>;
+  if (pageSize === null) return <p className="text-center my-8">{t("products.loading_config", lang)}</p>;
+  if (loading) return <p className="text-center my-8">{t("products.loading_products", lang)}</p>;
 
   return (
     <div className="flex flex-col w-full px-4">
@@ -94,6 +103,8 @@ export default function CategoryProductsListComponent({ categoryId, lang = "es" 
             description={p.descripcion}
             price={p.precio}
             img={p.img_url}
+            category_id={p.product_category || categoryId}
+            lang={lang}
           />
         ))}
       </div>
