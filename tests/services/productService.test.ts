@@ -1,9 +1,23 @@
-// Test disabled: direct import of productService uses `import.meta` which causes jest parse errors.
-// The behaviour of searchProducts is covered indirectly by HeaderSearch component tests which mock searchProducts.
+import { searchProducts } from '@/services/productService';
 
-describe.skip('productService.searchProducts (disabled)', () => {
-	test('skipped - import.meta incompatibility', () => {
-		// placeholder for test suite which is disabled because productService imports import.meta
+describe('productService.searchProducts', () => {
+	it('returns parsed json when backend responds ok', async () => {
+		const payload = {
+			data: [{ id: 1, title: 'Freno', price: 12, img_url: '/img/freno.png' }],
+			total: 1,
+			totalPages: 1,
+			success: true
+		};
+		(globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+			ok: true,
+			json: async () => payload,
+			clone: function () { return this; }
+		});
+
+		const res = await searchProducts('Freno', 1, 5);
+
+		expect(res).toBeDefined();
+		expect(res?.data[0].title).toBe('Freno');
 	});
 });
 

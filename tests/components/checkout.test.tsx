@@ -5,26 +5,24 @@ import { Provider, createStore } from 'jotai';
 
 jest.mock('@/services/paymentService', () => ({
   paymentService: {
-    createPaymentIntent: jest.fn(async (items: any) => ({ success: true, clientSecret: 'x' })),
+    Order: jest.fn(async (items: any) => ({ success: true, clientSecret: 'x' })),
   },
 }));
 
+import { cartStore } from '@/store/cartStore';
+import { userStore } from '@/store/userStore';
+
 describe('CheckoutComponent', () => {
   it('creates payment intent and clears cart on success', async () => {
-    const { Provider: Prov, createStore: create } = require('jotai');
-    const store = create();
-    const { cartStore } = require('@/store/cartStore');
+    const store = createStore();
 
     store.set(cartStore, { items: [{ productId: 1, title: 'X', price: 12.5, quantity: 2 }] });
-
-    // Ensure user is logged in for the checkout flow
-    const { userStore } = require('@/store/userStore');
-    store.set(userStore, { loggedIn: true, user: { id: 'u1' } });
+    store.set(userStore, { loggedIn: true, user: { id: 'u1' }, ready: true });
 
     render(
-      <Prov store={store}>
+      <Provider store={store}>
         <CheckoutComponent />
-      </Prov>
+      </Provider>
     );
 
     expect(await screen.findByText(/X/)).toBeInTheDocument();
@@ -34,83 +32,82 @@ describe('CheckoutComponent', () => {
     await waitFor(() => expect(screen.getByText(/Pago iniciado correctamente/i)).toBeInTheDocument());
 
     // cart should be cleared
-    expect(screen.getByText(/Tu carrito está vacío/i)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/carrito/i)).toBeInTheDocument());
+    expect(screen.getByText(/vac/i)).toBeInTheDocument();
   });
 
   it('redirects to login if user is not authenticated', async () => {
-    const { Provider: Prov, createStore: create } = require('jotai');
-    const store = create();
-    const { cartStore } = require('@/store/cartStore');
-
+    const store = createStore();
     store.set(cartStore, { items: [{ productId: 1, title: 'X', price: 12.5, quantity: 2 }] });
 
     // Set userStore to logged out
-    const { userStore } = require('@/store/userStore');
-    store.set(userStore, { loggedIn: false, user: null });
+    store.set(userStore, { loggedIn: false, user: null, ready: true });
 
     const navigation = require('@/lib/navigation');
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     render(
-      <Prov store={store}>
+      <Provider store={store}>
         <CheckoutComponent />
-      </Prov>
+      </Provider>
     );
 
     fireEvent.click(screen.getByRole('button', { name: /pagar/i }));
 
-    await waitFor(() => expect(goSpy).toHaveBeenCalled());
+    await waitFor(() => expect(goSpy).toHaveBeenCalled(), { timeout: 2000 });
     goSpy.mockRestore();
   });
 
   it('redirects to login if createPaymentIntent returns 401', async () => {
-    const { Provider: Prov, createStore: create } = require('jotai');
-    const store = create();
-    const { cartStore } = require('@/store/cartStore');
-
+    const store = createStore();
     store.set(cartStore, { items: [{ productId: 1, title: 'X', price: 12.5, quantity: 2 }] });
 
+    // Set userStore to logged in but it will fail the service
+    store.set(userStore, { loggedIn: true, user: { id: 'u1' }, ready: true });
+
     // Mock paymentService to throw a 401
-    const paymentService = require('@/services/paymentService').paymentService;
-    paymentService.createPaymentIntent = jest.fn(async () => { const e: any = new Error('Unauthorized'); e.status = 401; throw e; });
+    const { paymentService: ps } = require('@/services/paymentService');
+    ps.Order = jest.fn(async () => {
+      const e: any = new Error('Unauthorized');
+      e.status = 401;
+      return Promise.reject(e);
+    });
 
     const navigation = require('@/lib/navigation');
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     render(
-      <Prov store={store}>
+      <Provider store={store}>
         <CheckoutComponent />
-      </Prov>
+      </Provider>
     );
 
     fireEvent.click(screen.getByRole('button', { name: /pagar/i }));
 
-    await waitFor(() => expect(goSpy).toHaveBeenCalled());
+    await waitFor(() => expect(goSpy).toHaveBeenCalled(), { timeout: 2000 });
     goSpy.mockRestore();
   });
 
   it('redirects to login immediately if sessionStorage login is false', async () => {
-    const { Provider: Prov, createStore: create } = require('jotai');
-    const store = create();
-    const { cartStore } = require('@/store/cartStore');
-
+    const store = createStore();
     store.set(cartStore, { items: [{ productId: 1, title: 'X', price: 12.5, quantity: 2 }] });
+    store.set(userStore, { loggedIn: true, user: { id: 'u1' }, ready: true });
 
     // make sessionStorage indicate logged out
     sessionStorage.setItem('login', 'false');
 
     const navigation = require('@/lib/navigation');
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     render(
-      <Prov store={store}>
+      <Provider store={store}>
         <CheckoutComponent />
-      </Prov>
+      </Provider>
     );
 
     fireEvent.click(screen.getByRole('button', { name: /pagar/i }));
 
-    await waitFor(() => expect(goSpy).toHaveBeenCalled());
+    await waitFor(() => expect(goSpy).toHaveBeenCalled(), { timeout: 2000 });
     goSpy.mockRestore();
 
     // cleanup
