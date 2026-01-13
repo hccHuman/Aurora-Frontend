@@ -1,54 +1,74 @@
 /**
- * AuroraChatFrame.tsx
- * Purpose: React functional component that renders a chat UI for Aurora.
- * It manages a local message list and delegates message processing to
- * `processUserInput` (the message manager). The component shows user and
- * Aurora messages with simple entry animations using framer-motion.
+ * AuroraChatFrame Component
  *
- * Notes:
- * - This is a client component (uses "use client").
- * - Messages are stored locally in component state; no persistence.
+ * Renders the main chat interface for interacting with Aurora.
+ * Manages the message history state and coordinates with the message manager.
+ * Features smooth entry animations for messages using framer-motion.
+ *
+ * @component
  */
-
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { processUserInput } from "../core/AuroraMessageManager";
+import { initChat } from "@/services/chatService";
 import type { Message } from "../../../models/AuroraProps/MessageProps";
 
 export const AuroraChatFrame: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [chatId, setChatId] = useState<number | undefined>(undefined);
   const [input, setInput] = useState("");
+
+  useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const response = await initChat();
+        if (response.chatId) setChatId(response.chatId);
+        if (response.data) {
+          setMessages(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to load chat history", err);
+      }
+    };
+    loadHistory();
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMsg: Message = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
-
-    // Llama al gestor de mensajes
-    const auroraReply = await processUserInput(input);
-
-    const auroraMsg: Message = { sender: "aurora", text: auroraReply };
-    setMessages((prev) => [...prev, auroraMsg]);
+    const tempUserMsg: Message = { remitente: "usuario", contenido: input };
+    setMessages((prev) => [...prev, tempUserMsg]);
+    const currentInput = input;
     setInput("");
+
+    try {
+      const { text, chatId: newChatId, aiMessage } = await processUserInput(currentInput, chatId);
+
+      if (newChatId) setChatId(newChatId);
+
+      // Use the full message object from backend if available, otherwise fallback to local construction
+      const auroraMsg: Message = aiMessage ? aiMessage : { remitente: "ia", contenido: text };
+      setMessages((prev) => [...prev, auroraMsg]);
+    } catch (error) {
+      console.error("Error processing user input:", error);
+    }
   };
 
   return (
-    <div className="w-[500px] bg-gray-900/70 backdrop-blur-md rounded-2xl p-4 mt-4 text-white shadow-xl border border-pink-400/20">
+    <div className="w-full max-w-[500px] bg-gray-900/70 backdrop-blur-md rounded-2xl p-4 mt-4 text-white shadow-xl border border-pink-400/20 mx-auto">
       <div className="h-[250px] overflow-y-auto mb-3 space-y-2 scrollbar-thin scrollbar-thumb-pink-500/50">
         {messages.map((msg, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-2 rounded-xl max-w-[80%] ${
-              msg.sender === "user"
-                ? "ml-auto bg-pink-600/70 text-right"
-                : "mr-auto bg-white/10 border border-pink-400/30"
-            }`}
+            className={`p-2 rounded-xl max-w-[80%] ${msg.remitente === "usuario"
+              ? "ml-auto bg-pink-600/70 text-right"
+              : "mr-auto bg-white/10 border border-pink-400/30"
+              }`}
           >
-            {msg.text}
+            {msg.contenido}
           </motion.div>
         ))}
       </div>

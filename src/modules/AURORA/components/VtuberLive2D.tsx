@@ -1,15 +1,11 @@
 /**
- * VtuberLive2D.tsx
- * Purpose: Integrates a Live2D model into a PIXI application and
- * exposes hooks to drive expressions, motions and lip-sync from
- * Aurora's state and audio input. Acts as the visual avatar for the
- * assistant and forwards user messages to the AnaCore controller.
+ * VtuberLive2D Component
  *
- * Behavior summary:
- * - Initializes a PIXI.Application and loads a Live2D model
- * - Registers a ticker to update the Live2D runtime
- * - Maps audio frames (visemes) to mouth parameters for lip-sync
- * - Applies expressions and motions when the Aurora state updates
+ * Integrates a Live2D model into a PIXI application.
+ * Manages expressions, motions, and real-time lip-sync based on Aurora's state.
+ * Acts as the visual representative (avatar) for the AI assistant.
+ *
+ * @component
  */
 
 "use client";
@@ -31,7 +27,6 @@ import { AuroraVoiceLocal } from "../core/AuroraVoice";
 // - Apply expressions and motions coming from Aurora's state.
 // - Provide debug helpers to play motions/expressions manually.
 // Este componente se puede usar como hijo en un popup React
-// No se renderiza hasta que el padre lo monte
 const VtuberLive2D: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement | null>(null);
   const modelRef = useRef<Live2DModel | null>(null);
@@ -49,6 +44,42 @@ const VtuberLive2D: React.FC = () => {
     let app: PIXI.Application | null = null;
     let model: Live2DModel | null = null;
 
+    let mounted = true;
+
+    // Responsive layout handler
+    const updateLayout = () => {
+      if (!model || !app) return;
+
+      const w = window.innerWidth;
+
+      // Device-specific configuration
+      let scale = 0.33;
+      let yOffset = 280;
+      let xOffset = 10; // Mobile: Back to Right
+
+      if (w >= 1024) {
+        // PC
+        scale = 0.42;
+        yOffset = 460;
+        xOffset = 10;
+      } else if (w >= 768) {
+        // Tablet
+        scale = 0.38;
+        yOffset = 400;
+        xOffset = 10;
+      }
+
+      model.scale.set(scale);
+
+      // X: Center + Offset
+      model.x = (app.renderer.width / 2) - (model.width / 2) + xOffset;
+
+      // Y: Center + Offset
+      model.y = (app.renderer.height / 2) - (model.height / 2) + yOffset;
+
+      console.log(`📏 Layout Updated: Scale=${scale}, X=${model.x.toFixed(0)}, Y=${model.y.toFixed(0)} (Screen: ${w}px)`);
+    };
+
     const init = async () => {
       console.log("🟦 Iniciando aplicación PIXI...");
       app = new PIXI.Application({
@@ -59,26 +90,39 @@ const VtuberLive2D: React.FC = () => {
         resolution: window.devicePixelRatio || 1,
       });
 
+      if (!mounted) {
+        app.destroy(true);
+        return;
+      }
+
       if (!canvasRef.current) return;
       canvasRef.current.innerHTML = "";
       canvasRef.current.appendChild(app.view as HTMLCanvasElement);
 
       console.log("🟨 Cargando modelo Live2D...");
-      model = await Live2DModel.from("/models/haru/runtime/haru_greeter_t05.model3.json");
+      try {
+        model = await Live2DModel.from("/models/haru/runtime/haru_greeter_t05.model3.json");
+      } catch (error) {
+        console.error("❌ Error cargando modelo Live2D:", error);
+        return;
+      }
+
+      if (!mounted || !app || !app.stage) {
+        model?.destroy();
+        return;
+      }
 
       model.once("load", () => {
+        if (!model) return;
         try {
-          model.internalModel.motionManager.stopAllMotions();
-          if (model.internalModel.expressionManager) {
-            model.internalModel.expressionManager.setExpression(null);
+          const internal: any = model.internalModel;
+          internal.motionManager?.stopAllMotions?.();
+          if (internal.expressionManager) {
+            internal.expressionManager.setExpression(null);
           }
 
-          // Attempt to discover model parameters to help debug viseme
-          // mapping (mouth parameters). This is non-critical: some models
-          // don't expose `coreModel` or use vendor-specific structures.
           try {
-            // Many Live2D models expose a `coreModel` API with parameter info
-            const core = (model.internalModel.coreModel as any) || {};
+            const core = (internal.coreModel as any) || {};
             const paramNames =
               core.getParameterIds?.() || core.parameters?.map((p: any) => p.id) || [];
             if (paramNames && paramNames.length) {
@@ -87,7 +131,7 @@ const VtuberLive2D: React.FC = () => {
           } catch (pm) {
             // If inspection fails, continue without blocking the load.
           }
-        } catch (e) {}
+        } catch (e) { }
         console.log("✅ Modelo totalmente cargado y listo.");
       });
 
@@ -95,13 +139,14 @@ const VtuberLive2D: React.FC = () => {
       // This makes sure the Live2D runtime receives regular time updates.
       Live2DModel.registerTicker(Ticker);
 
-      app.stage.addChild(model);
+      if (model) app.stage.addChild(model as any);
       modelRef.current = model;
 
       model.interactive = false;
-      model.scale.set(0.35);
-      model.x = app.renderer.width / 2 - model.width / 2;
-      model.y = app.renderer.height / 2 - model.height / 2 + 360;
+
+      // Initial responsive layout + resize listener
+      updateLayout();
+      window.addEventListener("resize", updateLayout);
 
       // Lip-sync setup: receive estimated audio-frame values and map them
       // to the model's mouth parameter(s). We try several common parameter
@@ -118,15 +163,16 @@ const VtuberLive2D: React.FC = () => {
         for (const id of mouthCandidates) {
           try {
             // Preferred API: coreModel.setParameterValueById
-            const core: any = m.internalModel.coreModel;
+            const internal: any = m.internalModel;
+            const core: any = internal.coreModel;
             if (core && typeof core.setParameterValueById === "function") {
               core.setParameterValueById(id, scaled);
               return;
             }
             // Fallback to exposed `parameters` APIs
             const params: any =
-              (m.internalModel.parameters as any) ||
-              (m.internalModel.coreModel && (m.internalModel.coreModel as any).parameters);
+              internal.parameters ||
+              (internal.coreModel && (internal.coreModel as any).parameters);
             if (params && typeof params.setValueById === "function") {
               params.setValueById(id, scaled);
               return;
@@ -146,7 +192,7 @@ const VtuberLive2D: React.FC = () => {
               coreAny.setParameterValueById(found.id, scaled);
             }
           }
-        } catch (e) {}
+        } catch (e) { }
       };
 
       if (voiceRef.current) {
@@ -193,14 +239,21 @@ const VtuberLive2D: React.FC = () => {
     init();
 
     return () => {
+      mounted = false;
       // Cleanup: remove listeners and destroy PIXI/Live2D instances to free
       // memory and stop animations when the component unmounts.
       console.log("🧹 Destruyendo aplicación PIXI...");
+
       try {
-        window.removeEventListener("aurora-lipsync", () => {});
-      } catch (e) {}
-      if (model) model.destroy();
-      if (app) app.destroy(true);
+        window.removeEventListener("aurora-lipsync", () => { });
+        window.removeEventListener("resize", updateLayout);
+      } catch (e) { }
+      if (model) {
+        try { model.destroy(); } catch (e) { }
+      }
+      if (app) {
+        try { app.destroy(true); } catch (e) { }
+      }
     };
   }, []);
 
@@ -209,9 +262,13 @@ const VtuberLive2D: React.FC = () => {
     const m = modelRef.current;
     if (!m || !expression) return;
     const expUrl = `/models/haru/runtime/expressions/${expression}.exp3.json`;
-    m.internalModel.expressionManager
-      .setExpression(expUrl)
-      .catch(() => console.warn("⚠️ No se encontró la expresión:", expression));
+
+    // Guard against undefined expressionManager
+    if (m.internalModel && (m.internalModel as any).expressionManager) {
+      (m.internalModel as any).expressionManager
+        .setExpression(expUrl)
+        .catch(() => console.warn("⚠️ No se encontró la expresión:", expression));
+    }
   }, [expression]);
 
   // Motions
@@ -219,10 +276,14 @@ const VtuberLive2D: React.FC = () => {
     const m = modelRef.current;
     if (!m || !motion) return;
     const motionUrl = `/models/haru/runtime/motion/${motion}.motion3.json`;
-    m.internalModel.motionManager.stopAllMotions();
-    m.internalModel.motionManager
-      .startMotion(motionUrl, 0, 1)
-      .catch(() => console.warn("⚠️ No se encontró el motion:", motion));
+
+    // Guard against undefined motionManager
+    if (m.internalModel && (m.internalModel as any).motionManager) {
+      (m.internalModel as any).motionManager.stopAllMotions();
+      (m.internalModel as any).motionManager
+        .startMotion(motionUrl, 0, 1)
+        .catch(() => console.warn("⚠️ No se encontró el motion:", motion));
+    }
   }, [motion]);
 
   const handleMessage = async (message: string) => {
@@ -233,7 +294,7 @@ const VtuberLive2D: React.FC = () => {
     // Also request local voice output so the avatar speaks. Uses optional
     // emotion and pitch parameters.
     if (voiceRef.current) {
-      voiceRef.current.speak(instruction?.text ?? instruction?.response ?? "Te escucho, cariño~", {
+      voiceRef.current.speak(instruction?.text ?? (instruction as any)?.response ?? "Te escucho, cariño~", {
         emotion: "sweet",
         pitch: 1.2,
       });
@@ -253,15 +314,18 @@ const VtuberLive2D: React.FC = () => {
     const m = modelRef.current;
     if (!m) return;
     const expUrl = `/models/haru/runtime/expressions/${name}.exp3.json`;
-    m.internalModel.expressionManager.setExpression(expUrl);
+    const em = (m.internalModel as any).expressionManager;
+    if (em && typeof em.setExpression === "function") {
+      em.setExpression(expUrl);
+    }
   };
 
   return (
-    <div className="relative flex flex-col items-center">
-      <div ref={canvasRef} style={{ width: maxWidth, height: maxHeight }} />
+    <div className="relative flex flex-col items-center w-full max-w-[500px] mx-auto aspect-[5/8]">
+      <div ref={canvasRef} className="w-full h-full [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:object-contain" />
 
-      <div className="absolute bottom-0 left-0 w-full flex justify-center z-50 pointer-events-auto pb-0">
-        <AuroraChatFrame onSend={handleMessage} />
+      <div className="absolute bottom-0 left-0 w-full flex justify-center z-50 pointer-events-auto pb-0 px-4">
+        <AuroraChatFrame />
       </div>
     </div>
   );

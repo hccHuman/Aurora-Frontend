@@ -16,8 +16,8 @@ import type { EmotionEntry } from "@/models/AuroraProps/EmotionEntryProps";
  * Returns the first matching emotional state with its associated
  * avatar expression and motion.
  *
- * @param text - Text to analyze for emotional keywords
- * @returns Object with emotion, expression, and motion properties
+ * @param {string} text - Text to analyze for emotional keywords
+ * @returns {{emotion: string, expression: string, motion: string}} Object with emotion, expression, and motion properties
  *
  * @example
  * const state = analyzeEmotion("I feel very happy and grateful")

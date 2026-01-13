@@ -18,8 +18,13 @@ export class AlbaClient {
      * @throws {Error} If a network error occurs or the backend returns an error pact
      */
     static async fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+        const fetchInit: RequestInit = {
+            credentials: 'include',
+            ...init
+        };
+
         try {
-            const response = await fetch(input, init);
+            const response = await fetch(input, fetchInit);
 
             // Clone response to read body without consuming it for the caller
             const clone = response.clone();

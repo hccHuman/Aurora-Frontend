@@ -7,7 +7,7 @@
  */
 
 import { analyzeEmotion } from "./AnaEmotionMap";
-import { fetchBackendResponse } from "../../services/chatService";
+import { sendMessage } from "@/services/chatService";
 import type { AuroraInstruction } from "@/models/AuroraProps/AuroraInstructionProps";
 
 /**
@@ -27,9 +27,9 @@ export class AnaCore {
    * 3. Maps emotions to avatar animations (motions)
    * 4. Returns unified instruction object for avatar controller
    *
-   * @param message - User input message
-   * @returns Promise resolving to AuroraInstruction with emotion, expression, motion, and text
-   * @throws Returns default neutral instruction if processing fails
+   * @param {string} message - User input message
+   * @returns {Promise<AuroraInstruction>} Promise resolving to AuroraInstruction with emotion, expression, motion, and text
+   * @throws {Error} Returns default neutral instruction if processing fails
    *
    * @example
    * const instruction = await AnaCore.processUserMessage("I feel happy!")
@@ -41,26 +41,33 @@ export class AnaCore {
    * //   text: 'That's wonderful to hear!'
    * // }
    */
-  static async processUserMessage(message: string): Promise<AuroraInstruction> {
+  static async processUserMessage(message: string, chatId?: number): Promise<{ instruction: AuroraInstruction; chatId?: number; aiMessage?: any }> {
     try {
       // Step 1️⃣: Send message to backend and retrieve AI response
-      const backendResponse = await fetchBackendResponse(message);
+      const { chatId: newChatId, aiMessage } = await sendMessage(message, chatId);
 
       // Step 2️⃣: Analyze emotional content of the response text
-      const emotionData = analyzeEmotion(backendResponse.text);
+      const emotionData = analyzeEmotion(aiMessage.contenido);
 
       // Step 3️⃣: Return complete instruction for avatar animation controller
       return {
-        emotion: emotionData.emotion,
-        expression: emotionData.expression,
-        motion: emotionData.motion,
-        text: backendResponse.text,
+        instruction: {
+          emotion: emotionData.emotion,
+          expression: emotionData.expression,
+          motion: emotionData.motion,
+          text: aiMessage.contenido,
+        },
+        chatId: newChatId,
+        aiMessage
       };
     } catch (error) {
       // Log error for debugging
       console.error("❌ Error in AnaCore:", error);
       // Return safe default instruction to prevent app crashes
-      return { emotion: "neutral", expression: "neutral", motion: "haru_g_idle" };
+      return {
+        instruction: { emotion: "neutral", expression: "neutral", motion: "haru_g_idle" },
+        chatId
+      };
     }
   }
 }

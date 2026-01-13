@@ -27,6 +27,9 @@
  * }
  */
 export interface Message {
-  sender: "user" | "aurora";
-  text: string;
+  id?: number;
+  remitente: "usuario" | "ia";
+  contenido: string;
+  chatId?: number; // Optional reference
+  creadoEn?: string;
 }

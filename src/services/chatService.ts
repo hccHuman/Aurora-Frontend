@@ -2,47 +2,72 @@
  * Chat Service
  *
  * Handles communication with the Aurora chatbot backend.
- * Sends user messages and receives AI responses with error handling.
+ * implments endpoints for history, sending messages, and message management.
  */
 
 import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
+import type { Message } from "@/models/AuroraProps/MessageProps";
+
+const BASE_URL = `${PUBLIC_API_URL}/messages`;
 
 /**
- * Send a user message to the Aurora chatbot and receive a response
- *
- * @param message - The user input message to send to the chatbot
- * @returns Promise resolving to an object with the chatbot's response text
- * @throws Returns fallback response if request fails
- *
- * @example
- * const response = await fetchBackendResponse("Hello Aurora!")
- * console.log(response.text) // Chatbot response
+ * Recovers the most recent chat and history on load.
+ * ref: GET /messages/history
  */
-export async function fetchBackendResponse(message: string) {
+export async function initChat(): Promise<{ message: string; chatId?: number; data: Message[] }> {
   try {
-    // TEST TRIGGER: Re-enabled for verifying UI Fix
-    if (message === "testerror") {
-      const mockError = { status: 400, code: 642, error: "Simulated Backend Error via Magic Word" };
-      const { handleInternalError } = await import("@/modules/ALBA/ErrorHandler");
-      handleInternalError(mockError);
-      throw new Error(mockError.error);
-    }
-
-    // Get API URL from environment (browser or server-side)
-    const apiUrl = PUBLIC_API_URL;
-    // Construct endpoint for Aurora chat messages
-    const endpoint = `${apiUrl}/aurora/chats`;
-
-    // Send POST request with user message using ALBA Client
-    // AlbaClient handles error interception and dispatching (Toasts)
-    const res = await AlbaClient.post(endpoint, { message });
-
-    // Parse and return chatbot response
+    const res = await AlbaClient.get(`${BASE_URL}/history`);
     return await res.json();
-  } catch (error: any) {
-    // Error has already been logged and displayed by ALBA Client.
-    // We simply return the fallback message to keep the chat interface functional.
-    return { text: "Sorry, I cannot connect to the server 😔" };
+  } catch (error) {
+    console.error("Error initializing chat:", error);
+    throw error;
   }
+}
+
+/**
+ * Sends a message to the IA and gets a response.
+ * ref: POST /messages/chat-and-respond
+ */
+export async function sendMessage(contenido: string, chatId?: number, newChat: boolean = false): Promise<{ chatId: number; aiMessage: Message }> {
+  try {
+    // TEST TRIGGER: Keep for testing if needed, or remove if strictly following prod.
+    // Keeping it simple for now.
+    const payload = {
+      contenido,
+      chatId,
+      newChat
+    };
+    const res = await AlbaClient.post(`${BASE_URL}/chat-and-respond`, payload);
+    return await res.json();
+  } catch (error) {
+    console.error("Error sending message:", error);
+    throw error;
+  }
+}
+
+/**
+ * Gets messages for a specific chat ID.
+ * ref: GET /messages/by-chat/:chatId
+ */
+export async function getChatMessages(chatId: number): Promise<Message[]> {
+  const res = await AlbaClient.get(`${BASE_URL}/by-chat/${chatId}`);
+  return await res.json();
+}
+
+/**
+ * Updates a user message.
+ * ref: POST /messages/:id/update
+ */
+export async function updateMessage(id: number, contenido: string): Promise<{ updatedMessage: Message; newAiResponse: Message }> {
+  const res = await AlbaClient.post(`${BASE_URL}/${id}/update`, { contenido });
+  return await res.json();
+}
+
+/**
+ * Deletes a message.
+ * ref: POST /messages/:id/delete
+ */
+export async function deleteMessage(id: number): Promise<void> {
+  await AlbaClient.post(`${BASE_URL}/${id}/delete`, {});
 }
