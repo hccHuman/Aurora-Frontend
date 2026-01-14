@@ -28,6 +28,8 @@ export default function ProductCardReact({
       whileHover={{ y: -5 }}
       transition={{ duration: 0.4 }}
       className="w-full rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+      role="article"
+      aria-label={title}
     >
       {/* Imagen del producto */}
       <motion.div className="overflow-hidden">

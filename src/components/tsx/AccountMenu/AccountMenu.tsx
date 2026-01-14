@@ -29,7 +29,7 @@ const AccountMenu: React.FC<Lang> = ({ lang }) => {
     <div
       className="w-full bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl p-5 transition-all animate-in fade-in zoom-in-95 duration-300"
       role="menu"
-      aria-label="Account menu"
+      aria-label={t("aria.account_menu")}
     >
       {auth.loggedIn ? (
         <div className="flex flex-col gap-2">
@@ -53,7 +53,7 @@ const AccountMenu: React.FC<Lang> = ({ lang }) => {
               role="menuitem"
             >
               <Shield className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform" />
-              <span>Dashboard</span>
+              <span>{t("header.dashboard")}</span>
             </a>
           )}
 

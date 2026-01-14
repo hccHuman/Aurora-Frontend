@@ -1,5 +1,6 @@
 import type { CategoryCard } from "@/models/EcommerceProps/CategoriesCardProps";
 import { motion } from "framer-motion";
+import { t } from "@/modules/YOLI/injector";
 
 /**
  * CategoryCard Component
@@ -17,6 +18,7 @@ export default function CategoryCard({ lang, title, img }: CategoryCard & { dela
     <motion.a
       href={`/${lang}/${LowTitle}/productslist`}
       className="block"
+      aria-label={t("products.aria_view_category", lang).replace("{target}", title)}
       variants={{
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0 }

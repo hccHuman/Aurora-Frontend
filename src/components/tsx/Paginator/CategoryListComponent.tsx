@@ -5,6 +5,7 @@ import Paginator from "@/components/tsx/Paginator/Paginator";
 import { fetchPaginatedCategories } from "@/services/categoryService";
 import { getResponsivePageSize } from "@/services/deviceService";
 import type { Category } from "@/models/EcommerceProps/CategoryPaginationProps";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * CategoryListComponent Component
@@ -15,12 +16,13 @@ import type { Category } from "@/models/EcommerceProps/CategoryPaginationProps";
  *
  * @component
  */
-export default function CategoryListComponent({ lang }: Category) {
+export default function CategoryListComponent({ lang = "es" }: Category) {
+  const t = useYOLI(lang);
   const [categories, setCategories] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [pageSize, setPageSize] = useState(getResponsivePageSize());
+  const [pageSize, setPageSize] = useState<number | null>(null);
 
   const loadCategories = async (pageToLoad: number, size: number) => {
     setLoading(true);
@@ -42,7 +44,7 @@ export default function CategoryListComponent({ lang }: Category) {
     loadCategories(page, size);
   }, [page]);
 
-  if (loading) return <p className="text-center my-8">Cargando categorías...</p>;
+  if (loading || pageSize === null) return <p className="text-center my-8">{t("products.loading_categories")}</p>;
 
   return (
     <div className="flex flex-col w-full px-12">
@@ -65,7 +67,7 @@ export default function CategoryListComponent({ lang }: Category) {
         ))}
       </motion.div>
 
-      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} lang={lang} />
     </div>
   );
 }

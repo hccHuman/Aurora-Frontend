@@ -109,7 +109,7 @@ export default function CategoryProductsListComponent({ categoryId, lang = "es" 
         ))}
       </div>
 
-      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} lang={lang} />
     </div>
   );
 }

@@ -1,4 +1,44 @@
 {
+    "aria": {
+        "navigating": "Redirigiendo a {target}...",
+        "searching": "Buscando productos relacionados con {target}...",
+        "scrolling": "Desplazando hacia la sección {target}",
+        "highlighting": "Resaltando el elemento {target}",
+        "account_menu": "Menú de cuenta",
+        "accessibility_menu": "Menú de accesibilidad",
+        "close_menu": "Cerrar menú",
+        "open_menu": "Abrir menú de navegación",
+        "appearance": "Apariencia",
+        "user_preferences": "Preferencias de usuario",
+        "cvd_modes": "Modos de daltonismo",
+        "cvd": {
+            "normal": "Normal",
+            "protanopia": "Protanopia (Rojo)",
+            "deuteranopia": "Deuteranopia (Verde)",
+            "tritanopia": "Tritanopia (Azul)",
+            "achromatopsia": "Acromatopsia (Mono)"
+        },
+        "anti_epilepsy": "Modo Anti-Epilepsia",
+        "adhd_focus": "Modo TDAH / Enfoque",
+        "master_aaa": "Master WCAG 2.1 AAA",
+        "dark_mode": "Modo Oscuro",
+        "light_mode": "Modo Claro",
+        "toggle_theme": "Cambiar tema",
+        "close": "Cerrar",
+        "show_password": "Mostrar contraseña",
+        "hide_password": "Ocultar contraseña",
+        "access": {
+            "dark": "Activando modo oscuro",
+            "light": "Activando modo claro",
+            "epilepsy_on": "Modo anti-epilepsia activado",
+            "epilepsy_off": "Modo anti-epilepsia desactivado",
+            "adhd_on": "Modo enfoque TDAH activado",
+            "adhd_off": "Modo enfoque TDAH desactivado",
+            "aaa_on": "Modo WCAG AAA Máximo activado. Se han aplicado restricciones de lectura y contraste extremo.",
+            "aaa_off": "Modo WCAG AAA desactivado",
+            "explain": "Aurora está proporcionando una explicación sobre: {target}"
+        }
+    },
     "profile": {
         "title": "Mi Perfil",
         "subtitle": "Gestiona tu información personal y preferencias",
@@ -66,6 +106,7 @@
         "account": "Cuenta",
         "my_account": "MI CUENTA",
         "profile": "Perfil",
+        "dashboard": "Panel de Control",
         "logout": "Cerrar Sesión",
         "login": "Iniciar Sesión",
         "cart": "CARRITO",
@@ -77,7 +118,9 @@
             "cart": "Carrito",
             "open_menu": "Abrir menú",
             "search": "Buscar productos",
-            "back": "Volver"
+            "back": "Volver",
+            "nav_main": "Navegación principal",
+            "nav_mobile": "Navegación móvil"
         }
     },
     "footer": {
@@ -87,11 +130,20 @@
         "rights": "Todos los derechos reservados",
         "terms": "Términos y Condiciones",
         "privacy": "Política de Privacidad",
-        "cookies": "Política de Cookies"
+        "cookies": "Política de Cookies",
+        "aria": {
+            "nav_quick": "Enlaces rápidos",
+            "nav_legal": "Información legal"
+        }
     },
     "common": {
         "back": "Volver",
-        "close": "Cerrar"
+        "close": "Cerrar",
+        "skip_to_content": "Saltar al contenido principal",
+        "loading": "Cargando...",
+        "logging_out": "Cerrando sesión...",
+        "loading_config": "Cargando configuración...",
+        "loading_products": "Cargando productos..."
     },
     "products": {
         "list_title": "Productos de ",
@@ -103,6 +155,38 @@
         "added": "¡Añadido!",
         "loading_config": "Cargando configuración...",
         "loading_products": "Cargando productos...",
-        "aria_add_to_cart": "Añadir {title} al carrito"
+        "aria_add_to_cart": "Añadir {title} al carrito",
+        "aria_view_category": "Ver artículos en {target}",
+        "loading_categories": "Cargando categorías..."
+    },
+    "checkout": {
+        "title": "Revisar pedido",
+        "empty": "Tu carrito está vacío.",
+        "total": "Total",
+        "pay_button": "Pagar",
+        "processing": "Procesando...",
+        "empty_cart": "Vaciar carrito",
+        "login_required": "Debes iniciar sesión para finalizar la compra.",
+        "pago_iniciado": "Pago iniciado correctamente.",
+        "unexpected_error": "Respuesta inesperada del servidor",
+        "error_pago": "Error iniciando pago",
+        "aria": {
+            "order_list": "Lista de productos en tu pedido",
+            "checkout_form": "Formulario de pago"
+        },
+        "paypal": {
+            "title": "Pago con PayPal",
+            "pay_now": "Pagar ahora",
+            "error": "Error al procesar el pago con PayPal."
+        }
+    },
+    "pagination": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "of": "de",
+        "aria": {
+            "go_previous": "Ir a la página anterior",
+            "go_next": "Ir a la página siguiente"
+        }
     }
 }

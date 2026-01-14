@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ProductModal } from "./ProductModal";
 import { getProductById } from "@/services/productService";
+import type { Lang } from "@/models/SystemProps/LangProps";
 
 /**
  * ProductModalWrapper Component
@@ -11,7 +12,7 @@ import { getProductById } from "@/services/productService";
  *
  * @component
  */
-export default function ProductModalWrapper() {
+export default function ProductModalWrapper({ lang = "es" }: Lang) {
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState(null);
 
@@ -29,5 +30,5 @@ export default function ProductModalWrapper() {
     setProduct(null);
   };
 
-  return <ProductModal product={product} open={open} onClose={handleClose} />;
+  return <ProductModal product={product} open={open} onClose={handleClose} lang={lang} />;
 }

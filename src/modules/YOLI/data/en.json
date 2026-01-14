@@ -1,4 +1,44 @@
 {
+    "aria": {
+        "navigating": "Redirecting to {target}...",
+        "searching": "Searching for products related to {target}...",
+        "scrolling": "Scrolling to section {target}",
+        "highlighting": "Highlighting element {target}",
+        "account_menu": "Account menu",
+        "accessibility_menu": "Accessibility menu",
+        "close_menu": "Close menu",
+        "open_menu": "Open navigation menu",
+        "appearance": "Appearance",
+        "user_preferences": "User preferences",
+        "cvd_modes": "Color vision deficiency modes",
+        "cvd": {
+            "normal": "Normal",
+            "protanopia": "Protanopia (Red)",
+            "deuteranopia": "Deuteranopia (Green)",
+            "tritanopia": "Tritanopia (Blue)",
+            "achromatopsia": "Achromatopsia (Mono)"
+        },
+        "anti_epilepsy": "Anti-Epilepsy Mode",
+        "adhd_focus": "ADHD / Focus Mode",
+        "master_aaa": "Master WCAG 2.1 AAA",
+        "dark_mode": "Dark Mode",
+        "light_mode": "Light Mode",
+        "toggle_theme": "Toggle theme",
+        "close": "Close",
+        "show_password": "Show password",
+        "hide_password": "Hide password",
+        "access": {
+            "dark": "Activating dark mode",
+            "light": "Activating light mode",
+            "epilepsy_on": "Anti-epilepsy mode enabled",
+            "epilepsy_off": "Anti-epilepsy mode disabled",
+            "adhd_on": "ADHD focus mode enabled",
+            "adhd_off": "ADHD focus mode disabled",
+            "aaa_on": "Maximum WCAG AAA Mode enabled. Reading constraints and extreme contrast applied.",
+            "aaa_off": "WCAG AAA Mode disabled",
+            "explain": "Aurora is providing an explanation about: {target}"
+        }
+    },
     "profile": {
         "title": "My Profile",
         "subtitle": "Manage your personal information and preferences",
@@ -66,6 +106,7 @@
         "account": "Account",
         "my_account": "MY ACCOUNT",
         "profile": "Profile",
+        "dashboard": "Dashboard",
         "logout": "Log Out",
         "login": "Log In",
         "cart": "CART",
@@ -77,7 +118,9 @@
             "cart": "Cart",
             "open_menu": "Open menu",
             "search": "Search products",
-            "back": "Back"
+            "back": "Back",
+            "nav_main": "Main navigation",
+            "nav_mobile": "Mobile navigation"
         }
     },
     "footer": {
@@ -87,11 +130,20 @@
         "rights": "All rights reserved",
         "terms": "Terms & Conditions",
         "privacy": "Privacy Policy",
-        "cookies": "Cookie Policy"
+        "cookies": "Cookie Policy",
+        "aria": {
+            "nav_quick": "Quick links",
+            "nav_legal": "Legal information"
+        }
     },
     "common": {
         "back": "Back",
-        "close": "Close"
+        "close": "Close",
+        "skip_to_content": "Skip to main content",
+        "loading": "Loading...",
+        "logging_out": "Logging out...",
+        "loading_config": "Loading configuration...",
+        "loading_products": "Loading products..."
     },
     "products": {
         "list_title": "Products from ",
@@ -103,6 +155,38 @@
         "added": "Added!",
         "loading_config": "Loading configuration...",
         "loading_products": "Loading products...",
-        "aria_add_to_cart": "Add {title} to cart"
+        "aria_add_to_cart": "Add {title} to cart",
+        "aria_view_category": "View items in {target}",
+        "loading_categories": "Loading categories..."
+    },
+    "checkout": {
+        "title": "Review Order",
+        "empty": "Your cart is empty.",
+        "total": "Total",
+        "pay_button": "Pay",
+        "processing": "Processing...",
+        "empty_cart": "Empty cart",
+        "login_required": "You must log in to finalize the purchase.",
+        "pago_iniciado": "Payment initiated correctly.",
+        "unexpected_error": "Unexpected server response",
+        "error_pago": "Error initiating payment",
+        "aria": {
+            "order_list": "List of products in your order",
+            "checkout_form": "Checkout form"
+        },
+        "paypal": {
+            "title": "Pay with PayPal",
+            "pay_now": "Pay now",
+            "error": "Error processing payment with PayPal."
+        }
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "of": "of",
+        "aria": {
+            "go_previous": "Go to previous page",
+            "go_next": "Go to next page"
+        }
     }
 }

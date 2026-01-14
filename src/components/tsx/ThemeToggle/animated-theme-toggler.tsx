@@ -29,6 +29,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AnimatedThemeTogglerProps } from "@/models/FunctionProps/AnimatedThemeTogglerProps";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * AnimatedThemeToggler - Main component
@@ -50,8 +51,10 @@ import type { AnimatedThemeTogglerProps } from "@/models/FunctionProps/AnimatedT
 export const AnimatedThemeToggler = ({
   className,
   duration, // ignoramos este valor si viene (se calcula dinámicamente)
+  lang = "es",
   ...props
 }: AnimatedThemeTogglerProps) => {
+  const t = useYOLI(lang);
   // ========================================
   // STATE MANAGEMENT
   // ========================================
@@ -252,7 +255,7 @@ export const AnimatedThemeToggler = ({
       {isDark ? <Sun /> : <Moon />}
 
       {/* Screen reader text for accessibility */}
-      <span className="sr-only">Toggle theme</span>
+      <span className="sr-only">{t("aria.toggle_theme")}</span>
     </button>
   );
 };

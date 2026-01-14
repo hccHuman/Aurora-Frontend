@@ -50,6 +50,29 @@ export default function HeaderSearch({
 
   const [, setSearchState] = useAtom(searchStateAtom);
 
+  // M.A.R.I.A Integration: Listen for proactive search triggers
+  useEffect(() => {
+    const handleTrigger = (e: Event) => {
+      const term = (e as CustomEvent).detail;
+      if (term) {
+        setQuery(term);
+        doSearch(term);
+      }
+    };
+
+    window.addEventListener("aurora-trigger-search", handleTrigger);
+
+    // Check for query params on mount (for navigation-based search)
+    const urlParams = new URLSearchParams(window.location.search);
+    const q = urlParams.get('q');
+    if (q) {
+      setQuery(q);
+      doSearch(q);
+    }
+
+    return () => window.removeEventListener("aurora-trigger-search", handleTrigger);
+  }, []); // Run on mount
+
   useEffect(() => {
     // Only activate/search on the AllProducts page: /products/allproducts
     if (!window || !window.location) return;

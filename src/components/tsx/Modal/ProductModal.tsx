@@ -1,5 +1,6 @@
 import type { ModalProps } from "@/models/FunctionProps/ModalProps";
 import ProductCardButton from "../ProductCard/ProductCardButton";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * ProductModal Component
@@ -9,7 +10,8 @@ import ProductCardButton from "../ProductCard/ProductCardButton";
  *
  * @component
  */
-export function ProductModal({ product, open, onClose }: ModalProps) {
+export function ProductModal({ product, open, onClose, lang = "es" }: ModalProps) {
+  const t = useYOLI(lang);
   if (!open || !product) return null;
 
   return (
@@ -35,8 +37,8 @@ export function ProductModal({ product, open, onClose }: ModalProps) {
           className="absolute top-4 right-4 z-50 text-slate-400
                  hover:text-red-400 hover:bg-slate-800/80
                  transition-all text-2xl font-bold p-2 rounded-full bg-slate-800/60 shadow-lg"
-          aria-label="Cerrar"
-          title="Cerrar"
+          aria-label={t("aria.close")}
+          title={t("aria.close")}
         >
           ✕
         </button>
@@ -74,7 +76,7 @@ export function ProductModal({ product, open, onClose }: ModalProps) {
 
             {/* Action button */}
             <div className="flex gap-3">
-              <ProductCardButton title={product.nombre} id={product.id} category_id={product.product_category} />
+              <ProductCardButton title={product.nombre} id={product.id} category_id={product.product_category} lang={lang} />
             </div>
           </div>
         </div>

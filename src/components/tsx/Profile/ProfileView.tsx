@@ -140,6 +140,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                     <button
                         onClick={() => setIsEditing(true)}
                         className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 transition-all flex items-center gap-2"
+                        aria-label={t("profile.edit", lang)}
                     >
                         <Edit2 className="w-4 h-4" />
                         {t("profile.edit", lang)}
@@ -172,6 +173,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                             value={formData.nombre}
                                             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                                             className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700/50 rounded-lg text-slate-900 dark:text-slate-200 focus:border-red-400/50 focus:outline-none transition-colors"
+                                            aria-label={t("profile.labels.name", lang)}
                                         />
                                     </div>
                                     <div>
@@ -181,6 +183,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700/50 rounded-lg text-slate-900 dark:text-slate-200 focus:border-red-400/50 focus:outline-none transition-colors"
+                                            aria-label={t("profile.labels.email", lang)}
                                         />
                                     </div>
                                     <div>
@@ -195,11 +198,13 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                                     if (passwordError) setPasswordError(null);
                                                 }}
                                                 className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800/50 border ${passwordError ? 'border-red-500' : 'border-slate-300 dark:border-slate-700/50'} rounded-lg text-slate-900 dark:text-slate-200 focus:border-red-400/50 focus:outline-none transition-colors pr-10`}
+                                                aria-label={t("profile.labels.new_password", lang)}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
                                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                                                aria-label={showPassword ? t("aria.hide_password", lang) : t("aria.show_password", lang)}
                                             >
                                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                             </button>

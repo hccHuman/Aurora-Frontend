@@ -89,6 +89,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         <input
           type="text"
           placeholder={t("auth.labels.name", lang)}
+          aria-label={t("auth.labels.name", lang)}
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           required
@@ -99,6 +100,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         <input
           type="email"
           placeholder={t("auth.labels.email", lang)}
+          aria-label={t("auth.labels.email", lang)}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -110,6 +112,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder={t("auth.labels.password", lang)}
+            aria-label={t("auth.labels.password", lang)}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -119,6 +122,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            aria-label={showPassword ? t("aria.hide_password", lang) : t("aria.show_password", lang)}
           >
             {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
           </button>
@@ -129,6 +133,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
           <input
             type={showPassword2 ? "text" : "password"}
             placeholder={t("auth.labels.confirm_password", lang)}
+            aria-label={t("auth.labels.confirm_password", lang)}
             value={password2}
             onChange={(e) => setPassword2(e.target.value)}
             required
@@ -138,6 +143,7 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
             type="button"
             onClick={() => setShowPassword2(!showPassword2)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            aria-label={showPassword2 ? t("aria.hide_password", lang) : t("aria.show_password", lang)}
           >
             {showPassword2 ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
           </button>
