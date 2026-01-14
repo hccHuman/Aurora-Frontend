@@ -44,10 +44,43 @@ export class AnaCore {
   static async processUserMessage(message: string, chatId?: number): Promise<{ instruction: AuroraInstruction; chatId?: number; aiMessage?: any }> {
     try {
       // Step 1️⃣: Send message to backend and retrieve AI response
-      const { chatId: newChatId, aiMessage } = await sendMessage(message, chatId);
+      const responseData = await sendMessage(message, chatId);
+      console.log("📥 Backend RAW Response (COPIAME ESTO):", JSON.stringify(responseData, null, 2));
+
+      // Extract data safely, supporting multiple potential structures
+      const data = (responseData as any).data || responseData;
+      const newChatId = data.chatId || (responseData as any).chatId;
+
+      // Extraction Priority:
+      // 1. data.aiMessage.contenido (Standard)
+      // 2. data.aiMessage.text
+      // 3. raw text if aiMessage is just a string
+      // 4. (FALLBACK) Only use top-level 'message' if it's reasonably long (likely a response, not a status)
+
+      let aiMsg = data.aiMessage || responseData.aiMessage;
+      let content = "";
+
+      if (aiMsg) {
+        content = aiMsg.contenido || (aiMsg as any).text || (typeof aiMsg === 'string' ? aiMsg : "");
+      } else if ((responseData as any).message && (responseData as any).message.length > 25) {
+        // If it's a long message and no aiMessage exists, it might be the response
+        content = (responseData as any).message;
+        aiMsg = { contenido: content, remitente: "ia" };
+      }
+
+      // Normalize the message object for the UI
+      const normalizedAiMsg = {
+        ...(typeof aiMsg === 'object' ? aiMsg : {}),
+        remitente: "ia",
+        contenido: content || "..."
+      };
+
+      if (!content) {
+        console.warn("⚠️ No AI content identified in response. Possible status-only response:", responseData);
+      }
 
       // Step 2️⃣: Analyze emotional content of the response text
-      const emotionData = analyzeEmotion(aiMessage.contenido);
+      const emotionData = analyzeEmotion(content || "Neutral");
 
       // Step 3️⃣: Return complete instruction for avatar animation controller
       return {
@@ -55,10 +88,10 @@ export class AnaCore {
           emotion: emotionData.emotion,
           expression: emotionData.expression,
           motion: emotionData.motion,
-          text: aiMessage.contenido,
+          text: content,
         },
         chatId: newChatId,
-        aiMessage
+        aiMessage: normalizedAiMsg
       };
     } catch (error) {
       // Log error for debugging

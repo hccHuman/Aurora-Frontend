@@ -99,6 +99,10 @@ const VtuberLive2D: React.FC = () => {
       canvasRef.current.innerHTML = "";
       canvasRef.current.appendChild(app.view as HTMLCanvasElement);
 
+      // Register the Ticker class required by pixi-live2d-display.
+      // This must be done BEFORE loading the model to ensure the runtime is ready.
+      Live2DModel.registerTicker(Ticker);
+
       console.log("🟨 Cargando modelo Live2D...");
       try {
         model = await Live2DModel.from("/models/haru/runtime/haru_greeter_t05.model3.json");
@@ -134,10 +138,6 @@ const VtuberLive2D: React.FC = () => {
         } catch (e) { }
         console.log("✅ Modelo totalmente cargado y listo.");
       });
-
-      // Register the Ticker class required by pixi-live2d-display.
-      // This makes sure the Live2D runtime receives regular time updates.
-      Live2DModel.registerTicker(Ticker);
 
       if (model) app.stage.addChild(model as any);
       modelRef.current = model;
@@ -287,7 +287,7 @@ const VtuberLive2D: React.FC = () => {
   }, [motion]);
 
   const handleMessage = async (message: string) => {
-    const instruction = await AnaCore.processUserMessage(message);
+    const { instruction } = await AnaCore.processUserMessage(message);
     updateFromResponse(instruction);
     applyAuroraInstruction(modelRef, instruction);
 
