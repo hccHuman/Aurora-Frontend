@@ -31,6 +31,7 @@
   "dependencies": {
     "@astrojs/react": "^4.4.1",
     "@heroicons/react": "^2.2.0",
+    "@tailwindcss/typography": "^0.5.19",
     "apexcharts": "^5.3.6",
     "astro": "^5.15.2",
     "class-variance-authority": "^0.7.1",
@@ -50,7 +51,9 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "react-reconciler": "^0.33.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "validator": "^13.15.20"
