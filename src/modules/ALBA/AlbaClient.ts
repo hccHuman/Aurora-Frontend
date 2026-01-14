@@ -1,10 +1,12 @@
 import { handleInternalError, type BackendError } from "./ErrorHandler";
+import { clientService } from "@/services/clientService";
 
 /**
  * ALBA Client - Enhanced Fetch Wrapper
  *
  * Intercepts responses to check for logical backend errors based on the pact
  * { status, error, code }. Dispatches errors to the global handler.
+ * Now supports auto-refresh on 401 and redirect to login on failure.
  */
 export class AlbaClient {
     /**
@@ -24,7 +26,34 @@ export class AlbaClient {
         };
 
         try {
-            const response = await fetch(input, fetchInit);
+            let response = await fetch(input, fetchInit);
+
+            // AUTO-REFRESH LOGIC
+            if (response.status === 401) {
+                // Prevent infinite loops if the refresh endpoint itself is being called
+                const urlString = input.toString();
+                if (!urlString.includes("/auth/refresh") && !urlString.includes("/auth/login") && !urlString.includes("/auth/me")) {
+                    console.warn("🔒 401 Detectado. Intentando refrescar token...");
+                    try {
+                        // Attempt to refresh
+                        await clientService.refreshToken();
+                        console.log("✅ Token refrescado. Reintentando petición original...");
+
+                        // Retry the original request
+                        response = await fetch(input, fetchInit);
+                    } catch (refreshError) {
+                        console.error("❌ Fallo al refrescar token. Redirigiendo a login...", refreshError);
+                        if (typeof window !== "undefined") {
+                            // Extract locale from current path (e.g., /en/dashboard -> /en)
+                            const pathSegments = window.location.pathname.split('/').filter(Boolean);
+                            const currentLocale = pathSegments[0] === 'en' || pathSegments[0] === 'es' ? pathSegments[0] : 'es'; // Default to 'es' if not found
+
+                            window.location.href = `/${currentLocale}/account/login`;
+                        }
+                        throw new Error("Sesión expirada. Por favor inicia sesión nuevamente.");
+                    }
+                }
+            }
 
             // Clone response to read body without consuming it for the caller
             const clone = response.clone();

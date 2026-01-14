@@ -4,6 +4,7 @@
  * Provides functions for managing products via the dashboard API.
  * Includes fetching paginated lists, creating, updating, and deleting products.
  */
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 import type { Product } from "@/models/dashboardProps/DashboardProductProps";
@@ -30,16 +31,7 @@ export async function fetchProducts(
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/products?page=${page}&pageSize=${pageSize}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Products error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -58,17 +50,7 @@ export async function saveProduct(product: Partial<Product>) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/products`;
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(product),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Save product error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.post(endpoint, product);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -87,17 +69,7 @@ export async function saveProductUpdate(product: Partial<Product>) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/products/update`;
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(product),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Save product error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.post(endpoint, product);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -116,17 +88,7 @@ export async function deleteProduct(id: string) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/products/delete`;
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ id }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Delete product error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.post(endpoint, { id });
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);

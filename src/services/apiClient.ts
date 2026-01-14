@@ -5,6 +5,7 @@
  * Handles common request configuration, error handling, and token management.
  */
 
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
 /**
@@ -38,19 +39,15 @@ export async function apiCall(endpoint: string, options: RequestInit = {}): Prom
   };
 
   try {
-    // Make the HTTP request with provided options
-    const response = await fetch(url, {
+    // Make the HTTP request with provided options using AlbaClient
+    const response = await AlbaClient.fetch(url, {
       ...options,
       headers,
     });
 
-    // Parse JSON response
+    // Parse JSON response - AlbaClient checks for errors but returns the raw Response object
+    // We need to parse it here as apiCall expects to return data
     const data = await response.json();
-
-    // Check if response is successful
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} - ${data.message || "Unknown error"}`);
-    }
 
     return data;
   } catch (error: any) {

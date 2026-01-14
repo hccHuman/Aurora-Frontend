@@ -5,6 +5,7 @@
  * Responsible for fetching the list of product categories.
  */
 
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
@@ -34,16 +35,7 @@ export async function fetchCategories() {
     const endpoint = `${apiUrl}/categories`;
 
     // Make GET request to fetch all categories
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    // Check if response is successful
-    if (!res.ok) {
-      throw new Error(`Error del backend: ${res.status}`);
-    }
+    const res = await AlbaClient.get(endpoint);
 
     // Parse JSON response
     const data = await res.json();
@@ -75,11 +67,7 @@ export async function fetchPaginatedCategories(page = 1, pageSize = 10) {
 
     const endpoint = `${apiUrl}/categories/paginated?page=${page}&pageSize=${pageSize}`;
 
-    const res = await fetch(endpoint);
-
-    if (!res.ok) {
-      throw new Error(`Error del backend: ${res.status}`);
-    }
+    const res = await AlbaClient.get(endpoint);
 
     const json = await res.json();
 
