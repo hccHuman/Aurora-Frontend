@@ -16,6 +16,8 @@ export default {
     moduleNameMapper: {
         "^@/utils/envWrapper$": "<rootDir>/tests/mocks/envWrapper.cjs",
         "^@/(.*)$": "<rootDir>/src/$1",
+        "^react-markdown$": "<rootDir>/tests/mocks/react-markdown.js",
+        "^remark-gfm$": "<rootDir>/tests/mocks/remark-gfm.js",
     },
     setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
     collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts", "!src/pages/**", "!src/**/*.astro"],
