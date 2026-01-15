@@ -1,4 +1,4 @@
-import type { AuroraVoiceOptions } from "@/models/AuroraProps/AuroraVoiceOptionsProps";
+import type { AuroraVoiceOptions } from "@/modules/AURORA/models/AuroraVoiceOptionsProps";
 
 /**
  * AuroraVoiceLocal - Text-driven Lip-Sync & Speech Synthesis
@@ -40,11 +40,13 @@ export class AuroraVoiceLocal {
   private loadVoice() {
     const loadVoices = () => {
       const voices = this.synth.getVoices();
+      // Prioritize natural sounding Spanish female voices
       this.voice =
         voices.find(
           (v) =>
             v.lang.startsWith("es") &&
-            /female|mujer|Helena|Conchita|Lucia|Google Español/i.test(v.name)
+            /Paulina|Helena|Laura|Sabina|Zira|Microsoft|Google/i.test(v.name) &&
+            !/Mobile/i.test(v.name) // Prefer desktop/high-quality voices if available
         ) ||
         voices.find((v) => v.lang.startsWith("es")) ||
         voices[0] ||
@@ -71,29 +73,45 @@ export class AuroraVoiceLocal {
   speak(text: string, options: AuroraVoiceOptions = {}) {
     if (!this.voice) this.loadVoice();
 
+    // Strip emojis so they are not narrated by the speech engine
+    const cleanText = this._stripEmojis(text);
+
     // Add short warm pauses for more natural speech
-    const preparedText = this._addWarmPauses(text);
+    const preparedText = this._addWarmPauses(cleanText);
     const utterance = new SpeechSynthesisUtterance(preparedText);
 
     if (this.voice) utterance.voice = this.voice;
-    utterance.rate = options.rate ?? 0.95;
-    utterance.pitch = options.pitch ?? 1.25;
+    utterance.rate = options.rate ?? 1.0; // Default slightly faster for modern feel
+    utterance.pitch = options.pitch ?? 1.1; // Default slightly higher for feminine tone
     utterance.volume = options.volume ?? 1;
 
     // Apply light emotional variations
     switch (options.emotion) {
       case "sweet":
-        utterance.pitch += 0.12;
-        utterance.rate -= 0.03;
+        utterance.pitch += 0.1;
+        utterance.rate -= 0.05;
         break;
       case "sad":
         utterance.pitch -= 0.15;
-        utterance.rate -= 0.08;
-        utterance.volume = 0.85;
+        utterance.rate -= 0.15;
+        utterance.volume = 0.9;
         break;
       case "happy":
-        utterance.pitch += 0.18;
-        utterance.rate += 0.06;
+        utterance.pitch += 0.15;
+        utterance.rate += 0.1;
+        break;
+      case "excited":
+        utterance.pitch += 0.2;
+        utterance.rate += 0.15;
+        break;
+      case "angry":
+        utterance.pitch -= 0.05;
+        utterance.rate += 0.1;
+        utterance.volume = 1.0;
+        break;
+      case "surprised":
+        utterance.pitch += 0.25;
+        utterance.rate -= 0.05;
         break;
     }
 
@@ -108,10 +126,13 @@ export class AuroraVoiceLocal {
     const estimatedSeconds = Math.max(0.8, chars / (baseCps * rateFactor));
     const estimatedMs = estimatedSeconds * 1000;
 
+    console.log(`🗣️ Speaking: "${text.substring(0, 30)}..." | ${estimatedMs.toFixed(0)}ms | Voice: ${this.voice?.name || "Default"}`);
+
     // Divide text into approximate chunks for viseme animation
     const chunks = this._textToChunks(preparedText);
 
     utterance.onstart = () => {
+      console.log("🔊 TTS Started");
       // Schedule lip frames to match chunks over estimatedMs
       const total = chunks.length || 1;
       const msPerChunk = estimatedMs / total;
@@ -127,6 +148,7 @@ export class AuroraVoiceLocal {
 
         // Also dispatch window event for compatibility
         try {
+          // console.log("👄 Dispatching lip sync:", v.toFixed(2)); // Uncomment for noisy debug
           window.dispatchEvent(new CustomEvent("aurora-lipsync", { detail: v }));
         } catch (e) { }
 
@@ -150,12 +172,17 @@ export class AuroraVoiceLocal {
     };
 
     utterance.onend = () => {
+      console.log("🔇 TTS Ended");
       // Ensure mouth closure at the end
       if (this.onAudioFrame) this.onAudioFrame(0);
       try {
         window.dispatchEvent(new CustomEvent("aurora-lipsync", { detail: 0 }));
       } catch (e) { }
       this._stopLipTimer();
+    };
+
+    utterance.onerror = (e) => {
+      console.error("❌ TTS Error:", e);
     };
 
     this.synth.speak(utterance);
@@ -229,5 +256,20 @@ export class AuroraVoiceLocal {
       .replace(/([,;])/g, "$1 …")
       .replace(/([.!?])\s*/g, "$1 … ")
       .replace(/(\bquerida\b|\bcariño\b|\bmi amor\b)/gi, "… $1 …");
+  }
+
+  /**
+   * Remove emojis from text using Unicode-aware regex
+   * to prevent them from being narrated by TTS engine.
+   *
+   * @private
+   * @param {string} text - Text to clean
+   * @returns {string} Cleaned text
+   */
+  private _stripEmojis(text: string): string {
+    if (!text) return "";
+    // Regex matches common emojis and extended pictographics
+    // Using simple range for compatibility if needed, or \p{Extended_Pictographic}
+    return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g, '').trim();
   }
 }

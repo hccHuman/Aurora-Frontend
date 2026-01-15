@@ -12,12 +12,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiX } from "react-icons/fi";
 import VtuberLive2D from "@/modules/AURORA/components/VtuberLive2D";
 
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { userStore } from "@/store/userStore";
+import { isChatOpenAtom } from "@/store/chatStore";
 
 export default function ChatWrapper() {
   const { loggedIn } = useAtomValue(userStore);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useAtom(isChatOpenAtom);
+
+  // Listen for M.A.R.I.A chat toggle events
+  useEffect(() => {
+    const handleToggle = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      setIsOpen(detail);
+    };
+    window.addEventListener("aurora-toggle-chat", handleToggle);
+    return () => window.removeEventListener("aurora-toggle-chat", handleToggle);
+  }, [setIsOpen]);
+
+  const toggleChat = () => setIsOpen(!isOpen);
 
 
 
@@ -64,7 +77,7 @@ export default function ChatWrapper() {
             initial={{ opacity: 0, scale: 0.8, y: 20, transformOrigin: "bottom right" }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-4 right-4 shadow-2xl rounded-2xl overflow-hidden flex flex-col z-50 max-h-[90vh] max-w-[95vw] border border-slate-200 dark:border-slate-700"
+            className="fixed bottom-4 right-4 shadow-2xl rounded-2xl overflow-hidden flex flex-col z-50 w-[380px] h-[650px] max-h-[85vh] max-w-[90vw] border border-slate-200 dark:border-slate-700 bg-slate-900"
           >
             {/* Barra superior con X */}
             <div className="cabecera flex justify-between items-center bg-red-600 dark:bg-red-700 text-white px-4 py-2 flex-shrink-0">

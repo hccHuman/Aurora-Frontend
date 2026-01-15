@@ -36,9 +36,15 @@
  *   text: "I'm sorry to hear that..."
  * }
  */
+export interface AuroraAction {
+  type: "NAVIGATE" | "SCROLL" | "HIGHLIGHT" | "OPEN_CHAT" | "CLOSE_CHAT" | "SEARCH" | "ACCESS" | "EXPLAIN";
+  target: string;
+}
+
 export interface AuroraInstruction {
   emotion: string;
   expression: string;
   motion: string;
   text?: string;
+  action?: AuroraAction;
 }

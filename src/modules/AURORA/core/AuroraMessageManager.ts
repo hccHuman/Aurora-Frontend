@@ -12,6 +12,9 @@ import { AuroraVoiceLocal } from "./AuroraVoice";
 const auroraVoice = new AuroraVoiceLocal();
 
 import { AnaCore } from "@/modules/ANA/AnaCore";
+import { MariaEngine } from "../../MARIA/core/MariaEngine";
+import { t } from "@/modules/YOLI/injector";
+import { YoliAria } from "@/modules/YOLI/core/YoliAria";
 
 /**
  * Main message processing function
@@ -39,6 +42,12 @@ export async function processUserInput(rawInput: string, chatId?: number): Promi
 
   console.log("💬 Aurora responds:", instruction.text);
 
+  // Dispatch global event for Avatar/UI sync
+  if (typeof window !== "undefined" && instruction.emotion) {
+    console.log(`📡 Dispatching Emotion Event: ${instruction.emotion}`);
+    window.dispatchEvent(new CustomEvent("aurora-emotion", { detail: instruction.emotion }));
+  }
+
   // Play voice synthesis with the emotion returned by ANA
   // Only speak if there is text to say
   if (instruction.text) {
@@ -49,11 +58,37 @@ export async function processUserInput(rawInput: string, chatId?: number): Promi
   }
 
   // Return text response for display in chat UI
-  return {
+  const result = {
     text: instruction.text || "",
     chatId: newChatId!,
     aiMessage: aiMessage
   };
+
+  // Step 4️⃣: Execute M.A.R.I.A Action if present
+  if (instruction.action) {
+    // If it's a navigation or search, we wait a bit so the transition isn't jarring
+    const delay = (instruction.action.type === "NAVIGATE" || instruction.action.type === "SEARCH") ? 2000 : 500;
+    setTimeout(() => {
+      // Step 3.5️⃣: Trigger ARIA Announcement via Y.O.L.I.
+      const lang = window.location.pathname.startsWith("/en") ? "en" : "es";
+      let ariaKey = `aria.${instruction.action!.type.toLowerCase()}`;
+
+      // Special case for ACCESS sub-keys
+      if (instruction.action!.type === "ACCESS") {
+        ariaKey = `aria.access.${instruction.action!.target.toLowerCase()}`;
+      }
+
+      const rawMsg = t(ariaKey, lang);
+      // Simple template replacement
+      const localizedAnnounce = rawMsg.replace("{target}", instruction.action!.target);
+
+      YoliAria.announce(localizedAnnounce);
+
+      MariaEngine.executeAction(instruction.action!);
+    }, delay);
+  }
+
+  return result;
 }
 
 /**

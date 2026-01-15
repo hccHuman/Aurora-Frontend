@@ -15,10 +15,16 @@ import * as PIXI from "pixi.js";
 import { Ticker } from "@pixi/ticker";
 import { Live2DModel } from "pixi-live2d-display";
 import { AnaCore } from "../../ANA/AnaCore";
+import { analyzeEmotion } from "../../ANA/AnaEmotionMap";
 import { applyAuroraInstruction } from "../controller/AuroraController";
 import { useAuroraState } from "../hook/useAuroraState";
 import { AuroraChatFrame } from "./AuroraChatFrame";
 import { AuroraVoiceLocal } from "../core/AuroraVoice";
+import { AudioPermissionRequest } from "./AudioPermissionRequest";
+
+// ... (existing imports)
+
+
 
 // Main component that mounts a PIXI canvas and loads a Live2D model.
 // Responsibilities:
@@ -40,225 +46,174 @@ const VtuberLive2D: React.FC = () => {
     voiceRef.current = new AuroraVoiceLocal();
   }, []);
 
+  const [isModelLoaded, setIsModelLoaded] = React.useState(false);
+
   useEffect(() => {
     let app: PIXI.Application | null = null;
     let model: Live2DModel | null = null;
-
     let mounted = true;
 
     // Responsive layout handler
     const updateLayout = () => {
-      if (!model || !app) return;
+      if (!model || !app || !canvasRef.current) return;
 
-      const w = window.innerWidth;
+      const containerW = canvasRef.current.clientWidth;
+      const containerH = canvasRef.current.clientHeight;
 
-      // Device-specific configuration
-      let scale = 0.33;
-      let yOffset = 280;
-      let xOffset = 10; // Mobile: Back to Right
+      if (containerW === 0 || containerH === 0) return;
 
-      if (w >= 1024) {
-        // PC
-        scale = 0.42;
-        yOffset = 460;
-        xOffset = 10;
-      } else if (w >= 768) {
-        // Tablet
-        scale = 0.38;
-        yOffset = 400;
-        xOffset = 10;
-      }
+      // Resize renderer to match container exactly
+      app.renderer.resize(containerW, containerH);
 
-      model.scale.set(scale);
+      // "Alejar cámara un poco más": 0.72 multiplier
+      // "Más abajo": Increase Y (from -180 closer to 0 or positive)
+      const scaleToFitHeight = (containerH * 0.72) / 1200;
+      model.scale.set(scaleToFitHeight);
 
-      // X: Center + Offset
-      model.x = (app.renderer.width / 2) - (model.width / 2) + xOffset;
+      // Center horizontally
+      model.x = (containerW - model.width) / 2;
 
-      // Y: Center + Offset
-      model.y = (app.renderer.height / 2) - (model.height / 2) + yOffset;
+      // Position vertically higher
+      model.y = -110;
 
-      console.log(`📏 Layout Updated: Scale=${scale}, X=${model.x.toFixed(0)}, Y=${model.y.toFixed(0)} (Screen: ${w}px)`);
+      console.log(`📐 Layout Re-Refined: ${containerW}x${containerH} | Scale: ${model.scale.y.toFixed(3)} | Y: ${model.y}`);
     };
+
+    const setMouthValue = (val: number) => {
+      const m = modelRef.current;
+      if (!m) return;
+      const clamped = Math.max(0, Math.min(1, val));
+      const scaled = clamped * 0.9;
+
+      const mouthCandidates = ["ParamMouthOpenY", "ParamMouthOpen", "ParamMouthOpenX", "MouthOpen"];
+
+      for (const id of mouthCandidates) {
+        try {
+          const internal: any = m.internalModel;
+          const core: any = internal.coreModel;
+          if (core && typeof core.setParameterValueById === "function") {
+            core.setParameterValueById(id, scaled);
+            return;
+          }
+          const params: any = internal.parameters || (internal.coreModel && (internal.coreModel as any).parameters);
+          if (params && typeof params.setValueById === "function") {
+            params.setValueById(id, scaled);
+            return;
+          }
+        } catch (e) { }
+      }
+      try {
+        const coreAny: any = m.internalModel.coreModel;
+        if (coreAny && coreAny.parameters) {
+          const found = coreAny.parameters.find((p: any) => /mouth/i.test(p.id));
+          if (found && typeof coreAny.setParameterValueById === "function") {
+            coreAny.setParameterValueById(found.id, scaled);
+          }
+        }
+      } catch (e) { }
+    };
+
+    const onWindowLip = (e: Event) => {
+      const detail: any = (e as CustomEvent).detail;
+      // console.log("👄 Client Sync:", detail); // Verify we receive it
+      if (typeof detail === "number") setMouthValue(detail);
+    };
+
+    const onWindowEmotion = (e: Event) => {
+      const detail: any = (e as CustomEvent).detail;
+      console.log("🎭 Emotion Event Received in Live2D:", detail);
+      if (detail) {
+        // Map the emotion keyword (e.g. "excited") to its animation (e.g. "haru_g_m20")
+        const mapped = analyzeEmotion(detail);
+        updateFromResponse(mapped);
+      }
+    };
+
+    window.addEventListener("aurora-lipsync", onWindowLip as EventListener);
+    window.addEventListener("aurora-emotion", onWindowEmotion as EventListener);
+    window.addEventListener("resize", updateLayout);
 
     const init = async () => {
       console.log("🟦 Iniciando aplicación PIXI...");
+      const container = canvasRef.current;
+      if (!container) return;
+
       app = new PIXI.Application({
-        width: maxWidth,
-        height: maxHeight,
+        width: container.clientWidth,
+        height: container.clientHeight,
         backgroundAlpha: 0,
         autoDensity: true,
+        antialias: true,
         resolution: window.devicePixelRatio || 1,
       });
 
-      if (!mounted) {
-        app.destroy(true);
-        return;
+      if (!mounted) { app.destroy(true); return; }
+      if (canvasRef.current) {
+        canvasRef.current.innerHTML = "";
+        canvasRef.current.appendChild(app.view as HTMLCanvasElement);
       }
 
-      if (!canvasRef.current) return;
-      canvasRef.current.innerHTML = "";
-      canvasRef.current.appendChild(app.view as HTMLCanvasElement);
-
-      // Register the Ticker class required by pixi-live2d-display.
-      // This must be done BEFORE loading the model to ensure the runtime is ready.
       Live2DModel.registerTicker(Ticker);
 
-      console.log("🟨 Cargando modelo Live2D...");
       try {
         model = await Live2DModel.from("/models/haru/runtime/haru_greeter_t05.model3.json");
-      } catch (error) {
-        console.error("❌ Error cargando modelo Live2D:", error);
-        return;
-      }
+      } catch (error) { return; }
 
-      if (!mounted || !app || !app.stage) {
-        model?.destroy();
-        return;
-      }
+      if (!mounted || !app || !app.stage) { model?.destroy(); return; }
 
       model.once("load", () => {
-        if (!model) return;
-        try {
-          const internal: any = model.internalModel;
-          internal.motionManager?.stopAllMotions?.();
-          if (internal.expressionManager) {
-            internal.expressionManager.setExpression(null);
-          }
-
-          try {
-            const core = (internal.coreModel as any) || {};
-            const paramNames =
-              core.getParameterIds?.() || core.parameters?.map((p: any) => p.id) || [];
-            if (paramNames && paramNames.length) {
-              console.log("🧭 Parámetros del modelo detectados:", paramNames.slice(0, 30));
-            }
-          } catch (pm) {
-            // If inspection fails, continue without blocking the load.
-          }
-        } catch (e) { }
-        console.log("✅ Modelo totalmente cargado y listo.");
+        console.log("✅ Model fully loaded");
+        if (mounted) updateLayout();
       });
 
-      if (model) app.stage.addChild(model as any);
+      app.stage.addChild(model as any);
       modelRef.current = model;
-
       model.interactive = false;
 
-      // Initial responsive layout + resize listener
+      // Mark model as loaded so effects can trigger
+      if (mounted) setIsModelLoaded(true);
+
       updateLayout();
-      window.addEventListener("resize", updateLayout);
-
-      // Lip-sync setup: receive estimated audio-frame values and map them
-      // to the model's mouth parameter(s). We try several common parameter
-      // ids and fall back to alternative parameter APIs when needed.
-      const mouthCandidates = ["ParamMouthOpenY", "ParamMouthOpen", "ParamMouthOpenX", "MouthOpen"];
-      const setMouthValue = (val: number) => {
-        const m = modelRef.current;
-        if (!m) return;
-        const clamped = Math.max(0, Math.min(1, val));
-
-        // Slight scaling because some models expect smaller ranges (e.g. 0..0.6)
-        const scaled = clamped * 0.9;
-
-        for (const id of mouthCandidates) {
-          try {
-            // Preferred API: coreModel.setParameterValueById
-            const internal: any = m.internalModel;
-            const core: any = internal.coreModel;
-            if (core && typeof core.setParameterValueById === "function") {
-              core.setParameterValueById(id, scaled);
-              return;
-            }
-            // Fallback to exposed `parameters` APIs
-            const params: any =
-              internal.parameters ||
-              (internal.coreModel && (internal.coreModel as any).parameters);
-            if (params && typeof params.setValueById === "function") {
-              params.setValueById(id, scaled);
-              return;
-            }
-          } catch (e) {
-            // Try next candidate on error
-          }
-        }
-        // If no candidate IDs worked, try to find any parameter whose id
-        // contains 'mouth' and set that value directly.
-        try {
-          const coreAny: any = m.internalModel.coreModel;
-          if (coreAny && coreAny.parameters) {
-            // attempt to find a parameter that contains "mouth" in its id
-            const found = coreAny.parameters.find((p: any) => /mouth/i.test(p.id));
-            if (found && typeof coreAny.setParameterValueById === "function") {
-              coreAny.setParameterValueById(found.id, scaled);
-            }
-          }
-        } catch (e) { }
-      };
 
       if (voiceRef.current) {
         voiceRef.current.setOnAudioFrameCallback((v) => setMouthValue(v));
       }
 
-      // Fallback: listen for a global event if other parts of the app
-      // dispatch viseme values. Expect a CustomEvent 'aurora-lipsync' with a
-      // numeric `detail` (0..1).
-      const onWindowLip = (e: Event) => {
-        const detail: any = (e as CustomEvent).detail;
-        if (typeof detail === "number") setMouthValue(detail);
-      };
-      window.addEventListener("aurora-lipsync", onWindowLip as EventListener);
-
-      // Optional: try to add a background image for the canvas. If the asset
-      // is missing, catch the error and continue without a background.
+      // Background logic...
       try {
-        const bgPath = "/img/frame-background.png"; // change or parametrize as needed
+        const bgPath = "/img/frame-background.png";
         const sprite = PIXI.Sprite.from(bgPath);
         sprite.zIndex = 0;
         sprite.width = app.renderer.width;
         sprite.height = app.renderer.height;
         sprite.alpha = 0.6;
         app.stage.addChildAt(sprite, 0);
-      } catch (e) {
-        // Non-critical if background asset is missing
-      }
+      } catch (e) { }
 
-      // remove listener on cleanup (handled below in return)
-
-      // Ticker backup: ensure the model receives update calls. The registered
-      // ticker normally handles updates, but this guarantees `model.update`
-      // is called in environments where automatic updates may not run.
       app.ticker.add((delta) => {
         if (model && typeof (model as any).update === "function") {
           (model as any).update(delta * app!.ticker.deltaMS);
         }
       });
-
-      console.log("✅ Modelo cargado correctamente y en ejecución.");
     };
 
     init();
 
     return () => {
       mounted = false;
-      // Cleanup: remove listeners and destroy PIXI/Live2D instances to free
-      // memory and stop animations when the component unmounts.
-      console.log("🧹 Destruyendo aplicación PIXI...");
-
       try {
-        window.removeEventListener("aurora-lipsync", () => { });
+        window.removeEventListener("aurora-lipsync", onWindowLip as EventListener);
+        window.removeEventListener("aurora-emotion", onWindowEmotion as EventListener);
         window.removeEventListener("resize", updateLayout);
       } catch (e) { }
-      if (model) {
-        try { model.destroy(); } catch (e) { }
-      }
-      if (app) {
-        try { app.destroy(true); } catch (e) { }
-      }
+      if (model) { try { model.destroy(); } catch (e) { } }
+      if (app) { try { app.destroy(true); } catch (e) { } }
     };
   }, []);
 
   // Expressions
   useEffect(() => {
+    if (!isModelLoaded) return;
     const m = modelRef.current;
     if (!m || !expression) return;
     const expUrl = `/models/haru/runtime/expressions/${expression}.exp3.json`;
@@ -269,22 +224,28 @@ const VtuberLive2D: React.FC = () => {
         .setExpression(expUrl)
         .catch(() => console.warn("⚠️ No se encontró la expresión:", expression));
     }
-  }, [expression]);
+  }, [expression, isModelLoaded]);
 
   // Motions
   useEffect(() => {
+    if (!isModelLoaded) return;
     const m = modelRef.current;
     if (!m || !motion) return;
     const motionUrl = `/models/haru/runtime/motion/${motion}.motion3.json`;
+    console.log(`🎬 Triggering Motion: ${motion} | URL: ${motionUrl}`);
 
     // Guard against undefined motionManager
     if (m.internalModel && (m.internalModel as any).motionManager) {
-      (m.internalModel as any).motionManager.stopAllMotions();
-      (m.internalModel as any).motionManager
-        .startMotion(motionUrl, 0, 1)
-        .catch(() => console.warn("⚠️ No se encontró el motion:", motion));
+      const mm = (m.internalModel as any).motionManager;
+      console.log("🛠️ MotionManager detected:", mm);
+      mm.stopAllMotions();
+      mm.startMotion(motionUrl, 0, 3) // Priority 3 (Force)
+        .then(() => console.log(`✅ Motion started successfully: ${motion}`))
+        .catch((err: any) => console.error("❌ Motion failed to start:", motion, err));
+    } else {
+      console.warn("⚠️ No motionManager found on model's internalModel");
     }
-  }, [motion]);
+  }, [motion, isModelLoaded]);
 
   const handleMessage = async (message: string) => {
     const { instruction } = await AnaCore.processUserMessage(message);
@@ -321,12 +282,14 @@ const VtuberLive2D: React.FC = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center w-full max-w-[500px] mx-auto aspect-[5/8]">
-      <div ref={canvasRef} className="w-full h-full [&>canvas]:w-full [&>canvas]:h-full [&>canvas]:object-contain" />
+    <div className="relative w-full h-full overflow-hidden bg-slate-900">
+      <div ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      <div className="absolute bottom-0 left-0 w-full flex justify-center z-50 pointer-events-auto pb-0 px-4">
+      <div className="absolute bottom-0 left-0 w-full flex justify-center z-50 pointer-events-auto pb-0">
         <AuroraChatFrame />
       </div>
+
+      <AudioPermissionRequest />
     </div>
   );
 };
