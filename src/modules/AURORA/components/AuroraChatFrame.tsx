@@ -189,6 +189,9 @@ export const AuroraChatFrame: React.FC = () => {
         <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
         <div className="relative flex gap-2 bg-gray-900 rounded-xl p-1">
           <input
+            id="aurora-chat-input"
+            name="aurora-chat-input"
+            autoComplete="off"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}

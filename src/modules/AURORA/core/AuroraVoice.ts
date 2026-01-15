@@ -10,6 +10,7 @@ import type { AuroraVoiceOptions } from "@/modules/AURORA/models/AuroraVoiceOpti
 export class AuroraVoiceLocal {
   private synth: SpeechSynthesis;
   private voice: SpeechSynthesisVoice | null = null;
+  public currentLang: string = "es"; // Default language, now public for read access
 
   /** Callback for each "audio frame" (0..1 openness value) */
   private onAudioFrame: ((value: number) => void) | null = null;
@@ -17,8 +18,9 @@ export class AuroraVoiceLocal {
   /** Internal ID for the lip-sync animation scheduler */
   private _lipTimerId: number | null = null;
 
-  constructor() {
+  constructor(lang?: string) {
     this.synth = window.speechSynthesis;
+    if (lang) this.currentLang = lang;
     this.loadVoice();
   }
 
@@ -32,26 +34,60 @@ export class AuroraVoiceLocal {
   }
 
   /**
-   * Load the preferred voice for Aurora
-   * Prioritizes Spanish female voices.
+   * Set language and reload voice
+   *
+   * @param {string} lang - Language code (es, en, etc.)
+   */
+  public setLanguage(lang: string) {
+    if (this.currentLang !== lang) {
+      this.currentLang = lang;
+      this.loadVoice();
+    }
+  }
+
+  /**
+   * Load the preferred voice for Aurora based on language
    *
    * @private
    */
   private loadVoice() {
     const loadVoices = () => {
       const voices = this.synth.getVoices();
-      // Prioritize natural sounding Spanish female voices
-      this.voice =
-        voices.find(
-          (v) =>
-            v.lang.startsWith("es") &&
-            /Paulina|Helena|Laura|Sabina|Zira|Microsoft|Google/i.test(v.name) &&
-            !/Mobile/i.test(v.name) // Prefer desktop/high-quality voices if available
-        ) ||
-        voices.find((v) => v.lang.startsWith("es")) ||
-        voices[0] ||
-        null;
-      console.log("🎤 Selected voice for Aurora:", this.voice?.name);
+      
+      if (this.currentLang === "es") {
+        // Prioritize Spanish female voices
+        this.voice =
+          voices.find(
+            (v) =>
+              v.lang.startsWith("es") &&
+              /Paulina|Helena|Laura|Sabina|Zira|Microsoft|Google/i.test(v.name) &&
+              !/Mobile/i.test(v.name)
+          ) ||
+          voices.find((v) => v.lang.startsWith("es")) ||
+          voices[0] ||
+          null;
+      } else if (this.currentLang === "en") {
+        // Prioritize English female voices
+        this.voice =
+          voices.find(
+            (v) =>
+              (v.lang.startsWith("en") || v.lang === "en") &&
+              /Samantha|Victoria|Moira|Zira|Google|Microsoft/i.test(v.name) &&
+              !/Male|male/i.test(v.name) &&
+              !/Mobile/i.test(v.name)
+          ) ||
+          voices.find((v) => v.lang.startsWith("en")) ||
+          voices[0] ||
+          null;
+      } else {
+        // Fallback: just pick first voice with matching language or first available
+        this.voice =
+          voices.find((v) => v.lang.startsWith(this.currentLang)) ||
+          voices[0] ||
+          null;
+      }
+      
+      console.log(`🎤 Selected voice for Aurora [${this.currentLang}]:`, this.voice?.name);
     };
 
     if (this.synth.getVoices().length === 0) {
@@ -256,6 +292,101 @@ export class AuroraVoiceLocal {
       .replace(/([,;])/g, "$1 …")
       .replace(/([.!?])\s*/g, "$1 … ")
       .replace(/(\bquerida\b|\bcariño\b|\bmi amor\b)/gi, "… $1 …");
+  }
+
+  /**
+   * Pause ongoing speech
+   * Keeps the speech synthesis paused, allowing resume()
+   *
+   * @public
+   */
+  public pause() {
+    if (this.synth.speaking && !this.synth.paused) {
+      this.synth.pause();
+      console.log("⏸️ Speech paused");
+    }
+  }
+
+  /**
+   * Resume paused speech
+   * Continues the speech synthesis from where it was paused
+   *
+   * @public
+   */
+  public resume() {
+    if (this.synth.paused) {
+      this.synth.resume();
+      console.log("▶️ Speech resumed");
+    }
+  }
+
+  /**
+   * Check if speech is currently active
+   *
+   * @public
+   * @returns {boolean} True if speaking or paused
+   */
+  public isSpeaking(): boolean {
+    return this.synth.speaking;
+  }
+
+  /**
+   * Save current speech state to sessionStorage for recovery after page reload
+   * This allows continuing speech animation after navigation
+   *
+   * @public
+   */
+  public saveState(): void {
+    if (this.synth.speaking) {
+      try {
+        sessionStorage.setItem(
+          "aurora_voice_state",
+          JSON.stringify({
+            isPaused: this.synth.paused,
+            timestamp: Date.now(),
+            lang: this.currentLang,
+          })
+        );
+        console.log("💾 Voice state saved to sessionStorage");
+      } catch (e) {
+        console.warn("⚠️ Could not save voice state:", e);
+      }
+    }
+  }
+
+  /**
+   * Restore speech state from sessionStorage and resume if applicable
+   * Called when component remounts after page reload
+   *
+   * @public
+   */
+  public restoreState(): boolean {
+    try {
+      const saved = sessionStorage.getItem("aurora_voice_state");
+      if (saved) {
+        const state = JSON.parse(saved);
+        const elapsed = Date.now() - state.timestamp;
+        
+        // If less than 30 seconds have passed, try to resume
+        if (elapsed < 30000 && state.isPaused) {
+          console.log("🔄 Attempting to restore voice state...");
+          
+          // Update language if different
+          if (state.lang !== this.currentLang) {
+            this.setLanguage(state.lang);
+          }
+          
+          // Clear the saved state
+          sessionStorage.removeItem("aurora_voice_state");
+          return true;
+        } else {
+          sessionStorage.removeItem("aurora_voice_state");
+        }
+      }
+    } catch (e) {
+      console.warn("⚠️ Could not restore voice state:", e);
+    }
+    return false;
   }
 
   /**

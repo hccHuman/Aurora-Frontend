@@ -10,17 +10,37 @@
 
 "use client";
 import React, { useEffect, useRef } from "react";
+import { useAtom } from "jotai";
 import * as PIXI from "pixi.js";
+import "@/modules/AURORA/utils/initPixi"; // Fix for RETINA_PREFIX error
 // Use the standalone ticker class that pixi-live2d-display expects
 import { Ticker } from "@pixi/ticker";
-import { Live2DModel } from "pixi-live2d-display";
+// Type for Live2D model instance
+type Live2DModelType = any; // Will be loaded dynamically
+
+// Lazy import Live2DModel - it will be available after scripts load
+let Live2DModel: any = null;
+const loadLive2DModel = async (): Promise<any> => {
+  if (!Live2DModel) {
+    try {
+      // PIXI global is already handled by initPixi import
+      const module = await import("pixi-live2d-display");
+      Live2DModel = module.Live2DModel;
+    } catch (err) {
+      console.error("Failed to import pixi-live2d-display:", err);
+      return null;
+    }
+  }
+  return Live2DModel;
+};
 import { AnaCore } from "../../ANA/AnaCore";
 import { analyzeEmotion } from "../../ANA/AnaEmotionMap";
 import { applyAuroraInstruction } from "../controller/AuroraController";
 import { useAuroraState } from "../hook/useAuroraState";
-import { AuroraChatFrame } from "./AuroraChatFrame";
+// import { AuroraChatFrame } from "./AuroraChatFrame";
 import { AuroraVoiceLocal } from "../core/AuroraVoice";
 import { AudioPermissionRequest } from "./AudioPermissionRequest";
+import { auroraVoiceInstanceAtom } from "@/store/chatStore";
 
 // ... (existing imports)
 
@@ -35,22 +55,39 @@ import { AudioPermissionRequest } from "./AudioPermissionRequest";
 // Este componente se puede usar como hijo en un popup React
 const VtuberLive2D: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement | null>(null);
-  const modelRef = useRef<Live2DModel | null>(null);
+  const modelRef = useRef<Live2DModelType | null>(null);
   const { emotion, expression, motion, updateFromResponse } = useAuroraState();
   const voiceRef = useRef<AuroraVoiceLocal | null>(null);
+  const [voiceInstance, setVoiceInstance] = useAtom(auroraVoiceInstanceAtom);
 
-  const maxWidth = 500;
-  const maxHeight = 800;
+  // Fixed dimensions - will be responsive via CSS scale if needed
+  const maxWidth = 380;
+  const maxHeight = 580; // 650px modal - ~70px header = ~580px for avatar
 
   useEffect(() => {
-    voiceRef.current = new AuroraVoiceLocal();
-  }, []);
+    const pathLang = window.location.pathname.includes("/en/") ? "en" : "es";
+
+    if (!voiceInstance) {
+      // First time: create new instance with detected language
+      const newVoice = new AuroraVoiceLocal(pathLang);
+      setVoiceInstance(newVoice);
+      voiceRef.current = newVoice;
+      console.log(`🎙️ Created new voice instance for language: ${pathLang}`);
+    } else {
+      // Update language if path changed (e.g., /es/ → /en/)
+      voiceRef.current = voiceInstance;
+      if (voiceRef.current.currentLang !== pathLang) {
+        voiceRef.current.setLanguage(pathLang);
+        console.log(`🌐 Language changed to: ${pathLang}`);
+      }
+    }
+  }, [voiceInstance, setVoiceInstance]);
 
   const [isModelLoaded, setIsModelLoaded] = React.useState(false);
 
   useEffect(() => {
     let app: PIXI.Application | null = null;
-    let model: Live2DModel | null = null;
+    let model: Live2DModelType | null = null;
     let mounted = true;
 
     // Responsive layout handler
@@ -65,16 +102,14 @@ const VtuberLive2D: React.FC = () => {
       // Resize renderer to match container exactly
       app.renderer.resize(containerW, containerH);
 
-      // "Alejar cámara un poco más": 0.72 multiplier
-      // "Más abajo": Increase Y (from -180 closer to 0 or positive)
-      const scaleToFitHeight = (containerH * 0.72) / 1200;
+      const scaleToFitHeight = (containerH * 1.4) / 1200;
       model.scale.set(scaleToFitHeight);
 
       // Center horizontally
       model.x = (containerW - model.width) / 2;
 
       // Position vertically higher
-      model.y = -110;
+      model.y = -80;
 
       console.log(`📐 Layout Re-Refined: ${containerW}x${containerH} | Scale: ${model.scale.y.toFixed(3)} | Y: ${model.y}`);
     };
@@ -135,12 +170,54 @@ const VtuberLive2D: React.FC = () => {
 
     const init = async () => {
       console.log("🟦 Iniciando aplicación PIXI...");
+
+      // Wait for Live2D globals to be ready (set by Layout.astro)
+      if ((window as any).__live2dReady) {
+        try {
+          await (window as any).__live2dReady;
+          console.log("✅ Live2D globals confirmed ready");
+        } catch (error) {
+          console.error("❌ Live2D initialization failed:", error);
+          return;
+        }
+      } else {
+        // Fallback if promise doesn't exist
+        let attempts = 0;
+        while ((!(window as any).Live2D || !(window as any).Live2DCubismCore) && attempts < 50) {
+          await new Promise(r => setTimeout(r, 100));
+          attempts++;
+        }
+        if (attempts >= 50) {
+          console.error("❌ Live2D globals did not load in time");
+          return;
+        }
+      }
+
+      // Load Live2DModel module
+      const LoadedLive2DModel = await loadLive2DModel();
+      if (!LoadedLive2DModel) {
+        console.error("❌ Failed to load Live2DModel module");
+        return;
+      }
+
       const container = canvasRef.current;
       if (!container) return;
 
+      // Wait for container to have dimensions
+      let attempts = 0;
+      while ((container.clientWidth === 0 || container.clientHeight === 0) && attempts < 10) {
+        await new Promise(r => setTimeout(r, 50));
+        attempts++;
+      }
+
+      const width = container.clientWidth || 500;
+      const height = container.clientHeight || 800;
+
+      console.log(`📦 Container dimensions: ${width}x${height}`);
+
       app = new PIXI.Application({
-        width: container.clientWidth,
-        height: container.clientHeight,
+        width,
+        height,
         backgroundAlpha: 0,
         autoDensity: true,
         antialias: true,
@@ -150,20 +227,42 @@ const VtuberLive2D: React.FC = () => {
       if (!mounted) { app.destroy(true); return; }
       if (canvasRef.current) {
         canvasRef.current.innerHTML = "";
-        canvasRef.current.appendChild(app.view as HTMLCanvasElement);
+        const canvas = app.view as HTMLCanvasElement;
+
+        // Ensure canvas is visible with explicit styles
+        canvas.style.display = "block";
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.maxWidth = `${width}px`;
+        canvas.style.maxHeight = `${height}px`;
+
+        canvasRef.current.appendChild(canvas);
+        console.log(`🖼️ Canvas appended to DOM (${width}x${height})`);
       }
 
-      Live2DModel.registerTicker(Ticker);
+      // Register Ticker with Live2DModel
+      if (!LoadedLive2DModel) {
+        console.error("❌ Live2DModel is not available.");
+        return;
+      }
+
+      LoadedLive2DModel.registerTicker(Ticker);
 
       try {
-        model = await Live2DModel.from("/models/haru/runtime/haru_greeter_t05.model3.json");
-      } catch (error) { return; }
+        model = await LoadedLive2DModel.from("/models/haru/runtime/haru_greeter_t05.model3.json");
+      } catch (error) {
+        console.error("❌ Failed to load Live2D model:", error);
+        return;
+      }
 
       if (!mounted || !app || !app.stage) { model?.destroy(); return; }
 
       model.once("load", () => {
         console.log("✅ Model fully loaded");
-        if (mounted) updateLayout();
+        if (mounted) {
+          updateLayout();
+          // Voice instance persists with ClientRouter, no need to restore state
+        }
       });
 
       app.stage.addChild(model as any);
@@ -206,6 +305,9 @@ const VtuberLive2D: React.FC = () => {
         window.removeEventListener("aurora-emotion", onWindowEmotion as EventListener);
         window.removeEventListener("resize", updateLayout);
       } catch (e) { }
+
+      // With ClientRouter, component stays mounted during navigation, so don't pause speech
+      // Only clean up PIXI/Live2D resources
       if (model) { try { model.destroy(); } catch (e) { } }
       if (app) { try { app.destroy(true); } catch (e) { } }
     };
@@ -282,12 +384,10 @@ const VtuberLive2D: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-slate-900">
-      <div ref={canvasRef} className="absolute inset-0 w-full h-full" />
+    <div className="relative w-full h-full overflow-hidden bg-slate-900 flex flex-col">
+      <div ref={canvasRef} className="flex-1 relative w-full h-full" />
 
-      <div className="absolute bottom-0 left-0 w-full flex justify-center z-50 pointer-events-auto pb-0">
-        <AuroraChatFrame />
-      </div>
+      {/* AuroraChatFrame removed to avoid duplication with ChatWrapper */}
 
       <AudioPermissionRequest />
     </div>
