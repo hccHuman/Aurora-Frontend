@@ -1,0 +1,17 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import TokyoDriftAbout from "@/components/tsx/About/TokyoDriftAbout";
+import { t } from "@/modules/YOLI/injector";
+
+const lang = "es";
+---
+
+<Layout
+  lang={lang}
+  title={t("about.title", lang)}
+  metaTitle={t("about.title", lang)}
+  metaDescription={t("about.subtitle", lang)}
+  home={true}
+>
+  <TokyoDriftAbout client:load lang={lang} />
+</Layout>
