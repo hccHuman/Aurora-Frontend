@@ -37,8 +37,29 @@ export async function processUserInput(rawInput: string, chatId?: number): Promi
   const cleanText = await sanitizeText(rawInput);
   console.log("🧼 Text after sanitization:", cleanText);
 
+  // 🔥 Add personality instructions and user identity to the message context
+  // This helps make the AI softer and more personalized (personal data RAG)
+  let enrichedText = cleanText;
+  if (typeof window !== "undefined") {
+    const userDataStr = localStorage.getItem("user");
+    if (userDataStr) {
+      try {
+        const userData = JSON.parse(userDataStr);
+        if (userData && userData.nombre) {
+          enrichedText = `(Mensaje de ${userData.nombre}): ${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+        } else {
+          enrichedText = `${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+        }
+      } catch (e) {
+        enrichedText = `${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+      }
+    } else {
+      enrichedText = `${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+    }
+  }
+
   // Send to ANA Core (Backend + Emotion Engine)
-  const { instruction, chatId: newChatId, aiMessage } = await AnaCore.processUserMessage(cleanText, chatId);
+  const { instruction, chatId: newChatId, aiMessage } = await AnaCore.processUserMessage(enrichedText, chatId);
 
   console.log("💬 Aurora responds:", instruction.text);
 

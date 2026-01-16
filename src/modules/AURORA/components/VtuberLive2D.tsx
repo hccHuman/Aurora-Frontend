@@ -223,6 +223,7 @@ const VtuberLive2D: React.FC = () => {
         antialias: true,
         resolution: window.devicePixelRatio || 1,
       });
+      app.ticker.maxFPS = 30; // Limit FPS for performance as requested
 
       if (!mounted) { app.destroy(true); return; }
       if (canvasRef.current) {

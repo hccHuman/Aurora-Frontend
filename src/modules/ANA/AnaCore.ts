@@ -7,8 +7,9 @@
  */
 
 import { analyzeEmotion } from "./AnaEmotionMap";
+import { MariaEngine } from "../MARIA/core/MariaEngine";
 import { sendMessage } from "@/services/chatService";
-import type { AuroraInstruction } from "@/models/AuroraProps/AuroraInstructionProps";
+import type { AuroraInstruction } from "@/modules/AURORA/models/AuroraInstructionProps";
 
 /**
  * ANA Core - Emotion Analysis Service
@@ -80,18 +81,49 @@ export class AnaCore {
       }
 
       // Step 2️⃣: Analyze emotional content of the response text
-      const emotionData = analyzeEmotion(content || "Neutral");
+      // Priority: Backend Emotion > Local Analysis
+      let emotionData = analyzeEmotion(content || "Neutral");
+
+      // If backend provides a specific emotion, override the local analysis
+      if (data.emotion) {
+        console.log(`🎭 Backend Emotion Detected: ${data.emotion}`);
+
+        // Use the analyzeEmotion function to find the best motion for this emotion keyword
+        // This ensures we pick up the 'motionMap' we defined in AnaEmotionMap
+        const mapped = analyzeEmotion(data.emotion);
+
+        emotionData.emotion = data.emotion;
+        emotionData.motion = mapped.motion; // Use the mapped motion (e.g. haru_g_m20)
+        emotionData.expression = null; // No expressions available
+      }
+
+      // Step 2.5️⃣: Extract M.A.R.I.A navigation/interaction actions
+      const extractionResult = MariaEngine.extractAction(content);
+      const cleanText = extractionResult.cleanText;
+      let action = extractionResult.action;
+
+      // New: Check for explicit link in data (prioritized for redirection)
+      if (data.link) {
+        console.log(`🔗 Link detected in response data: ${data.link}`);
+        action = {
+          type: "NAVIGATE",
+          target: data.link
+        } as any; // Cast to avoid strict typing issues if AuroraAction isn't fully imported, though it fits the shape
+      }
+
+      const finalContent = cleanText || content;
 
       // Step 3️⃣: Return complete instruction for avatar animation controller
       return {
         instruction: {
           emotion: emotionData.emotion,
-          expression: emotionData.expression,
+          expression: null as any, // Force null to disable expression system
           motion: emotionData.motion,
-          text: content,
+          text: finalContent,
+          action: action
         },
         chatId: newChatId,
-        aiMessage: normalizedAiMsg
+        aiMessage: { ...normalizedAiMsg, contenido: finalContent }
       };
     } catch (error) {
       // Log error for debugging

@@ -7,7 +7,7 @@
  */
 
 import emotionDictionary from "./data/emotionDictionary.json";
-import type { EmotionEntry } from "@/models/AuroraProps/EmotionEntryProps";
+import type { EmotionEntry } from "@/modules/AURORA/models/EmotionEntryProps";
 
 /**
  * Analyze text for emotional keywords and return avatar state
@@ -24,31 +24,80 @@ import type { EmotionEntry } from "@/models/AuroraProps/EmotionEntryProps";
  * // Returns: { emotion: 'happy', expression: 'smile', motion: 'haru_g_m02' }
  */
 export function analyzeEmotion(text: string) {
-  // Convert text to lowercase for case-insensitive keyword matching
   const lower = text.toLowerCase();
 
-  // Iterate through emotion dictionary entries
-  for (const entry of emotionDictionary as EmotionEntry[]) {
-    // Check if any keywords for this emotion match the text
-    if (entry.keywords.some((keyword) => lower.includes(keyword))) {
-      // Found a matching emotion - normalize the motion path
-      const motion = normalizeMotion(entry.motion);
-      console.log(`🎯 Emotion detected: ${entry.emotion} → Motion: ${motion}`);
+  // Defines direct mapping from meaningful emotions to specific Motion files
+  // verified to exist in: /models/haru/runtime/motion/
+  const motionMap: Record<string, string> = {
+    // Joy / Happiness
+    "feliz": "haru_g_m02",       // Joyful movement
+    "happy": "haru_g_m02",
+    "contento": "haru_g_m02",
+    "alegre": "haru_g_m02",
+    "genial": "haru_g_m02",
+    "excited": "haru_g_m20",     // Excited jumping/active
+    "emocionado": "haru_g_m20",
 
-      // Return emotion state with expression and animation motion
+    // Sadness / Empathy
+    "triste": "haru_g_m14",      // Looking down / sad
+    "sad": "haru_g_m14",
+    "pena": "haru_g_m14",
+    "lo siento": "haru_g_m14",
+    "perdon": "haru_g_m14",
+
+    // Anger / Annoyance
+    "enfado": "haru_g_m19",      // Angry / Frustrated
+    "angry": "haru_g_m19",
+    "molesto": "haru_g_m19",
+
+    // Surprise / Shock
+    "sorpresa": "haru_g_m08",    // Surprised
+    "surprised": "haru_g_m08",
+    "wow": "haru_g_m08",
+
+    // Love / Affection
+    "amor": "haru_g_m22",        // Shy / Loving
+    "love": "haru_g_m22",
+    "te quiero": "haru_g_m22",
+    "cariño": "haru_g_m22",
+
+    // Thinking / Waiting
+    "pensar": "haru_g_m26",      // Thinking pose
+    "thinking": "haru_g_m26",
+
+    // Default Greetings/Neutral
+    "hola": "haru_g_m01",
+    "hello": "haru_g_m01"
+  };
+
+  // Check manual map first
+  for (const [key, motion] of Object.entries(motionMap)) {
+    if (lower.includes(key)) {
+      console.log(`🎯 Direct Emotion Motion: ${key} -> ${motion}`);
       return {
-        emotion: entry.emotion,
-        expression: entry.expression,
-        motion, // normalized base name without extensions
+        emotion: key,
+        expression: null, // No expressions available
+        motion: motion
       };
     }
   }
 
-  // No emotion keywords found - return neutral default state
-  console.log("😐 No emotion keywords found → Using neutral default state");
+  // Fallback to dictionary if needed, but likely the map above covers core interactions
+  for (const entry of emotionDictionary as EmotionEntry[]) {
+    if (entry.keywords.some((keyword) => lower.includes(keyword))) {
+      const motion = normalizeMotion(entry.motion);
+      return {
+        emotion: entry.emotion,
+        expression: null, // Force null expression
+        motion,
+      };
+    }
+  }
+
+  // Neutral default
   return {
     emotion: "neutral",
-    expression: "neutral",
+    expression: null,
     motion: "haru_g_idle",
   };
 }

@@ -3,9 +3,13 @@ import { useAtom } from 'jotai';
 import { toastsAtom, removeToastAtom } from '../store/toastStore';
 import { XMarkIcon, CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'; // Adjust import based on available icons
 
-const ToastContainer: React.FC = () => {
+import { useYOLI } from '@/modules/YOLI/injector';
+import type { Lang } from '@/models/SystemProps/LangProps';
+
+const ToastContainer: React.FC<Lang> = ({ lang = "es" }) => {
     const [toasts] = useAtom(toastsAtom);
     const [, removeToast] = useAtom(removeToastAtom);
+    const t = useYOLI(lang);
 
     if (toasts.length === 0) return null;
 
@@ -33,9 +37,9 @@ const ToastContainer: React.FC = () => {
                 >
                     {/* Icon based on type */}
                     <span className={`shrink-0 ${toast.type === 'info' ? 'text-sky-500 dark:text-sky-400' :
-                            toast.type === 'success' ? 'text-emerald-500 dark:text-emerald-400' :
-                                toast.type === 'warning' ? 'text-amber-500 dark:text-amber-400' :
-                                    'text-rose-500 dark:text-rose-400'
+                        toast.type === 'success' ? 'text-emerald-500 dark:text-emerald-400' :
+                            toast.type === 'warning' ? 'text-amber-500 dark:text-amber-400' :
+                                'text-rose-500 dark:text-rose-400'
                         }`}>
                         {toast.type === 'info' && <InformationCircleIcon className="w-6 h-6" />}
                         {toast.type === 'success' && <CheckCircleIcon className="w-6 h-6" />}
@@ -50,7 +54,7 @@ const ToastContainer: React.FC = () => {
                     <button
                         onClick={() => removeToast(toast.id)}
                         className="btn btn-ghost btn-xs btn-circle bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 border-none text-current opacity-70 hover:opacity-100 transition-opacity"
-                        aria-label="Close"
+                        aria-label={t("aria.close")}
                     >
                         <XMarkIcon className="w-4 h-4" />
                     </button>
