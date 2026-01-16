@@ -7,7 +7,7 @@
 
 import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
-import type { Message } from "@/models/AuroraProps/MessageProps";
+import type { Message } from "@/modules/AURORA/models/MessageProps";
 
 const BASE_URL = `${PUBLIC_API_URL}/messages`;
 
@@ -17,7 +17,7 @@ const BASE_URL = `${PUBLIC_API_URL}/messages`;
  */
 export async function initChat(): Promise<{ message: string; chatId?: number; data: Message[] }> {
   try {
-    const res = await AlbaClient.get(`${BASE_URL}/history`);
+    const res = await AlbaClient.get(`${BASE_URL}/history`, { "Content-Type": "application/json" }, { skipRedirect: true });
     return await res.json();
   } catch (error) {
     console.error("Error initializing chat:", error);

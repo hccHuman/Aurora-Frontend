@@ -13,4 +13,8 @@ export interface ModalProps {
   open: boolean;
   /** Callback function to close the modal */
   onClose: () => void;
+  /** Current language for localization */
+  lang?: string;
+  /** Whether data is currently being fetched */
+  loading?: boolean;
 }

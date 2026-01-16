@@ -93,7 +93,7 @@
         "errors": {
             "invalid_name": "Name is invalid 💔",
             "invalid_email": "Email is invalid 💔",
-            "invalid_password": "Password must be at least 8 characters with 1 uppercase, 1 lowercase, 1 number, and 1 special character 💔",
+            "invalid_password": "Password must be at least 8 characters with 1 uppercase, 1 lowercase, one number, and one special character 💔",
             "passwords_dont_match": "Passwords do not match 💔",
             "unknown": "Unknown error",
             "unknown_register": "Unknown error during registration"
@@ -188,5 +188,15 @@
             "go_previous": "Go to previous page",
             "go_next": "Go to next page"
         }
+    },
+    "about": {
+        "title": "About Us",
+        "subtitle": "Your Trusted Garage for Performance and Street Culture",
+        "who_we_are_title": "LAHIA'S GARAGE",
+        "who_we_are_text": "We are the epicenter of performance and underground style. At Lahia Shop, we don't just sell parts; we forge drift machines. From fire-breathing turbos to body kits designed in the heart of Tokyo, we have everything your car needs to dominate the night.",
+        "mission_title": "OUR GOAL",
+        "mission_text": "Equipping the new generation of drivers with components that withstand any slide. Our mission is clear: every part you buy brings you closer to the urban asphalt podium.",
+        "join_title": "FLOOR IT",
+        "join_text": "Looking to upgrade your ride? You've come to the right place. Get ready to burn rubber with the best products in the scene."
     }
 }

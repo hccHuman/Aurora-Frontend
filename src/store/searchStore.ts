@@ -8,10 +8,11 @@
  * const [search, setSearch] = useAtom(searchStateAtom);
  * setSearch({ query: 'laptop', results: [...] });
  */
-import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 
 /**
  * Search state atom used by HeaderSearch and AllProductsListComponent
  * Contains the current search query (string) and results (array)
+ * Persisted in sessionStorage to survive page reloads during MARIA navigation.
  */
-export const searchStateAtom = atom({ query: '', results: [] as any[] });
+export const searchStateAtom = atomWithStorage('aurora_search_state', { query: '', results: [] as any[] });

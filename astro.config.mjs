@@ -2,22 +2,22 @@ import { defineConfig } from "astro/config";
 import fs from "fs";
 import react from "@astrojs/react";
 
+import sitemap from "@astrojs/sitemap";
+
 export default defineConfig({
-  integrations: [react()],
+  site: "https://miweb.com",
+  integrations: [react(), sitemap()],
   vite: {
     ssr: {
       // Mark external modules that shouldn't be bundled for SSR
       noExternal: ['framer-motion'],
     },
-    server: {
-      https: {
-        key: fs.readFileSync("./ssl/mysite.key"),
-        cert: fs.readFileSync("./ssl/mysite.crt"),
-      },
-      port: 4321,
+    resolve: {
+      dedupe: ['react', 'react-dom', 'jotai'],
     },
-    // Disable source maps in production to avoid loading src files
-    sourcemap: false,
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'jotai'],
+    },
     build: {
       rollupOptions: {
         output: {

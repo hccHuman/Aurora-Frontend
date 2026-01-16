@@ -69,10 +69,10 @@
     },
     "auth": {
         "login": {
-            "title": "Inicia sesión",
+            "title": "Iniciar sesión",
             "button": "Iniciar sesión",
-            "success": "¡Login exitoso! Redirigiendo… 💖",
-            "connected": "¡Conectado exitosamente! 💖",
+            "success": "¡Acceso exitoso! Redirigiendo... 💖",
+            "connected": "¡Sesión iniciada! 💖",
             "no_account": "¿No tienes cuenta?",
             "register_here": "Regístrate aquí"
         },
@@ -82,7 +82,7 @@
             "button_loading": "Creando cuenta...",
             "success": "¡Cuenta creada con éxito! 🌸 Redirigiendo…",
             "have_account": "¿tienes cuenta?",
-            "login_here": "Haz Login aquí"
+            "login_here": "Inicia sesión aquí"
         },
         "labels": {
             "email": "Email",
@@ -188,5 +188,15 @@
             "go_previous": "Ir a la página anterior",
             "go_next": "Ir a la página siguiente"
         }
+    },
+    "about": {
+        "title": "Sobre Nosotros",
+        "subtitle": "Tu Garage de Confianza para el Performance y la Cultura Street",
+        "who_we_are_title": "EL GARAGE DE LAHIA",
+        "who_we_are_text": "Somos el epicentro del performance y el estilo underground. En Lahia Shop, no solo vendemos piezas; forjamos máquinas de drift. Desde turbos que escupen fuego hasta kits de carrocería diseñados en el corazón de Tokyo, tenemos todo lo que tu coche necesita para dominar la noche.",
+        "mission_title": "NUESTRO OBJETIVO",
+        "mission_text": "Equipar a la nueva generación de pilotos con componentes que aguantan cualquier derrape. Nuestra misión es clara: que cada pieza que compres te acerque más al podio del asfalto urbano.",
+        "join_title": "PISA A FONDO",
+        "join_text": "¿Buscas mejorar tu coche? Has llegado al sitio indicado. Prepárate para quemar neumático con los mejores productos del mundillo."
     }
 }
