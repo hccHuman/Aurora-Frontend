@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import TokyoDriftAbout from "@/components/tsx/About/TokyoDriftAbout";
+import { t } from "@/modules/YOLI/injector";
+
+const lang = "es";
+---
+
+<Layout
+  lang={lang}
+  title={t("about.title", lang)}
+  metaTitle={t("about.title", lang)}
+  description={t("about.subtitle", lang)}
+  metaDescription={t("about.subtitle", lang)}
+  canonicalUrl={`https://lahia.shop/${lang}/about`}
+  previewImage="https://lahia.shop/assets/preview-about.png"
+  home={true}
+>
+  <TokyoDriftAbout client:load lang={lang} />
+</Layout>

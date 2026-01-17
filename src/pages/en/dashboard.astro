@@ -1,0 +1,95 @@
+---
+import MainChart from "@/components/tsx/Dashboard/charts/MainChart/MainChart";
+import NewProductsChart from "@/components/tsx/Dashboard/charts/NewProductsChart/NewProductsChart";
+import SalesByCategoryChart from "@/components/tsx/Dashboard/charts/SalesByCategoryChart/SalesByCategoryChart";
+import TrafficByDeviceChart from "@/components/tsx/Dashboard/charts/TrafficByDeviceChart/TrafficByDeviceChart";
+import SignupsChart from "@/components/tsx/Dashboard/charts/SignupsChart/SignupsChart";
+import Layout from "@/layouts/Layout.astro";
+import VisitorsChart from "@/components/tsx/Dashboard/charts/VisitorsChart/VisitorsChart";
+import LoginReader from "@/components/tsx/statement/loginReader";
+import OrdersTable from "@/components/tsx/Dashboard/ChartsTables/OrdersTable/OrdersTable";
+import ProductsTable from "@/components/tsx/Dashboard/ChartsTables/ProductsTable/ProductsTable";
+import CategoryTable from "@/components/tsx/Dashboard/ChartsTables/CategoryTable/CategoryTable";
+import UsersList from "@/components/tsx/Dashboard/ChartsTables/UsersList/UsersList";
+import AdminOnly from "@/components/tsx/statement/AdminOnly";
+import DashboardWidget from "@/components/tsx/Dashboard/ui/DashboardWidget";
+import { t } from "@/modules/YOLI/injector";
+
+let lang = "en";
+---
+
+<Layout
+  lang={lang}
+  title={t("header.dashboard", lang)}
+  metaTitle={t("header.dashboard", lang)}
+  description={t("header.dashboard", lang)}
+  metaDescription={t("header.dashboard", lang)}
+  canonicalUrl="https://lahia.shop/en/dashboard"
+  previewImage="https://lahia.shop/assets/preview.png"
+  home={true}
+  noindex={true}
+>
+  <LoginReader client:load />
+  <AdminOnly client:only>
+    <div class="space-y-8 p-5 flex-1 w-full">
+      <!-- Chart principal -->
+      <section class="gap-6">
+        <DashboardWidget client:load delay={0.1}>
+          <MainChart client:only />
+        </DashboardWidget>
+      </section>
+
+      <section class="gap-6">
+        <DashboardWidget client:load delay={0.2}>
+          <VisitorsChart client:only />
+        </DashboardWidget>
+      </section>
+
+      <!-- Segunda fila -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <DashboardWidget client:load delay={0.3} direction="right">
+          <NewProductsChart client:only />
+        </DashboardWidget>
+
+        <DashboardWidget client:load delay={0.4} direction="left">
+          <SignupsChart client:only />
+        </DashboardWidget>
+      </section>
+
+      <!-- Tercera fila -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <DashboardWidget client:load delay={0.5} direction="right">
+          <SalesByCategoryChart client:only />
+        </DashboardWidget>
+
+        <DashboardWidget client:load delay={0.6} direction="left">
+          <TrafficByDeviceChart client:only />
+        </DashboardWidget>
+      </section>
+
+      <section class="gap-6">
+        <DashboardWidget client:load delay={0.7}>
+          <OrdersTable client:only />
+        </DashboardWidget>
+      </section>
+
+      <section class="gap-6">
+        <DashboardWidget client:load delay={0.8}>
+          <CategoryTable client:only />
+        </DashboardWidget>
+      </section>
+
+      <section class="gap-6">
+        <DashboardWidget client:load delay={0.9}>
+          <ProductsTable client:only />
+        </DashboardWidget>
+      </section>
+
+      <section class="gap-6">
+        <DashboardWidget client:load delay={1.0}>
+          <UsersList client:only />
+        </DashboardWidget>
+      </section>
+    </div>
+  </AdminOnly>
+</Layout>

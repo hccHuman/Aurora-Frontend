@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Block dashboards
+Disallow: /es/dashboard/
+Disallow: /en/dashboard/
+
+# Block private account pages
+Disallow: /es/account/login/
+Disallow: /es/account/logout/
+Disallow: /es/account/profile/
+Disallow: /en/account/login/
+Disallow: /en/account/logout/
+Disallow: /en/account/profile/
+
+# Block checkout pages
+Disallow: /es/products/checkout/
+Disallow: /en/products/checkout/
+
+# Sitemap location
+Sitemap: https://lahia.shop/sitemap-index.xml

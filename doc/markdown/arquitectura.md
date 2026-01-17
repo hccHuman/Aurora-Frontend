@@ -120,78 +120,46 @@ A.L.B.A. es el subsistema encargado de la resiliencia del frontend. Captura erro
 ```
 📦 Aurora/
 │
-├── 📁 doc/ # Toda la documentación ligada al proyecto
+├── 📁 doc/
 │   ├── 🗂️ markdown/
 │   └── 🗂️ pdf/
 │
-├── 📁 public/
-│   ├── 🗂️ modelos/             # Modelos 3D, animaciones, etc.
-│   └── 📄 favicon.svg
-│
 ├── 📁 src/
-│   ├── 📁 components/          # Componentes reutilizables
+│   ├── 📁 components/          # Componentes reutilizables UI/Layout
 │   │
-│   │   ├── index.astro         # Página principal
-│   │   ├── productos.astro
-│   │   ├── contacto.astro
-│   │   └── carrito.astro
-│   │
-│   ├── 📁 modules/             # 🌐 Aquí viven tus módulos inteligentes
-│   │   ├── LUCIA/              # Lógica Unificada de Comprensión e Interfaz Accesible
-│   │   │   ├── interface.ts    # Comunicación entre usuario ↔ IA ↔ front
-│   │   │   └── index.ts
+│   ├── 📁 modules/             # 🌐 Módulos Plug & Play
+│   │   ├── AURORA/             # 🤖 Módulo Principal (Chat & Avatar)
+│   │   │   ├── components/     # ChatFrame, UI
+│   │   │   ├── controller/     # Live2D Controller
+│   │   │   ├── core/           # MessageManager, Voice
+│   │   │   └── models/         # Props y tipos (Message, Instructions)
 │   │   │
-│   │   ├── MARIA/              # Módulo Administrador y Redireccionador Interno de Aplicación
-│   │   │   ├── context.ts      # Estado global de la app y sesiones
-│   │   │   └── index.ts
-│   │   ├── ANA/                # Analizador de Niveles Afectivos
-│   │   │   ├── detector.ts     # Detección emocional (texto, voz, patrones)
-│   │   │   └── manager.ts      # Control y ajuste de estados emocionales
-│   │   │
-│   │   ├── YOLI/               # Yector Omnilingüe de Lenguajes Inyectables
-│   │   │   ├── data/           # Diccionarios JSON por idioma
-│   │   │   └── injector.ts     # Lógica de inyección de textos
-│   │   │
-│   │   ├── paymentService.ts
-│   │   └── productService.ts
+│   │   ├── LUCIA/              # Accesibilidad
+│   │   ├── MARIA/              # Core Engine
+│   │   ├── ANA/                # Emociones
+│   │   ├── YOLI/               # i18n
+│   │   └── ALBA/               # Error Handling
 │   │
-│   ├── 📁 store/               # Gestión de estado global
-│   │   ├── cartStore.ts
-│   │   ├── userStore.ts
-│   │   └── uiStore.ts
-│   │
-│   ├── 📁 styles/              # Tailwind + estilos globales
-│   │   ├── global.css
-│   │   ├── theme.css
-│   │   └── animations.css
-│   │
-│   ├── 📁 utils/               # Utilidades, helpers y hooks
-│   │   ├── formatter.ts
-│   │   ├── validators.ts
-│   │   ├── constants.ts
-│   │   └── hooks/
-│   │       ├── useEmotion.ts   # Hook que usa A.N.A.
-│   │       └── useAIInterface.ts
-│   │
-│   └── main.ts                 # Entrada principal (puede inicializar módulos)
+│   ├── 📁 services/            # API Clients
+│   ├── 📁 store/               # Jotai State
+│   ├── 📁 styles/              # Global CSS
+│   └── 📁 utils/
 │
-├── 📁 tests/                   # Pruebas unitarias e integración
-│   ├── modules/
-│   │   ├── lucia.test.ts
-│   │   ├── maria.test.ts
-│   │   └── ana.test.ts
-│   └── e2e/
-│       ├── cart.test.ts
-│       └── checkout.test.ts
+├── 📁 tests/                   # Suite de Pruebas Completa
+│   ├── 📁 doc/                 # 📚 Documentación técnica de tests
+│   │   ├── unit/
+│   │   ├── integration/
+│   │   ├── system/
+│   │   ├── e2e/
+│   │   ├── modules/
+│   │   └── components/
+│   │
+│   ├── 📁 modules/             # Tests de módulos
+│   ├── 📁 components/          # Tests de componentes React
+│   ├── 📁 services/            # Tests de servicios
+│   ├── 📁 utils/
+│   ├── 📁 integration/
+│   └── 📁 e2e/
 │
-├── astro.config.mjs
-├── tsconfig.json
-├── env.d.ts
-├── tailwind.config.js
-├── package-lock.json
-├── postcss.config.js
-├── README.md
-├── eslint.config.js
-├── .prettierrc
-└── .gitignore
+└── ...config files (astro, tailwind, etc.)
 ```

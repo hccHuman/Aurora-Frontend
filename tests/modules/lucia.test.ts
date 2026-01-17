@@ -136,12 +136,21 @@ describe('LUCIA Module - Accessibility and UI Managers', () => {
       expect(document.documentElement.classList.contains('mode-adhd')).toBe(true);
     });
 
+    it('should set AAA mode', () => {
+      accessibilityManager.setAaaMode(true);
+      expect(accessibilityManager.isAaaMode()).toBe(true);
+      expect(localStorage.getItem('mode-aaa')).toBe('true');
+      expect(document.documentElement.classList.contains('mode-aaa')).toBe(true);
+    });
+
     it('should remove classes when disabled', () => {
       accessibilityManager.setEpilepsySafe(false);
       accessibilityManager.setFocusMode(false);
+      accessibilityManager.setAaaMode(false);
 
       expect(document.documentElement.classList.contains('mode-epilepsy')).toBe(false);
       expect(document.documentElement.classList.contains('mode-adhd')).toBe(false);
+      expect(document.documentElement.classList.contains('mode-aaa')).toBe(false);
     });
 
     it('should dispatch accessibility-changed event', () => {

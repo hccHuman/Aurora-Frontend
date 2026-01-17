@@ -5,6 +5,7 @@
  * Integrates with Stripe/PayPal flows via the server API.
  */
 import type { OrderPayload } from "@/models/FunctionProps/OrderPayloadProps";
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
@@ -21,29 +22,7 @@ export const paymentService = {
     const API_URL = PUBLIC_API_URL;
 
     try {
-      const res = await fetch(`${API_URL}/api/payments/create-payment-intent`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        let errorData: any = null;
-        try {
-          errorData = await res.json();
-        } catch {
-          throw new Error(`Error HTTP ${res.status}`);
-        }
-
-        if (errorData?.code) {
-          handleInternalError(errorData);
-          throw new Error(errorData.message || `Error interno ${errorData.code}`);
-        }
-
-        throw new Error(`Error HTTP ${res.status}`);
-      }
-
+      const res = await AlbaClient.post(`${API_URL}/api/payments/create-payment-intent`, payload);
       return await res.json();
     } catch (err: any) {
       handleInternalError(err);
@@ -63,32 +42,7 @@ export const paymentService = {
     const API_URL = PUBLIC_API_URL;
 
     try {
-      const res = await fetch(`${API_URL}/api/payments/create-payment-intent`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ items }),
-      });
-
-      if (!res.ok) {
-        let errData: any = null;
-        try {
-          errData = await res.json();
-        } catch { }
-
-        if (res.status === 401) {
-          const e: any = new Error(errData?.message || 'Unauthorized');
-          e.status = 401;
-          handleInternalError(errData || { message: 'Unauthorized', status: 401, code: 401 });
-          throw e;
-        }
-
-        handleInternalError(errData || { message: `Payment intent HTTP ${res.status}`, code: res.status });
-        const e: any = new Error(errData?.message || `Error creating payment intent: ${res.status}`);
-        e.status = res.status;
-        throw e;
-      }
-
+      const res = await AlbaClient.post(`${API_URL}/api/payments/create-payment-intent`, { items });
       return await res.json();
     } catch (err: any) {
       handleInternalError(err);

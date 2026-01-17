@@ -1,5 +1,6 @@
 import type { CategoryCard } from "@/models/EcommerceProps/CategoriesCardProps";
 import { motion } from "framer-motion";
+import { t } from "@/modules/YOLI/injector";
 
 /**
  * CategoryCard Component
@@ -16,7 +17,8 @@ export default function CategoryCard({ lang, title, img }: CategoryCard & { dela
   return (
     <motion.a
       href={`/${lang}/${LowTitle}/productslist`}
-      className="block"
+      className="block h-full"
+      aria-label={t("products.aria_view_category", lang).replace("{target}", title)}
       variants={{
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0 }
@@ -24,15 +26,20 @@ export default function CategoryCard({ lang, title, img }: CategoryCard & { dela
       whileHover={{ y: -5 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="w-full rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+      <div className="w-full h-full flex flex-col rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <motion.img
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.6 }}
           src={img}
-          alt={title}
+          alt=""
           className="w-full h-48 object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/img/placeholder.svg";
+            target.onerror = null; // Prevent infinite loop
+          }}
         />
-        <div className="p-6">
+        <div className="p-6 flex-1 flex flex-col justify-center">
           <h4 className="text-slate-900 dark:text-slate-100 text-2xl font-semibold mb-2">
             {title}
           </h4>

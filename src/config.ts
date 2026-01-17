@@ -43,8 +43,6 @@ export const ENV = {
   /** Base URL for all backend API calls */
   API_URL: getEnvVariable("PUBLIC_API_URL"),
 
-
-
   // ===== APPLICATION ENVIRONMENT =====
   /** Current runtime environment: 'development' or 'production' */
   NODE_ENV: getEnvVariable("NODE_ENV", "development") as "development" | "production",

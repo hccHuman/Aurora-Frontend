@@ -1,4 +1,44 @@
 {
+    "aria": {
+        "navigating": "Redirigiendo a {target}...",
+        "searching": "Buscando productos relacionados con {target}...",
+        "scrolling": "Desplazando hacia la sección {target}",
+        "highlighting": "Resaltando el elemento {target}",
+        "account_menu": "Menú de cuenta",
+        "accessibility_menu": "Menú de accesibilidad",
+        "close_menu": "Cerrar menú",
+        "open_menu": "Abrir menú de navegación",
+        "appearance": "Apariencia",
+        "user_preferences": "Preferencias de usuario",
+        "cvd_modes": "Modos de daltonismo",
+        "cvd": {
+            "normal": "Normal",
+            "protanopia": "Protanopia (Rojo)",
+            "deuteranopia": "Deuteranopia (Verde)",
+            "tritanopia": "Tritanopia (Azul)",
+            "achromatopsia": "Acromatopsia (Mono)"
+        },
+        "anti_epilepsy": "Modo Anti-Epilepsia",
+        "adhd_focus": "Modo TDAH / Enfoque",
+        "master_aaa": "Master WCAG 2.1 AAA",
+        "dark_mode": "Modo Oscuro",
+        "light_mode": "Modo Claro",
+        "toggle_theme": "Cambiar tema",
+        "close": "Cerrar",
+        "show_password": "Mostrar contraseña",
+        "hide_password": "Ocultar contraseña",
+        "access": {
+            "dark": "Activando modo oscuro",
+            "light": "Activando modo claro",
+            "epilepsy_on": "Modo anti-epilepsia activado",
+            "epilepsy_off": "Modo anti-epilepsia desactivado",
+            "adhd_on": "Modo enfoque TDAH activado",
+            "adhd_off": "Modo enfoque TDAH desactivado",
+            "aaa_on": "Modo WCAG AAA Máximo activado. Se han aplicado restricciones de lectura y contraste extremo.",
+            "aaa_off": "Modo WCAG AAA desactivado",
+            "explain": "Aurora está proporcionando una explicación sobre: {target}"
+        }
+    },
     "profile": {
         "title": "Mi Perfil",
         "subtitle": "Gestiona tu información personal y preferencias",
@@ -29,10 +69,10 @@
     },
     "auth": {
         "login": {
-            "title": "Inicia sesión",
+            "title": "Iniciar sesión",
             "button": "Iniciar sesión",
-            "success": "¡Login exitoso! Redirigiendo… 💖",
-            "connected": "¡Conectado exitosamente! 💖",
+            "success": "¡Acceso exitoso! Redirigiendo... 💖",
+            "connected": "¡Sesión iniciada! 💖",
             "no_account": "¿No tienes cuenta?",
             "register_here": "Regístrate aquí"
         },
@@ -42,7 +82,7 @@
             "button_loading": "Creando cuenta...",
             "success": "¡Cuenta creada con éxito! 🌸 Redirigiendo…",
             "have_account": "¿tienes cuenta?",
-            "login_here": "Haz Login aquí"
+            "login_here": "Inicia sesión aquí"
         },
         "labels": {
             "email": "Email",
@@ -66,6 +106,7 @@
         "account": "Cuenta",
         "my_account": "MI CUENTA",
         "profile": "Perfil",
+        "dashboard": "Panel de Control",
         "logout": "Cerrar Sesión",
         "login": "Iniciar Sesión",
         "cart": "CARRITO",
@@ -77,21 +118,38 @@
             "cart": "Carrito",
             "open_menu": "Abrir menú",
             "search": "Buscar productos",
-            "back": "Volver"
+            "back": "Volver",
+            "nav_main": "Navegación principal",
+            "nav_mobile": "Navegación móvil"
         }
     },
     "footer": {
         "brand_desc": "Tu tienda online de confianza con los mejores productos y atención al cliente.",
+        "contact_title": "Nuestros datos:",
+        "contact_info": {
+            "address": "Calle Ejemplo 123, 28000 Madrid, España",
+            "phone": "+34 123 456 789",
+            "email": "info@lahia.shop"
+        },
         "quick_links": "Enlaces Rápidos",
         "legal": "Legal",
         "rights": "Todos los derechos reservados",
         "terms": "Términos y Condiciones",
         "privacy": "Política de Privacidad",
-        "cookies": "Política de Cookies"
+        "cookies": "Política de Cookies",
+        "aria": {
+            "nav_quick": "Enlaces rápidos",
+            "nav_legal": "Información legal"
+        }
     },
     "common": {
         "back": "Volver",
-        "close": "Cerrar"
+        "close": "Cerrar",
+        "skip_to_content": "Saltar al contenido principal",
+        "loading": "Cargando...",
+        "logging_out": "Cerrando sesión...",
+        "loading_config": "Cargando configuración...",
+        "loading_products": "Cargando productos..."
     },
     "products": {
         "list_title": "Productos de ",
@@ -103,6 +161,58 @@
         "added": "¡Añadido!",
         "loading_config": "Cargando configuración...",
         "loading_products": "Cargando productos...",
-        "aria_add_to_cart": "Añadir {title} al carrito"
+        "aria_add_to_cart": "Añadir {title} al carrito",
+        "aria_view_category": "Ver artículos en {target}",
+        "loading_categories": "Cargando categorías..."
+    },
+    "checkout": {
+        "title": "Revisar pedido",
+        "empty": "Tu carrito está vacío.",
+        "total": "Total",
+        "pay_button": "Pagar",
+        "processing": "Procesando...",
+        "empty_cart": "Vaciar carrito",
+        "login_required": "Debes iniciar sesión para finalizar la compra.",
+        "pago_iniciado": "Pago iniciado correctamente.",
+        "unexpected_error": "Respuesta inesperada del servidor",
+        "error_pago": "Error iniciando pago",
+        "aria": {
+            "order_list": "Lista de productos en tu pedido",
+            "checkout_form": "Formulario de pago"
+        },
+        "paypal": {
+            "title": "Pago con PayPal",
+            "pay_now": "Pagar ahora",
+            "error": "Error al procesar el pago con PayPal."
+        }
+    },
+    "pagination": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "of": "de",
+        "aria": {
+            "go_previous": "Ir a la página anterior",
+            "go_next": "Ir a la página siguiente"
+        }
+    },
+    "about": {
+        "title": "Sobre Nosotros",
+        "subtitle": "Tu Garage de Confianza para el Performance y la Cultura Street",
+        "who_we_are_title": "EL GARAGE DE LAHIA",
+        "who_we_are_text": "Somos el epicentro del performance y el estilo underground. En Lahia Shop, no solo vendemos piezas; forjamos máquinas de drift. Desde turbos que escupen fuego hasta kits de carrocería diseñados en el corazón de Tokyo, tenemos todo lo que tu coche necesita para dominar la noche.",
+        "mission_title": "NUESTRO OBJETIVO",
+        "mission_text": "Equipar a la nueva generación de pilotos con componentes que aguantan cualquier derrape. Nuestra misión es clara: que cada pieza que compres te acerque más al podio del asfalto urbano.",
+        "join_title": "PISA A FONDO",
+        "join_text": "¿Buscas mejorar tu coche? Has llegado al sitio indicado. Prepárate para quemar neumático con los mejores productos del mundillo."
+    },
+    "404": {
+        "title": "Página no encontrada",
+        "meta_title": "404 - Página no encontrada | Lahia Shop",
+        "meta_description": "La página que buscas no existe. Vuelve al inicio y sigue explorando.",
+        "heading": "¡Te has salido del circuito!",
+        "message": "La página que buscas no existe o ha derrapado fuera de la pista.",
+        "cta": "¡Vuelve al inicio y sigue drifteando! 🏎️💨",
+        "back_home": "Volver al Inicio",
+        "view_products": "Ver Productos"
     }
 }

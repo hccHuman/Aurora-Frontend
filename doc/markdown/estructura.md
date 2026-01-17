@@ -11,8 +11,9 @@ Es el corazón del código fuente.
   - `layout/`: Componentes estructurales (Header, Footer, Sidebar).
   - `tsx/`: Componentes interactivos complejos desarrollados en React (Dashboard, Formas, Tablas).
 - **`/pages`**: Vistas de la aplicación basadas en Astro. Utiliza rutas basadas en archivos.
-- **`/modules`**: Núcleo inteligente de Aurora. Contiene los módulos **LUCIA, MARIA, ANA, YOLI y ALBA**.
-- **`/services`**: Abstracciones para llamadas a APIs externas (AI Backend, Dashboard API, Pasarelas de Pago).
+- **`/modules`**: Núcleo inteligente de Aurora. Diseño **Plug & Play** (Módulos de quita y pon) que contiene **LUCIA, MARIA, ANA, YOLI, ALBA y AURORA**.
+  - `AURORA/`: Contiene el ChatFrame, controladores de Live2D, y ahora los **modelos/props** encapsulados.
+- **`/services`**: Abstracciones para llamadas a APIs externas (AI Backend, Dashboard API, Pasarelas de Pago, Chat Service).
 - **`/store`**: Gestión de estado global con **Jotai**.
 - **`/styles`**: Definiciones de diseño, temas (oscuro/claro/deuteranopia) y animaciones globales.
 - **`/utils`**: Funciones auxiliares, validadores, constantes y hooks personalizados.
@@ -26,6 +27,7 @@ Contiene activos estáticos que no pasan por el pipeline de compilación.
 ### `/doc`
 Documentación técnica y de diseño.
 - **`markdown/`**: Guías detalladas en formato MD.
+- **`tests/doc/`**: Documentación específica autogenerada de las pruebas (Unit, Integration, System, E2E).
 - **`pdf/`**: Documentos oficiales del proyecto (Anteproyecto, Glosario, Guía de Diseño).
 
 ---

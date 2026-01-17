@@ -2,37 +2,165 @@
   {
     "emotion": "happy",
     "expression": "smile",
-    "motion": "/models/haru/runtime/motion/haru_g_m01.motion3.json",
-    "keywords": ["feliz", "contento", "genial", "bien", "alegre"]
+    "motion": "haru_g_m01",
+    "keywords": [
+      "feliz",
+      "contento",
+      "genial",
+      "bien",
+      "alegre",
+      "happy"
+    ]
+  },
+  {
+    "emotion": "excited",
+    "expression": "smile",
+    "motion": "haru_g_m22",
+    "keywords": [
+      "emocionado",
+      "increíble",
+      "fantástico",
+      "excited",
+      "wow"
+    ]
   },
   {
     "emotion": "sad",
     "expression": "sad",
-    "motion": "/models/haru/runtime/motion/haru_g_m05.motion3.json",
-    "keywords": ["triste", "mal", "deprimido", "desanimado"]
+    "motion": "haru_g_m05",
+    "keywords": [
+      "triste",
+      "mal",
+      "deprimido",
+      "desanimado",
+      "sad",
+      "unhappy"
+    ]
+  },
+  {
+    "emotion": "crying",
+    "expression": "sad",
+    "motion": "haru_g_m19",
+    "keywords": [
+      "llorar",
+      "llanto",
+      "crying",
+      "tears"
+    ]
   },
   {
     "emotion": "angry",
     "expression": "angry",
-    "motion": "/models/haru/runtime/motion/haru_g_m10.motion3.json",
-    "keywords": ["enfadado", "ira", "furioso", "molesto"]
+    "motion": "haru_g_m10",
+    "keywords": [
+      "enfadado",
+      "ira",
+      "furioso",
+      "molesto",
+      "angry",
+      "mad"
+    ]
   },
   {
     "emotion": "surprised",
     "expression": "surprised",
-    "motion": "/models/haru/runtime/motion/haru_g_m14.motion3.json",
-    "keywords": ["sorprendido", "wow", "asombroso", "no esperaba"]
+    "motion": "haru_g_m14",
+    "keywords": [
+      "sorprendido",
+      "asombroso",
+      "no esperaba",
+      "surprised",
+      "shocked"
+    ]
   },
   {
     "emotion": "thinking",
     "expression": "thinking",
-    "motion": "/models/haru/runtime/motion/haru_g_m08.motion3.json",
-    "keywords": ["pienso", "reflexiono", "creo que", "tal vez"]
+    "motion": "haru_g_m08",
+    "keywords": [
+      "pienso",
+      "reflexiono",
+      "creo que",
+      "tal vez",
+      "thinking",
+      "maybe"
+    ]
+  },
+  {
+    "emotion": "confused",
+    "expression": "thinking",
+    "motion": "haru_g_m06",
+    "keywords": [
+      "confundido",
+      "no entiendo",
+      "duda",
+      "confused",
+      "huh"
+    ]
+  },
+  {
+    "emotion": "shy",
+    "expression": "shy",
+    "motion": "haru_g_m02",
+    "keywords": [
+      "timido",
+      "penita",
+      "shy",
+      "blush",
+      "nervioso"
+    ]
+  },
+  {
+    "emotion": "love",
+    "expression": "smile",
+    "motion": "haru_g_m20",
+    "keywords": [
+      "amor",
+      "te quiero",
+      "love",
+      "corazón",
+      "beso"
+    ]
+  },
+  {
+    "emotion": "greeting",
+    "expression": "smile",
+    "motion": "haru_g_m04",
+    "keywords": [
+      "hola",
+      "buenos días",
+      "buenas",
+      "hello",
+      "hi"
+    ]
+  },
+  {
+    "emotion": "agreeing",
+    "expression": "smile",
+    "motion": "haru_g_m11",
+    "keywords": [
+      "si",
+      "claro",
+      "por supuesto",
+      "yes",
+      "agree"
+    ]
+  },
+  {
+    "emotion": "denying",
+    "expression": "neutral",
+    "motion": "haru_g_m12",
+    "keywords": [
+      "no",
+      "nunca",
+      "jamás",
+      "negativo"
+    ]
   },
   {
     "emotion": "neutral",
     "expression": "neutral",
-    "motion": "/models/haru/runtime/motion/haru_g_idle.motion3.json",
+    "motion": "haru_g_idle",
     "keywords": []
   }
 ]

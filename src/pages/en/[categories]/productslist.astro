@@ -2,7 +2,6 @@
 import Layout from "@/layouts/Layout.astro";
 import { fetchCategories } from "@/services/categoryService";
 import CategoryProductsListComponent from "@/components/tsx/Paginator/CategoryProductsListComponent";
-import ChatbotLoader from "@/components/ui/ChatbotLoader.astro";
 import { t } from "@/modules/YOLI/injector";
 
 // ⚡ getStaticPaths se ejecuta en build
@@ -32,25 +31,27 @@ const id = currentCategory.id;
 // We'll render products client-side and paginate using CategoryProductsListComponent
 ---
 
-<meta charset="utf-8" />
 <Layout
   lang={lang}
   title={`${t("products.list_title", lang)} ${currentCategory.nombre}`}
+  metaTitle={`${t("products.list_title", lang)} ${currentCategory.nombre}`}
   description={`${t("products.list_description", lang)} ${currentCategory.nombre}`}
-  canonicalUrl={`https://miweb.com/${lang}/${categories}`}
-  previewImage="/assets/preview.png"
+  metaDescription={`${t("products.list_description", lang)} ${currentCategory.nombre}`}
+  canonicalUrl={`https://lahia.shop/${lang}/${categories}`}
+  previewImage="https://lahia.shop/assets/preview.png"
   home={true}
   showSearch={true}
   searchCategoryId={id}
-  className="h-fit"
 >
-  <h1 class="text-3xl font-bold mb-4 mt-6 flex justify-center">
-    {t("products.list_title", lang)}
-    {currentCategory.nombre}
-  </h1>
+  <div class="flex-1 w-full flex flex-col">
+    <h1 class="text-3xl font-bold mb-4 mt-6 flex justify-center" aria-live="polite">
+      {t("products.list_title", lang)}
+      {currentCategory.nombre}
+    </h1>
 
-  <CategoryProductsListComponent client:load categoryId={id} lang={lang} />
+    <CategoryProductsListComponent client:load categoryId={id} lang={lang} />
+  </div>
 
   <!-- ProductModalWrapper mounted in layout globally -->
-  <ChatbotLoader />
+  <!-- ProductModalWrapper mounted in layout globally -->
 </Layout>

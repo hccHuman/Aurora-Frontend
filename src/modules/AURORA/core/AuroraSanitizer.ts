@@ -16,8 +16,8 @@
  * 4. Enforces maximum length (300 characters)
  * 5. Replaces prohibited/offensive words with emoji
  *
- * @param input - Raw user input text
- * @returns Promise resolving to sanitized text
+ * @param {string} input - Raw user input text
+ * @returns {Promise<string>} Promise resolving to sanitized text
  *
  * @example
  * const clean = await sanitizeText("  Hello!!! WORLD  ");

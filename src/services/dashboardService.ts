@@ -6,6 +6,7 @@
  */
 import type { OrdersResponse } from "@/models/dashboardProps/DashboardOrderProps";
 import type { StatsRange } from "@/models/dashboardProps/DashboardTimeProps";
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
@@ -20,16 +21,7 @@ export async function fetchSalesStats(range: StatsRange) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/sales?range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Stats error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -48,16 +40,7 @@ export async function fetchSalesByCategoryStats(range: StatsRange) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/sales-by-category?range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Stats category error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -76,16 +59,7 @@ export async function fetchNewProductsStats(range: StatsRange) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/new-products?range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`New products stats error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -104,16 +78,7 @@ export async function fetchVisitorsStats(range: StatsRange) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/people?range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Visitors stats error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -132,16 +97,7 @@ export async function fetchSignupsStats(range: StatsRange) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/signups?range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Signups stats error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -160,16 +116,7 @@ export async function fetchTrafficByDeviceStats(range: StatsRange) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/traffic-by-device?range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Traffic by device stats error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -190,16 +137,7 @@ export async function fetchOrders(page = 1, pageSize = 5, range = '30d'): Promis
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/orders?page=${page}&pageSize=${pageSize}&range=${range}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Orders stats error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);

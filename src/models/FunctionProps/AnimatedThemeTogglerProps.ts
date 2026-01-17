@@ -29,4 +29,5 @@
  */
 export interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
   duration?: number;
+  lang?: string;
 }

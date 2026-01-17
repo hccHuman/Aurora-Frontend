@@ -3,23 +3,26 @@ import Layout from "@/layouts/Layout.astro";
 import ProfileView from "@/components/tsx/Profile/ProfileView";
 import LoginReader from "@/components/tsx/statement/loginReader";
 import UserOnly from "@/components/tsx/statement/UserOnly";
+import { t } from "@/modules/YOLI/injector";
 
 const lang = "en";
 ---
 
 <Layout
   lang={lang}
-  title="My Profile - HCC Shop"
-  description="Manage your profile and preferences at HCC Shop"
-  canonicalUrl="https://miweb.com/en/account/profile"
-  previewImage="/assets/preview.png"
+  title={t("profile.title", lang)}
+  metaTitle={t("profile.title", lang)}
+  description={t("profile.subtitle", lang)}
+  metaDescription={t("profile.subtitle", lang)}
+  canonicalUrl="https://lahia.shop/en/account/profile"
+  previewImage="https://lahia.shop/assets/preview.png"
   home={false}
 >
   <!-- Authentication check -->
   <LoginReader client:load />
 
   <!-- Profile content -->
-  <UserOnly client:load>
+  <UserOnly client:load lang={lang}>
     <ProfileView client:load lang={lang} />
   </UserOnly>
 </Layout>

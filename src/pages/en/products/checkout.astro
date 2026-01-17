@@ -1,7 +1,26 @@
 ---
 import { PayPalCheckout } from "@/components/tsx/PayPalCheckout/PayPalCheckoutComponent";
+import Layout from "@/layouts/Layout.astro";
+import { t } from "@/modules/YOLI/injector";
+const lang = "en";
 ---
 
-<div>
-    <PayPalCheckout client:load/>
-</div>
+<Layout
+  lang={lang}
+  title={t("checkout.title", lang)}
+  metaTitle={t("checkout.title", lang)}
+  description={t("checkout.empty", lang)}
+  metaDescription={t("checkout.empty", lang)}
+  canonicalUrl="https://lahia.shop/en/products/checkout"
+  previewImage="https://lahia.shop/assets/preview.png"
+  home={false}
+>
+  <div class="flex-1 w-full flex items-start justify-center py-10 px-4">
+    <div class="w-full max-w-4xl">
+      <h2 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-6 text-center">
+        {t("checkout.title", lang)}
+      </h2>
+      <PayPalCheckout client:load lang={lang} />
+    </div>
+  </div>
+</Layout>

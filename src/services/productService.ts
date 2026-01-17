@@ -6,6 +6,7 @@
  */
 
 import type { PaginatedProducts } from "@/models/EcommerceProps/ProductsProps";
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 
@@ -31,17 +32,8 @@ export async function fetchProductsByCategory(id: string | number) {
     // Construct endpoint for category products
     const endpoint = `${apiUrl}/products/category/${categoryId}`;
 
-    // Make GET request to fetch products
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    // Check for successful response
-    if (!res.ok) {
-      throw new Error(`Backend error: ${res.status}`);
-    }
+    // Make GET request to fetch products using AlbaClient
+    const res = await AlbaClient.get(endpoint);
 
     // Parse JSON response
     const data = await res.json();
@@ -81,15 +73,8 @@ export async function getProductById(id: string | number) {
     // Build final endpoint
     const endpoint = `${apiUrl}/products/${productId}`;
 
-    // Make the request
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Backend error: ${res.status}`);
-    }
+    // Make the request using AlbaClient
+    const res = await AlbaClient.get(endpoint);
 
     // Parse response
     const data = await res.json();
@@ -108,14 +93,7 @@ export async function fetchPaginatedProducts(page: number = 1, pageSize: number 
   try {
     const apiUrl = PUBLIC_API_URL;
 
-    const res = await fetch(`${apiUrl}/products/paginated?page=${page}&pageSize=${pageSize}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Error del backend: ${res.status}`);
-    }
+    const res = await AlbaClient.get(`${apiUrl}/products/paginated?page=${page}&pageSize=${pageSize}`);
 
     const json = await res.json();
 
@@ -152,17 +130,9 @@ export async function fetchPaginatedProductsByCategory(
   try {
     const apiUrl = PUBLIC_API_URL;
 
-    const res = await fetch(
-      `${apiUrl}/products/category/${categoryId}?page=${page}&pageSize=${pageSize}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }
+    const res = await AlbaClient.get(
+      `${apiUrl}/products/category/${categoryId}?page=${page}&pageSize=${pageSize}`
     );
-
-    if (!res.ok) {
-      throw new Error(`Error del backend: ${res.status}`);
-    }
 
     const json = await res.json();
 
@@ -204,12 +174,7 @@ export async function searchProducts(
     // Basic sanitization for query string
     const sanitized = encodeURIComponent(String(searchTerm).trim());
 
-    const res = await fetch(`${apiUrl}/products/search?pageSize=${pageSize}&searchTerm=${sanitized}&page=${page}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!res.ok) throw new Error(`Search API error: ${res.status}`);
+    const res = await AlbaClient.get(`${apiUrl}/products/search?pageSize=${pageSize}&searchTerm=${sanitized}&page=${page}`);
 
     const json = await res.json();
     return json;
@@ -238,12 +203,7 @@ export async function searchProductsByCategory(
     const sanitized = encodeURIComponent(String(searchTerm).trim());
     const cat = Number(categoryId);
 
-    const res = await fetch(`${apiUrl}/products/category/search?category=${cat}&searchTerm=${sanitized}&page=${page}&pageSize=${pageSize}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!res.ok) throw new Error(`Search by category API error: ${res.status}`);
+    const res = await AlbaClient.get(`${apiUrl}/products/category/search?category=${cat}&searchTerm=${sanitized}&page=${page}&pageSize=${pageSize}`);
 
     const json = await res.json();
     return json;

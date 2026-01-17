@@ -4,6 +4,7 @@ import { cartStore } from '@/store/cartStore';
 import { userStore } from '@/store/userStore';
 import { paymentService } from '@/services/paymentService';
 import { goTo } from '@/lib/navigation';
+import { useYOLI } from '@/modules/YOLI/injector';
 
 /**
  * PayPalCheckout Component
@@ -13,7 +14,8 @@ import { goTo } from '@/lib/navigation';
  * 
  * @component
  */
-export const PayPalCheckout: React.FC = () => {
+export const PayPalCheckout: React.FC<{ lang?: string }> = ({ lang = "es" }) => {
+    const t = useYOLI(lang);
     const [cart, setCart] = useAtom(cartStore);
     const [user] = useAtom(userStore);
     const [loading, setLoading] = useState(false);
@@ -26,14 +28,14 @@ export const PayPalCheckout: React.FC = () => {
         // 1. Check if user is logged in
         const isLoggedIn = sessionStorage.getItem('login') !== 'false' && user.loggedIn;
         if (!isLoggedIn) {
-            goTo('/account/login');
+            goTo(`/${lang}/account/login`);
             setLoading(false);
             return;
         }
 
         try {
             // 2. Prepare items for the backend (converting price to cents as expected by Stripe/PayPal wrappers)
-            const items = cart.items.map(item => ({
+            const items = cart.items.map((item: any) => ({
                 price: Math.round(item.price * 100),
                 quantity: item.quantity
             }));
@@ -53,13 +55,13 @@ export const PayPalCheckout: React.FC = () => {
                     goTo('/');
                 }
             } else {
-                setError('Error al procesar el pago con PayPal.');
+                setError(t("checkout.paypal.error"));
             }
         } catch (err: any) {
             if (err.status === 401) {
-                goTo('/account/login');
+                goTo(`/${lang}/account/login`);
             } else {
-                setError(err.message || 'Ocurrió un error inesperado.');
+                setError(err.message || t("checkout.unexpected_error"));
             }
         } finally {
             setLoading(false);
@@ -67,21 +69,21 @@ export const PayPalCheckout: React.FC = () => {
     };
 
     return (
-        <div className="paypal-checkout-container p-4 border rounded-xl bg-white dark:bg-slate-900 shadow-sm">
-            <h3 className="text-lg font-bold mb-4">Pago con PayPal</h3>
-            {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
+        <div className="paypal-checkout-container p-4 border rounded-xl bg-white dark:bg-slate-900 shadow-sm" role="region" aria-labelledby="paypal-title">
+            <h3 id="paypal-title" className="text-lg font-bold mb-4">{t("checkout.paypal.title")}</h3>
+            {error && <p className="text-red-500 mb-4 text-sm" role="alert">{error}</p>}
             <button
                 onClick={handlePayPalPayment}
                 disabled={loading || cart.items.length === 0}
                 className="w-full py-3 px-6 bg-[#0070ba] hover:bg-[#005ea6] text-white font-bold rounded-full transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-                aria-label="Pagar con PayPal"
+                aria-label={t("checkout.paypal.title")}
             >
                 {loading ? (
-                    <span>Cargando...</span>
+                    <span>{t("checkout.processing")}</span>
                 ) : (
                     <>
                         <span className="italic font-extrabold text-xl">PayPal</span>
-                        <span>Pagar ahora</span>
+                        <span>{t("checkout.paypal.pay_now")}</span>
                     </>
                 )}
             </button>

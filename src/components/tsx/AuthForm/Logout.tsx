@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { userStore } from "@/store/userStore";
 import { clientService } from "@/services/clientService";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * LogoutComponent Component
@@ -13,7 +14,8 @@ import { clientService } from "@/services/clientService";
  *
  * @component
  */
-const LogoutComponent: React.FC = () => {
+const LogoutComponent: React.FC<{ lang?: string }> = ({ lang = "es" }) => {
+  const t = useYOLI(lang);
   const setUser = useSetAtom(userStore);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const LogoutComponent: React.FC = () => {
     doLogout();
   }, [setUser]);
 
-  return <p style={{ color: "white" }}>Cerrando sesion...</p>;
+  return <p style={{ color: "white" }} role="status">{t("common.logging_out")}</p>;
 };
 
 export default LogoutComponent;

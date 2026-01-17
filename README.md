@@ -12,6 +12,7 @@ Aurora es una plataforma de e-commerce revolucionaria que combina la potencia de
 - **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación
 - **💖 ANA** - Analizador de Niveles Afectivos
 - **📡 YOLI** - Yector Omnilingüe de Lenguajes Inyectables
+- **🤖 AURORA** - Interfaz de Usuario y Avatar Inteligente
 
 ### 🛒 **Funcionalidades E-commerce**
 
@@ -31,6 +32,7 @@ Aurora es una plataforma de e-commerce revolucionaria que combina la potencia de
 - [👤 Avatar Virtual (Live2D)](./doc/markdown/avatar.md)
 - [📊 Dashboard de Administración](./doc/markdown/dashboard.md)
 - [📋 README Principal](./doc/markdown/README.md) - Documentación general
+- [🧪 Índice de Pruebas](./tests/doc/test_index.md) - Documentación detallada de Testing
 
 ### 📄 **Documentos en PDF** ([Ver en PDF](./doc/pdf/))
 
@@ -143,90 +145,43 @@ npm run build
 ```
 📦 Aurora/
 │
-├── 📁 doc/ # Toda la documentación ligada al proyecto
-│   ├── 🗂️ markdown/
-│   └── 🗂️ pdf/
-│
-├── 📁 public/
-│   ├── 🖼️ assets/              # Imágenes, logos, íconos estáticos
-│   ├── 🗂️ modelos/             # Modelos 3D, animaciones, etc.
-│   └── 📄 favicon.svg
+├── 📁 doc/                     # 📚 Documentación Técnica del Proyecto
+│   ├── 🗂️ markdown/            # Guías y manuales
+│   └── 🗂️ pdf/                 # Documentos oficiales
 │
 ├── 📁 src/
-│   ├── 📁 components/          # Componentes reutilizables
-│   │   ├── ui/                 # Botones, inputs, modales, loaders...
-│   │   ├── layout/             # Cabecera, menú, pie, sidebar...
-│   │   └── product/            # Tarjetas, galerías, reseñas...
+│   ├── 📁 components/          # Componentes Reutilizables (UI, Layout)
 │   │
-│   ├── 📁 pages/               # Páginas principales del e-commerce
-│   │   ├── index.astro         # Página principal
-│   │   ├── productos.astro
-│   │   ├── contacto.astro
-│   │   └── carrito.astro
-│   │
-│   ├── 📁 modules/             # 🌐 Aquí viven tus módulos inteligentes
-│   │   ├── LUCIA/              # Lógica Unificada de Comprensión e Interfaz Accesible
-│   │   │   ├── core.ts         # Núcleo lógico (parsing, detección, comandos)
-│   │   │   ├── interface.ts    # Comunicación entre usuario ↔ IA ↔ front
-│   │   │   └── index.ts
+│   ├── 📁 modules/             # 🌐 Núcleo Inteligente (Diseño Modular)
+│   │   ├── AURORA/             # 🤖 Módulo Principal: Chat & Avatar
+│   │   │   ├── components/     # UI del Chat
+│   │   │   ├── core/           # Lógica del mensaje, voz y modelos
+│   │   │   └── models/         # Props y definiciones internas (Encapsuladas)
 │   │   │
-│   │   ├── MARIA/              # Módulo Administrador y Redireccionador Interno de Aplicación
-│   │   │   ├── routes.ts       # Gestión dinámica de rutas y navegación
-│   │   │   ├── context.ts      # Estado global de la app y sesiones
-│   │   │   └── index.ts
-│   │   ├── ANA/                # Analizador de Niveles Afectivos 💗
-│   │   │   ├── detector.ts     # Detección emocional (texto, voz, patrones)
-│   │   │   ├── manager.ts      # Control y ajuste de estados emocionales
-│   │   │   ├── data/           # Diccionarios, perfiles emocionales, datasets
-│   │   │   └── index.ts
-│   │   │
-│   │   └── YOLI/               # Yector Omnilingüe de Lenguajes Inyectables 🌍
-│   │       ├── injector.ts     # Inyección de textos i18n
-│   │       └── data/           # Diccionarios JSON por idioma
+│   │   ├── LUCIA/              # Accesibilidad
+│   │   ├── MARIA/              # Core Engine (Nav & Actions)
+│   │   ├── ANA/                # Emociones
+│   │   ├── YOLI/               # i18n
+│   │   └── ALBA/               # Error Handling
 │   │
-│   ├── 📁 services/            # Conexión con APIs (backend, IA, pasarelas de pago)
-│   ├── 📁 services/            # Conexión con APIs (backend, IA, pasarelas de pago)
-│   │   ├── apiClient.ts
-│   │   ├── paymentService.ts
-│   │   └── productService.ts
-│   │
-│   ├── 📁 store/               # Gestión de estado global
-│   │   ├── cartStore.ts
-│   │   ├── userStore.ts
-│   │   └── uiStore.ts
-│   │
-│   ├── 📁 styles/              # Tailwind + estilos globales
-│   │   ├── global.css
-│   │   ├── theme.css
-│   │   └── animations.css
-│   │
-│   ├── 📁 utils/               # Utilidades, helpers y hooks
-│   │   ├── formatter.ts
-│   │   ├── validators.ts
-│   │   ├── constants.ts
-│   │   └── hooks/
-│   │       ├── useEmotion.ts   # Hook que usa A.N.A.
-│   │       └── useAIInterface.ts
-│   │
-│   └── main.ts                 # Entrada principal (puede inicializar módulos)
+│   ├── 📁 services/            # API Clients & Business Logic
+│   ├── 📁 store/               # Gestión de estado (Jotai)
+│   ├── 📁 styles/              # Global Styles & Animations
+│   └── 📁 utils/
 │
-├── 📁 tests/                   # Pruebas unitarias e integración
-│   ├── modules/
-│   │   ├── lucia.test.ts
-│   │   ├── maria.test.ts
-│   │   └── ana.test.ts
-│   └── e2e/
-│       ├── cart.test.ts
-│       └── checkout.test.ts
+├── 📁 tests/                   # 🧪 Suite de Pruebas Exhaustiva
+│   ├── 📁 doc/                 # 📄 Documentación detallada por Test
+│   │   ├── unit/               # Docs de Tests Unitarios
+│   │   ├── integration/        # Docs de Tests de Integración
+│   │   ├── system/             # Docs de Tests de Sistema
+│   │   ├── e2e/                # Docs de Tests E2E
+│   │   └── test_index.md       # Índice Maestro de Pruebas
+│   │
+│   ├── 📁 modules/             # Tests Unitarios de Módulos
+│   ├── 📁 components/          # Tests de Componentes React
+│   ├── 📁 services/            # Tests de Servicios
+│   ├── 📁 integration/         # Tests de Integración
+│   └── 📁 e2e/                 # Tests End-to-End
 │
-├── astro.config.mjs
-├── tsconfig.json
-├── env.d.ts
-├── tailwind.config.js
-├── package-lock.json
-├── postcss.config.js
-├── README.md
-├── eslint.config.js
-├── .prettierrc
-└── .gitignore
+└── ...config files
 ```

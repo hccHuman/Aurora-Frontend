@@ -17,7 +17,7 @@ describe('profileService', () => {
             const result = await fetchUserProfile();
             expect(result).toEqual(mockUser);
             expect(globalThis.fetch).toHaveBeenCalledWith(
-                `${PUBLIC_API_URL}/api/stats/users/me`,
+                `${PUBLIC_API_URL}/users/profile`,
                 expect.objectContaining({ method: 'GET' })
             );
         });
@@ -47,7 +47,7 @@ describe('profileService', () => {
             const result = await updateUserProfile(updateData);
             expect(result).toEqual(mockUser);
             expect(globalThis.fetch).toHaveBeenCalledWith(
-                `${PUBLIC_API_URL}/api/stats/users/me`,
+                `${PUBLIC_API_URL}/users/update`,
                 expect.objectContaining({
                     method: 'POST',
                     body: JSON.stringify(updateData)

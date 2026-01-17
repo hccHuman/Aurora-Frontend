@@ -6,6 +6,7 @@ import { useAtom } from 'jotai';
 import { searchStateAtom } from '@/store/searchStore';
 import ProductCardComponent from "../ProductCard/ProductCardComponent";
 import type { Product, AllProductsListProps } from "@/models/EcommerceProps/ProductsProps";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * AllProductsListComponent Component
@@ -20,6 +21,7 @@ export default function AllProductsListComponent({
   lang = "es",
   onOpenModal,
 }: AllProductsListProps) {
+  const t = useYOLI(lang);
   const [searchState] = useAtom(searchStateAtom);
 
   const [products, setProducts] = useState<Product[]>(searchState?.results || []);
@@ -85,12 +87,12 @@ export default function AllProductsListComponent({
 
   // If no pageSize and no search is active, show config loader.
   if (pageSize === null && !searchState.query) {
-    return <p className="text-center my-8">Cargando configuración...</p>;
+    return <p className="text-center my-8">{t("products.loading_config")}</p>;
   }
 
   // If loading and not currently showing search results, show loading UI.
   if (loading && !searchState.query) {
-    return <p className="text-center my-8">Cargando productos...</p>;
+    return <p className="text-center my-8">{t("products.loading_products")}</p>;
   }
 
   return (
@@ -108,12 +110,13 @@ export default function AllProductsListComponent({
             img={p.img_url}
             category_id={p.product_category}
             onOpenModal={onOpenModal}
+            lang={lang}
           />
         ))}
       </div>
 
       {/* PAGINADOR */}
-      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} lang={lang} />
     </div>
   );
 }

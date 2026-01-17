@@ -5,6 +5,7 @@ import { userStore } from "@/store/userStore";
 
 interface UserOnlyProps {
     children: React.ReactNode;
+    lang: string;
 }
 
 /**
@@ -12,21 +13,19 @@ interface UserOnlyProps {
  *
  * A specialized wrapper component that restricts access to its children to logged-in users only.
  * Checks the global `userStore` for the user's login status and session readiness.
- * Redirects unauthenticated users to the home page (where they can find the login link).
+ * Redirects unauthenticated users to the Login page.
  *
  * @component
  */
-const UserOnly: React.FC<UserOnlyProps> = ({ children }) => {
+const UserOnly: React.FC<UserOnlyProps> = ({ children, lang }) => {
     const userState = useAtomValue(userStore);
 
     useEffect(() => {
         // Redirect only when session is ready and user is not logged in
         if (userState.ready && !userState.loggedIn) {
-            // We redirect to home or login. Since we don't have the current lang here easily, 
-            // redirecting to / is a safe default as it detects lang.
-            window.location.href = "/";
+            window.location.href = `/${lang}/account/login`;
         }
-    }, [userState]);
+    }, [userState, lang]);
 
     // While session is not ready, render nothing
     if (!userState.ready) return null;

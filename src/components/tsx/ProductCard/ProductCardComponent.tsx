@@ -27,7 +27,9 @@ export default function ProductCardReact({
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.4 }}
-      className="w-full rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+      className="w-full h-full flex flex-col rounded-xl overflow-hidden shadow-lg bg-slate-50 dark:bg-slate-900 transition-colors duration-300"
+      role="article"
+      aria-label={title}
     >
       {/* Imagen del producto */}
       <motion.div className="overflow-hidden">
@@ -40,12 +42,17 @@ export default function ProductCardReact({
           src={img}
           alt={title}
           className="w-full h-48 object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/img/placeholder.svg";
+            target.onerror = null; // Prevent infinite loop
+          }}
         />
       </motion.div>
 
       {/* Contenido del producto */}
-      <div className="p-6 flex flex-col gap-4">
-        <div>
+      <div className="p-6 flex flex-col flex-1 gap-4">
+        <div className="flex-1">
           <h4 className="text-slate-900 dark:text-slate-100 text-2xl font-semibold mb-2">{title}</h4>
           {description && <p className="text-slate-700 dark:text-slate-300 mb-2 text-sm">{description}</p>}
           {price !== undefined && (
@@ -58,11 +65,16 @@ export default function ProductCardReact({
           <button
             className="ac-btn ac-btn--primary"
             onClick={() => {
+              console.log("🔗 Click en ‘Ver Detalles’ - Producto ID:", id);
               // Prefer explicit prop handler, but fall back to global openProductModal
               if (onOpenModal) {
+                console.log("👉 Usando onOpenModal (prop)");
                 onOpenModal(id);
               } else if (typeof window !== 'undefined' && (window as any).openProductModal) {
+                console.log("👉 Usando window.openProductModal (global)");
                 (window as any).openProductModal(id);
+              } else {
+                console.error("❌ No se encontró la función openProductModal");
               }
             }}
           >

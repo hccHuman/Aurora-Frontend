@@ -1,4 +1,56 @@
 /* ======================================================== */
+/*                   DROPDOWN MENU STYLES                  */
+/* ======================================================== */
+
+/* Default hidden state */
+#account-menu,
+#cart-menu,
+#account-menu-mobile,
+#cart-menu-mobile {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Show when hidden class is removed */
+#account-menu:not(.hidden),
+#cart-menu:not(.hidden),
+#account-menu-mobile:not(.hidden),
+#cart-menu-mobile:not(.hidden) {
+  display: block !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Dropdown animation for desktop menus */
+.dropdown-animate {
+  animation: slideDown 0.2s ease-in-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure proper z-index layering */
+#account-menu,
+#cart-menu {
+  z-index: 50 !important;
+}
+
+#account-menu-mobile,
+#cart-menu-mobile {
+  z-index: 40 !important;
+}
+
+/* ======================================================== */
 /*                 HEADER DARK MODE READY                  */
 /* ======================================================== */
 

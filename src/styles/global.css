@@ -17,7 +17,7 @@
   /* Root elements: set full height and width with no margins/padding */
   html,
   body {
-    @apply h-full w-full m-0 p-0;
+    @apply w-full m-0 p-0;
   }
 
   /* HTML: light background with smooth scrolling and theme transition */
@@ -146,6 +146,37 @@
     @apply transition-colors duration-300;
   }
 
+  /* Aurora Components - Buttons */
+  .ac-btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 inline-flex items-center justify-center gap-2;
+  }
+
+  .ac-btn--primary {
+    @apply bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg active:scale-95;
+  }
+
+  .ac-btn--secondary {
+    @apply bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700;
+  }
+
+  .ac-btn--outline {
+    @apply border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white;
+  }
+
+  /* 
+   * Standard Focus Indicators (WCAG 2.1 AA 2.4.7) 
+   * Ensure interactive elements have a visible focus outline by default.
+   */
+  :focus-visible {
+    outline: 2px solid hsl(var(--color-primary)) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Specific fix for elements that might have high contrast issues */
+  .dark :focus-visible {
+    outline-color: hsl(var(--color-sky-400, 201, 96%, 32%)) !important;
+  }
+
   /* 
    * Accessibility Modes (Epilepsy & ADHD): Disables all animations and transitions 
    */
@@ -178,6 +209,15 @@
     outline-offset: 2px;
   }
 
+  /* Skip to content link for AAA 2.4.1 */
+  .skip-link {
+    @apply sr-only;
+  }
+
+  .skip-link:focus {
+    @apply not-sr-only fixed top-4 left-4 z-[9999] bg-red-600 text-white px-6 py-3 rounded-lg font-bold shadow-2xl outline-none ring-4 ring-white;
+  }
+
   /* 
    * Theme Switch Animation (Circular Expansion)
    * Only works in browsers supporting View Transition API
@@ -203,4 +243,164 @@
   .dark::view-transition-new(root) {
     z-index: 1;
   }
+}
+
+/* 
+ * ============================================================
+ * WCAG 2.1 AAA MASTER OVERRIDES (POST-LAYER)
+ * These rules are outside the layers to ensure maximum priority.
+ * ============================================================
+ */
+
+/* Force extreme contrast background/text globally */
+html.mode-aaa,
+html.mode-aaa body,
+html.mode-aaa main,
+html.mode-aaa header,
+html.mode-aaa footer,
+html.mode-aaa nav,
+html.mode-aaa aside,
+html.mode-aaa section {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+html.mode-aaa.dark,
+html.mode-aaa.dark body,
+html.mode-aaa.dark main,
+html.mode-aaa.dark header,
+html.mode-aaa.dark footer,
+html.mode-aaa.dark nav,
+html.mode-aaa.dark aside,
+html.mode-aaa.dark section {
+  background-color: #000000 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+/* Universal reset for AAA to prevent ANY accidental spacing or animation */
+html.mode-aaa * {
+  letter-spacing: 0 !important;
+  word-spacing: 0 !important;
+  line-height: normal !important;
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+  text-justify: none !important;
+  box-shadow: none !important;
+}
+
+/* Strict Spacing ONLY for reading content (WCAG 1.4.12) */
+html.mode-aaa p,
+html.mode-aaa li,
+html.mode-aaa article,
+html.mode-aaa blockquote,
+html.mode-aaa .text-block {
+  line-height: 1.5 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+  margin-bottom: 2rem !important;
+  max-width: 80ch !important;
+  text-align: left !important;
+  display: block !important;
+}
+
+/* UI Elements: Keep them crisp and solid (Anti-fragmentation) */
+html.mode-aaa h1,
+html.mode-aaa h2,
+html.mode-aaa h3,
+html.mode-aaa h4,
+html.mode-aaa h5,
+html.mode-aaa h6,
+html.mode-aaa button,
+html.mode-aaa a,
+html.mode-aaa span,
+html.mode-aaa label,
+html.mode-aaa td,
+html.mode-aaa th,
+html.mode-aaa div:not(.text-block) {
+  letter-spacing: 0 !important;
+  word-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Interactive Elements: Extreme Contrast & Visibility */
+html.mode-aaa a,
+html.mode-aaa button,
+html.mode-aaa [role="button"],
+html.mode-aaa input,
+html.mode-aaa select,
+html.mode-aaa textarea {
+  outline: 4px solid currentColor !important;
+  outline-offset: 4px !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+/* Force high contrast for all buttons (White on Black or vice versa) */
+html.mode-aaa button,
+html.mode-aaa .ac-btn {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+html.mode-aaa.dark button,
+html.mode-aaa.dark .ac-btn {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+/* Card Handling: Thick borders and transparent backgrounds to show main BG */
+html.mode-aaa .rounded-xl,
+html.mode-aaa [class*="rounded-xl"],
+html.mode-aaa .bg-slate-50,
+html.mode-aaa .dark\:bg-slate-900,
+html.mode-aaa [class*="bg-slate"],
+html.mode-aaa [class*="bg-sky"],
+html.mode-aaa .absolute,
+html.mode-aaa .fixed {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  border: 5px solid #000000 !important;
+  outline: none !important;
+  max-width: none !important;
+}
+
+html.mode-aaa.dark .rounded-xl,
+html.mode-aaa.dark [class*="rounded-xl"],
+html.mode-aaa.dark .bg-slate-50,
+html.mode-aaa.dark .dark\:bg-slate-900,
+html.mode-aaa.dark [class*="bg-slate"],
+html.mode-aaa.dark [class*="bg-sky"],
+html.mode-aaa.dark .absolute,
+html.mode-aaa.dark .fixed {
+  background-color: #000000 !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  border: 5px solid #ffffff !important;
+  outline: none !important;
+  max-width: none !important;
+}
+
+/* Underline titles inside cards and make them boldest */
+html.mode-aaa [class*="card"] h4,
+html.mode-aaa h4 {
+  text-decoration: underline !important;
+  font-weight: 900 !important;
+}
+
+/* Navigation Paginator Fix */
+html.mode-aaa .flex.justify-center,
+html.mode-aaa .text-center {
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 3rem !important;
 }

@@ -38,10 +38,13 @@ export default function LegalModal({ isOpen, onClose, title, lang = "es", childr
                         transition={{ duration: 0.3 }}
                         onClick={(e) => e.stopPropagation()}
                         className="relative w-full max-w-4xl max-h-[85vh] rounded-2xl bg-slate-900/95 backdrop-blur-xl shadow-2xl border border-slate-700/50 overflow-hidden"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="legal-modal-title"
                     >
                         {/* Header */}
                         <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50 px-8 py-6 flex justify-between items-center">
-                            <h2 className="text-2xl font-bold text-slate-100">{title}</h2>
+                            <h2 id="legal-modal-title" className="text-2xl font-bold text-slate-100">{title}</h2>
                             <button
                                 onClick={onClose}
                                 className="text-slate-400 hover:text-red-400 hover:bg-slate-800/80 transition-all text-2xl font-bold p-2 rounded-full"

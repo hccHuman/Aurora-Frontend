@@ -1,5 +1,6 @@
 import type { Pagination } from "@/models/EcommerceProps/PaginationProps";
 import { useState } from "react";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * Paginator Component
@@ -14,7 +15,9 @@ export default function Paginator({
   initialPage = 1,
   totalPages,
   onPageChange,
-}: Pagination) {
+  lang = "es"
+}: Pagination & { lang?: string }) {
+  const t = useYOLI(lang);
   const [page, setPage] = useState(initialPage);
 
   const goTo = (p: number) => {
@@ -24,26 +27,28 @@ export default function Paginator({
   };
 
   return (
-    <div className="flex justify-center gap-4 my-8">
+    <nav className="flex justify-center gap-4 my-8" aria-label="Pagination">
       <button
-        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700"
+        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition disabled:opacity-50"
         onClick={() => goTo(page - 1)}
         disabled={page === 1}
+        aria-label={t("pagination.aria.go_previous")}
       >
-        ← Anterior
+        ← {t("pagination.previous")}
       </button>
 
-      <span className="font-medium">
-        {page} de {totalPages}
+      <span className="font-medium flex items-center" aria-current="page">
+        {page} {t("pagination.of")} {totalPages}
       </span>
 
       <button
-        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700"
+        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition disabled:opacity-50"
         onClick={() => goTo(page + 1)}
         disabled={page === totalPages}
+        aria-label={t("pagination.aria.go_next")}
       >
-        Siguiente →
+        {t("pagination.next")} →
       </button>
-    </div>
+    </nav>
   );
 }

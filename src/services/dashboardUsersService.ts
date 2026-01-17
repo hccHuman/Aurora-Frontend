@@ -4,6 +4,7 @@
  * Provides functions for managing users via the dashboard API.
  * Includes fetching paginated lists, creating, updating, and deleting users.
  */
+import { AlbaClient } from "@/modules/ALBA/AlbaClient";
 import { handleInternalError } from "@/modules/ALBA/ErrorHandler";
 import { PUBLIC_API_URL } from "@/utils/envWrapper";
 import type { User } from "@/models/dashboardProps/DashboardUsersProps";
@@ -30,16 +31,7 @@ export async function fetchUsers(
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/users?page=${page}&pageSize=${pageSize}`;
 
-    const res = await fetch(endpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Users error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.get(endpoint);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -58,17 +50,7 @@ export async function saveUser(user: Partial<User>) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/users`;
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(user),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Save user error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.post(endpoint, user);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -87,17 +69,7 @@ export async function saveUserUpdate(user: Partial<User>) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/users/update`;
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(user),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Save user error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.post(endpoint, user);
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);
@@ -116,17 +88,7 @@ export async function deleteUser(id: string) {
     const apiUrl = PUBLIC_API_URL;
     const endpoint = `${apiUrl}/api/stats/users/delete`;
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ id }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Delete user error: ${res.status}`);
-    }
-
+    const res = await AlbaClient.post(endpoint, { id });
     return await res.json();
   } catch (error: any) {
     handleInternalError(error);

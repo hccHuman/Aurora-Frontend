@@ -3,7 +3,7 @@ import MainChart from "@/components/tsx/Dashboard/charts/MainChart/MainChart";
 import NewProductsChart from "@/components/tsx/Dashboard/charts/NewProductsChart/NewProductsChart";
 import SalesByCategoryChart from "@/components/tsx/Dashboard/charts/SalesByCategoryChart/SalesByCategoryChart";
 import TrafficByDeviceChart from "@/components/tsx/Dashboard/charts/TrafficByDeviceChart/TrafficByDeviceChart";
-import SingupsChart from "@/components/tsx/Dashboard/charts/SignupsChart/SignupsChart";
+import SignupsChart from "@/components/tsx/Dashboard/charts/SignupsChart/SignupsChart";
 import Layout from "@/layouts/Layout.astro";
 import VisitorsChart from "@/components/tsx/Dashboard/charts/VisitorsChart/VisitorsChart";
 import LoginReader from "@/components/tsx/statement/loginReader";
@@ -12,114 +12,88 @@ import ProductsTable from "@/components/tsx/Dashboard/ChartsTables/ProductsTable
 import CategoryTable from "@/components/tsx/Dashboard/ChartsTables/CategoryTable/CategoryTable";
 import UsersList from "@/components/tsx/Dashboard/ChartsTables/UsersList/UsersList";
 import AdminOnly from "@/components/tsx/statement/AdminOnly";
-import FadeIn from "@/components/tsx/Dashboard/ui/FadeIn";
+import DashboardWidget from "@/components/tsx/Dashboard/ui/DashboardWidget";
+import { t } from "@/modules/YOLI/injector";
 
 let lang = "es";
 ---
 
-<meta charset="utf-8" />
 <Layout
   lang={lang}
-  title="Aurora Chat - Español"
-  description="Plataforma de chat con IA en español"
-  canonicalUrl="https://miweb.com/es/"
+
+  title={t("header.dashboard", lang)}
+  metaTitle={t("header.dashboard", lang)}
+
+  description={t("header.dashboard", lang)}
+  metaDescription={t("header.dashboard", lang)}
+
+  canonicalUrl="https://lahia.shop/es/dashboard"
+
   previewImage="/assets/preview.png"
+
   home={true}
+  noindex={true}
 >
   <LoginReader client:load />
   <AdminOnly client:only>
-    <div class="space-y-8 p-5">
+    <div class="space-y-8 p-5 flex-1 w-full">
       <!-- Chart principal -->
       <section class="gap-6">
-        <FadeIn client:load delay={0.1}>
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <MainChart client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.1}>
+          <MainChart client:only />
+        </DashboardWidget>
       </section>
+
       <section class="gap-6">
-        <FadeIn client:load delay={0.2}>
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <VisitorsChart client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.2}>
+          <VisitorsChart client:only />
+        </DashboardWidget>
       </section>
+
       <!-- Segunda fila -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FadeIn client:load delay={0.3} direction="right">
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <NewProductsChart client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.3} direction="right">
+          <NewProductsChart client:only />
+        </DashboardWidget>
 
-        <FadeIn client:load delay={0.4} direction="left">
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <SingupsChart client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.4} direction="left">
+          <SignupsChart client:only />
+        </DashboardWidget>
       </section>
 
       <!-- Tercera fila -->
       <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <FadeIn client:load delay={0.5} direction="right">
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <SalesByCategoryChart client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.5} direction="right">
+          <SalesByCategoryChart client:only />
+        </DashboardWidget>
 
-        <FadeIn client:load delay={0.6} direction="left">
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <TrafficByDeviceChart client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.6} direction="left">
+          <TrafficByDeviceChart client:only />
+        </DashboardWidget>
       </section>
+
       <section class="gap-6">
-        <FadeIn client:load delay={0.7}>
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <OrdersTable client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.7}>
+          <OrdersTable client:only />
+        </DashboardWidget>
       </section>
+
       <section class="gap-6">
-        <FadeIn client:load delay={0.8}>
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <CategoryTable client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.8}>
+          <CategoryTable client:only />
+        </DashboardWidget>
       </section>
+
       <section class="gap-6">
-        <FadeIn client:load delay={0.9}>
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <ProductsTable client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={0.9}>
+          <ProductsTable client:only />
+        </DashboardWidget>
       </section>
+
       <section class="gap-6">
-        <FadeIn client:load delay={1.0}>
-          <div
-            class="rounded-2xl bg-white/90 dark:bg-zinc-900 shadow-sm ring-1 ring-black/5 p-6 dark:text-white"
-          >
-            <UsersList client:only />
-          </div>
-        </FadeIn>
+        <DashboardWidget client:load delay={1.0}>
+          <UsersList client:only />
+        </DashboardWidget>
       </section>
     </div>
   </AdminOnly>

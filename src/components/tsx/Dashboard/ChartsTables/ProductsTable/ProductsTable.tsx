@@ -225,6 +225,8 @@ export default function ProductsTable() {
                     <td className="p-2">-</td>
                     <td className="p-2">
                       <input
+                        id="new-product-name"
+                        name="new-product-name"
                         value={draftName}
                         onChange={(e) => setDraftName(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -232,6 +234,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-product-desc"
+                        name="new-product-desc"
                         value={draftDescription}
                         onChange={(e) => setDraftDescription(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -239,6 +243,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-product-price"
+                        name="new-product-price"
                         value={draftPrice}
                         onChange={(e) => setDraftPrice(e.target.value)}
                         className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -246,6 +252,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-product-stock"
+                        name="new-product-stock"
                         value={draftStock}
                         onChange={(e) => setDraftStock(e.target.value)}
                         className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -253,6 +261,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2">
                       <select
+                        id="new-product-category"
+                        name="new-product-category"
                         value={draftCategory}
                         onChange={(e) => setDraftCategory(Number(e.target.value))}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -266,6 +276,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-product-img"
+                        name="new-product-img"
                         value={draftImg}
                         onChange={(e) => setDraftImg(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -303,6 +315,8 @@ export default function ProductsTable() {
                     <td className="p-2 text-sm">
                       {editingId === p.id ? (
                         <input
+                          id={`edit-product-name-${p.id}`}
+                          name="product-name"
                           value={draftName}
                           onChange={(e) => setDraftName(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -314,6 +328,8 @@ export default function ProductsTable() {
                     <td className="p-2 text-sm">
                       {editingId === p.id ? (
                         <input
+                          id={`edit-product-desc-${p.id}`}
+                          name="product-description"
                           value={draftDescription}
                           onChange={(e) => setDraftDescription(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -324,6 +340,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2 text-sm">{editingId === p.id ? (
                       <input
+                        id={`edit-product-price-${p.id}`}
+                        name="product-price"
                         value={draftPrice}
                         onChange={(e) => setDraftPrice(e.target.value)}
                         className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -334,6 +352,8 @@ export default function ProductsTable() {
                     </td>
                     <td className="p-2 text-sm">{editingId === p.id ? (
                       <input
+                        id={`edit-product-stock-${p.id}`}
+                        name="product-stock"
                         value={draftStock}
                         onChange={(e) => setDraftStock(e.target.value)}
                         className="w-24 rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -345,6 +365,8 @@ export default function ProductsTable() {
                     <td className="p-2 text-sm">
                       {editingId === p.id ? (
                         <select
+                          id={`edit-product-cat-${p.id}`}
+                          name="product-category"
                           value={draftCategory}
                           onChange={(e) => setDraftCategory(Number(e.target.value))}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -362,6 +384,8 @@ export default function ProductsTable() {
                     <td className="p-2 text-sm">
                       {editingId === p.id ? (
                         <input
+                          id={`edit-product-img-${p.id}`}
+                          name="product-image"
                           value={draftImg}
                           onChange={(e) => setDraftImg(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"

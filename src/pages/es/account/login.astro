@@ -1,25 +1,28 @@
 ---
 import { LoginComponent } from "@/components/tsx/AuthForm/LoginComponent";
 import Layout from "@/layouts/LayoutForm.astro";
+import "@/styles/Components/Main.css";
+import "@/styles/Components/Login.css";
+
+let lang = "es";
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <title>Login Aurora 💖</title>
-    <link rel="stylesheet" href="/src/styles/Components/Main.css" />
-    <link rel="stylesheet" href="/src/styles/Components/Login.css" />
-  </head>
-  <body>
-    <Layout
-      lang="es"
-      title="Aurora Chat - Español"
-      description="Plataforma de chat con IA en español"
-      canonicalUrl="https://miweb.com/es/"
-      previewImage="/assets/preview.png"
-    >
-      <!-- Montamos el componente React solo en cliente -->
-      <LoginComponent client:load lang="es"/>
-    </Layout>
-  </body>
-</html>
+<Layout
+  lang={lang}
+
+  title="Login – Aurora Chat"
+  metaTitle="Login – Aurora Chat"
+
+  description="Accede de forma segura a tu cuenta en Aurora Chat"
+  metaDescription="Accede de forma segura a tu cuenta en Aurora Chat"
+
+  canonicalUrl="https://lahia.shop/es/account/login"
+
+  previewImage="https://lahia.shop/assets/preview-login.png"
+
+  home={false}
+  noindex={true}
+>
+  <!-- Montamos el componente React solo en cliente -->
+  <LoginComponent client:load lang="es"/>
+</Layout>

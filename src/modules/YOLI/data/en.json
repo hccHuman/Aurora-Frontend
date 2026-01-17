@@ -1,4 +1,44 @@
 {
+    "aria": {
+        "navigating": "Redirecting to {target}...",
+        "searching": "Searching for products related to {target}...",
+        "scrolling": "Scrolling to section {target}",
+        "highlighting": "Highlighting element {target}",
+        "account_menu": "Account menu",
+        "accessibility_menu": "Accessibility menu",
+        "close_menu": "Close menu",
+        "open_menu": "Open navigation menu",
+        "appearance": "Appearance",
+        "user_preferences": "User preferences",
+        "cvd_modes": "Color vision deficiency modes",
+        "cvd": {
+            "normal": "Normal",
+            "protanopia": "Protanopia (Red)",
+            "deuteranopia": "Deuteranopia (Green)",
+            "tritanopia": "Tritanopia (Blue)",
+            "achromatopsia": "Achromatopsia (Mono)"
+        },
+        "anti_epilepsy": "Anti-Epilepsy Mode",
+        "adhd_focus": "ADHD / Focus Mode",
+        "master_aaa": "Master WCAG 2.1 AAA",
+        "dark_mode": "Dark Mode",
+        "light_mode": "Light Mode",
+        "toggle_theme": "Toggle theme",
+        "close": "Close",
+        "show_password": "Show password",
+        "hide_password": "Hide password",
+        "access": {
+            "dark": "Activating dark mode",
+            "light": "Activating light mode",
+            "epilepsy_on": "Anti-epilepsy mode enabled",
+            "epilepsy_off": "Anti-epilepsy mode disabled",
+            "adhd_on": "ADHD focus mode enabled",
+            "adhd_off": "ADHD focus mode disabled",
+            "aaa_on": "Maximum WCAG AAA Mode enabled. Reading constraints and extreme contrast applied.",
+            "aaa_off": "WCAG AAA Mode disabled",
+            "explain": "Aurora is providing an explanation about: {target}"
+        }
+    },
     "profile": {
         "title": "My Profile",
         "subtitle": "Manage your personal information and preferences",
@@ -53,7 +93,7 @@
         "errors": {
             "invalid_name": "Name is invalid 💔",
             "invalid_email": "Email is invalid 💔",
-            "invalid_password": "Password must be at least 8 characters with 1 uppercase, 1 lowercase, 1 number, and 1 special character 💔",
+            "invalid_password": "Password must be at least 8 characters with 1 uppercase, 1 lowercase, one number, and one special character 💔",
             "passwords_dont_match": "Passwords do not match 💔",
             "unknown": "Unknown error",
             "unknown_register": "Unknown error during registration"
@@ -66,6 +106,7 @@
         "account": "Account",
         "my_account": "MY ACCOUNT",
         "profile": "Profile",
+        "dashboard": "Dashboard",
         "logout": "Log Out",
         "login": "Log In",
         "cart": "CART",
@@ -77,21 +118,38 @@
             "cart": "Cart",
             "open_menu": "Open menu",
             "search": "Search products",
-            "back": "Back"
+            "back": "Back",
+            "nav_main": "Main navigation",
+            "nav_mobile": "Mobile navigation"
         }
     },
     "footer": {
         "brand_desc": "Your trusted online store with the best products and customer service.",
+        "contact_title": "Contact Information:",
+        "contact_info": {
+            "address": "123 Example Street, 28000 Madrid, Spain",
+            "phone": "+34 123 456 789",
+            "email": "info@lahia.shop"
+        },
         "quick_links": "Quick Links",
         "legal": "Legal",
         "rights": "All rights reserved",
         "terms": "Terms & Conditions",
         "privacy": "Privacy Policy",
-        "cookies": "Cookie Policy"
+        "cookies": "Cookie Policy",
+        "aria": {
+            "nav_quick": "Quick links",
+            "nav_legal": "Legal information"
+        }
     },
     "common": {
         "back": "Back",
-        "close": "Close"
+        "close": "Close",
+        "skip_to_content": "Skip to main content",
+        "loading": "Loading...",
+        "logging_out": "Logging out...",
+        "loading_config": "Loading configuration...",
+        "loading_products": "Loading products..."
     },
     "products": {
         "list_title": "Products from ",
@@ -103,6 +161,58 @@
         "added": "Added!",
         "loading_config": "Loading configuration...",
         "loading_products": "Loading products...",
-        "aria_add_to_cart": "Add {title} to cart"
+        "aria_add_to_cart": "Add {title} to cart",
+        "aria_view_category": "View items in {target}",
+        "loading_categories": "Loading categories..."
+    },
+    "checkout": {
+        "title": "Review Order",
+        "empty": "Your cart is empty.",
+        "total": "Total",
+        "pay_button": "Pay",
+        "processing": "Processing...",
+        "empty_cart": "Empty cart",
+        "login_required": "You must log in to finalize the purchase.",
+        "pago_iniciado": "Payment initiated correctly.",
+        "unexpected_error": "Unexpected server response",
+        "error_pago": "Error initiating payment",
+        "aria": {
+            "order_list": "List of products in your order",
+            "checkout_form": "Checkout form"
+        },
+        "paypal": {
+            "title": "Pay with PayPal",
+            "pay_now": "Pay now",
+            "error": "Error processing payment with PayPal."
+        }
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "of": "of",
+        "aria": {
+            "go_previous": "Go to previous page",
+            "go_next": "Go to next page"
+        }
+    },
+    "about": {
+        "title": "About Us",
+        "subtitle": "Your Trusted Garage for Performance and Street Culture",
+        "who_we_are_title": "LAHIA'S GARAGE",
+        "who_we_are_text": "We are the epicenter of performance and underground style. At Lahia Shop, we don't just sell parts; we forge drift machines. From fire-breathing turbos to body kits designed in the heart of Tokyo, we have everything your car needs to dominate the night.",
+        "mission_title": "OUR GOAL",
+        "mission_text": "Equipping the new generation of drivers with components that withstand any slide. Our mission is clear: every part you buy brings you closer to the urban asphalt podium.",
+        "join_title": "FLOOR IT",
+        "join_text": "Looking to upgrade your ride? You've come to the right place. Get ready to burn rubber with the best products in the scene."
+    },
+    "404": {
+        "title": "Page not found",
+        "meta_title": "404 - Page not found | Lahia Shop",
+        "meta_description": "The page you're looking for doesn't exist. Go back to the homepage and keep exploring.",
+        "heading": "You've left the track!",
+        "message": "The page you're looking for doesn't exist or has drifted off course.",
+        "cta": "Get back to the start and keep drifting! 🏎️💨",
+        "back_home": "Back to Home",
+        "view_products": "View Products"
     }
 }

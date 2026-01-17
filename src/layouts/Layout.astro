@@ -1,4 +1,7 @@
 ---
+import "@/styles/global.css";
+import "@/styles/animations.css";
+import "@/styles/Components/main.css";
 /**
  * Main Layout Component
  *
@@ -12,9 +15,12 @@
 
 import Header from "@/components/ui/Header.astro";
 import Footer from "@/components/ui/Footer.astro";
+import ChatbotLoader from "@/components/ui/ChatbotLoader.astro";
 import LoginReader from "@/components/tsx/statement/loginReader";
 import ProductModalWrapper from "@/components/tsx/Modal/ProductModalWrapper";
 import ToastContainer from "@/modules/ALBA/components/ToastContainer";
+import { ClientRouter } from "astro:transitions";
+import { t } from "@/modules/YOLI/injector";
 
 // Destructure props: language, titles, URLs, and preview image for SEO
 const {
@@ -31,7 +37,7 @@ const {
 ---
 
 <!doctype html>
-<html lang={lang} class="h-full">
+<html lang={lang} class="min-h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="author" content="HCC" />
@@ -57,11 +63,8 @@ const {
     <meta name="twitter:image" content={previewImage} />
 
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="stylesheet" href="/src/styles/global.css" />
-    <link rel="stylesheet" href="/src/styles/animations.css" />
-    <link rel="stylesheet" href="/src/styles/Components/main.css" />
-    <script type="module" src="/src/main.ts"></script>
 
+    <!-- Styles imported at component level (astro:import) -->
     <!-- Script para aplicar tema persistido antes de renderizar -->
     <!-- This script runs BEFORE rendering to prevent theme flash -->
     <script is:inline>
@@ -70,7 +73,7 @@ const {
        * Runs immediately when page loads to apply saved theme preference
        * Prevents flash of unstyled content (FOUC) when switching themes
        */
-      (function () {
+      function applyTheme() {
         // --- Theme (Light/Dark) ---
         const theme = localStorage.getItem("theme");
         const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -85,9 +88,20 @@ const {
         // --- Accessibility Modes (ADHD & Epilepsy) ---
         if (localStorage.getItem("mode-epilepsy") === "true") {
           document.documentElement.classList.add("mode-epilepsy");
+        } else {
+          document.documentElement.classList.remove("mode-epilepsy");
         }
+
         if (localStorage.getItem("mode-adhd") === "true") {
           document.documentElement.classList.add("mode-adhd");
+        } else {
+          document.documentElement.classList.remove("mode-adhd");
+        }
+
+        if (localStorage.getItem("mode-aaa") === "true") {
+          document.documentElement.classList.add("mode-aaa");
+        } else {
+          document.documentElement.classList.remove("mode-aaa");
         }
 
         // --- CVD Mode (Color Vision Deficiency) ---
@@ -104,12 +118,48 @@ const {
         if (cvdMode && validCvdModes.includes(cvdMode)) {
           document.documentElement.classList.add(cvdMode);
         }
-      })();
+      }
+
+      // Apply theme immediately on initial page load
+      applyTheme();
+
+      // Re-apply theme after Astro transitions (ClientRouter)
+      document.addEventListener("astro:before-swap", () => {
+        applyTheme();
+      });
+
+      document.addEventListener("astro:after-swap", () => {
+        applyTheme();
+      });
+    </script>
+
+    <!-- Load Live2D global scripts early to ensure they're available for pixi-live2d-display -->
+    <script is:inline src="/webpack/live2dcubismcore.js"></script>
+    <script is:inline src="/webpack/live2d.min.js"></script>
+
+    <!-- Ensure Live2D is fully initialized before any components hydrate -->
+    <script is:inline>
+      window.__live2dReady = new Promise((resolve) => {
+        const checkLive2D = () => {
+          if (
+            typeof window.Live2D !== "undefined" &&
+            typeof window.Live2DCubismCore !== "undefined"
+          ) {
+            console.log("✅ Live2D globals initialized");
+            resolve(true);
+          } else {
+            setTimeout(checkLive2D, 50);
+          }
+        };
+        checkLive2D();
+      });
     </script>
   </head>
   <body
-    class="bg-sky-50 dark:bg-slate-800 text-slate-900 dark:text-slate-50 transition-colors duration-300 h-fit overflow-x-hidden"
+    class="bg-sky-50 dark:bg-slate-800 text-slate-900 dark:text-slate-50 transition-colors duration-300 min-h-screen"
   >
+    <ClientRouter />
+    <a href="#main-content" class="skip-link">{t("common.skip_to_content", lang)}</a>
     <Header
       cartCount={3}
       lang={lang}
@@ -117,14 +167,15 @@ const {
       showSearch={showSearch}
       searchCategoryId={searchCategoryId}
     />
-    <main class="flex-1 flex flex-col pt-4 animate-pageChange">
+    <main id="main-content" class="flex-1 flex flex-col pt-4 animate-pageChange" tabindex="-1">
       <slot />
     </main>
     <Footer lang={lang} />
     <LoginReader client:load />
     <!-- Global product modal wrapper: mounts on client, exposes openProductModal(id) -->
-    <ProductModalWrapper client:load />
-    <ToastContainer client:load />
+    <ProductModalWrapper client:load lang={lang} />
+    <ChatbotLoader />
+    <ToastContainer client:load lang={lang} />
 
     <!-- SVG Filters for Color Vision Deficiency (CVD) -->
     <svg style="display: none;">

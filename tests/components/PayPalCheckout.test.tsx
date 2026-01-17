@@ -12,10 +12,12 @@ jest.mock('@/services/paymentService');
 describe('PayPalCheckout', () => {
   it('creates a payment intent with cart items (prices in cents)', async () => {
     // Arrange: set cart with items
-    const mockCart = { items: [
-      { productId: 'p1', title: 'T1', price: 12.5, quantity: 2 }, // 1250 cents
-      { productId: 'p2', title: 'T2', price: 5.0, quantity: 1 }, // 500 cents
-    ] } as any;
+    const mockCart = {
+      items: [
+        { productId: 'p1', title: 'T1', price: 12.5, quantity: 2 }, // 1250 cents
+        { productId: 'p2', title: 'T2', price: 5.0, quantity: 1 }, // 500 cents
+      ]
+    } as any;
 
     const TestWrapper: React.FC = ({ children }) => (
       <Provider initialValues={[[cartStore, mockCart]]}>
@@ -32,7 +34,7 @@ describe('PayPalCheckout', () => {
       useEffect(() => setUser({ loggedIn: true, user: { id: 'u1' } }), []);
       return null;
     };
-    const goSpy = jest.spyOn(require('@/lib/navigation'), 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(require('@/lib/navigation'), 'goTo').mockImplementation(() => { });
 
     // Ensure the cart atom is set inside the rendered tree (some Jotai setups may require runtime set)
     const SetCart: React.FC = () => {
@@ -50,7 +52,7 @@ describe('PayPalCheckout', () => {
       { wrapper: TestWrapper }
     );
 
-    const button = screen.getByRole('button', { name: /Pagar con PayPal/i });
+    const button = screen.getByRole('button', { name: /Pago con PayPal/i }); // Matches aria-label
 
     // Act
     fireEvent.click(button);
@@ -65,9 +67,11 @@ describe('PayPalCheckout', () => {
   });
 
   it('clears cart and redirects to home on successful payment intent without approval URL', async () => {
-    const mockCart = { items: [
-      { productId: 'p1', title: 'T1', price: 12.5, quantity: 2 },
-    ] } as any;
+    const mockCart = {
+      items: [
+        { productId: 'p1', title: 'T1', price: 12.5, quantity: 2 },
+      ]
+    } as any;
 
     const TestWrapper: React.FC = ({ children }) => (
       <Provider initialValues={[[cartStore, mockCart]]}>
@@ -84,7 +88,7 @@ describe('PayPalCheckout', () => {
     };
 
     // Spy on navigation.goTo so we can observe navigation without touching window.location
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     // Ensure user is logged in
     const SetUserLoggedIn: React.FC = () => {
@@ -102,7 +106,7 @@ describe('PayPalCheckout', () => {
       { wrapper: TestWrapper }
     );
 
-    const button = screen.getByRole('button', { name: /Pagar con PayPal/i });
+    const button = screen.getByRole('button', { name: /Pago con PayPal/i }); // Matches aria-label
     fireEvent.click(button);
 
     await waitFor(() => expect(paymentService.createPaymentIntent).toHaveBeenCalled());
@@ -117,7 +121,7 @@ describe('PayPalCheckout', () => {
   });
 
   it('redirects to login if user is not logged in', async () => {
-    const mockCart = { items: [ { productId: 'p1', title: 'T1', price: 12.5, quantity: 1 } ] } as any;
+    const mockCart = { items: [{ productId: 'p1', title: 'T1', price: 12.5, quantity: 1 }] } as any;
 
     const TestWrapper: React.FC = ({ children }) => (
       <Provider initialValues={[[cartStore, mockCart]]}>
@@ -134,7 +138,7 @@ describe('PayPalCheckout', () => {
     };
 
     // Spy navigation.goTo
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     // Also set userStore to logged out at runtime
     const SetUser: React.FC = () => {
@@ -152,7 +156,7 @@ describe('PayPalCheckout', () => {
       { wrapper: TestWrapper }
     );
 
-    const button = screen.getByRole('button', { name: /Pagar con PayPal/i });
+    const button = screen.getByRole('button', { name: /Pago con PayPal/i }); // Matches aria-label
     fireEvent.click(button);
 
     // Should attempt to redirect to login and not call paymentService
@@ -162,7 +166,7 @@ describe('PayPalCheckout', () => {
   });
 
   it('redirects to login if backend returns 401 when creating payment intent', async () => {
-    const mockCart = { items: [ { productId: 'p1', title: 'T1', price: 12.5, quantity: 1 } ] } as any;
+    const mockCart = { items: [{ productId: 'p1', title: 'T1', price: 12.5, quantity: 1 }] } as any;
 
     const TestWrapper: React.FC = ({ children }) => (
       <Provider initialValues={[[cartStore, mockCart]]}>
@@ -178,7 +182,7 @@ describe('PayPalCheckout', () => {
       return null;
     };
 
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     // Ensure userStore is considered logged in for this case (server will still return 401)
     const SetUserLoggedIn: React.FC = () => {
@@ -196,7 +200,7 @@ describe('PayPalCheckout', () => {
       { wrapper: TestWrapper }
     );
 
-    const button = screen.getByRole('button', { name: /Pagar con PayPal/i });
+    const button = screen.getByRole('button', { name: /Pago con PayPal/i }); // Matches aria-label
     fireEvent.click(button);
 
     await waitFor(() => expect(goSpy).toHaveBeenCalled());
@@ -204,7 +208,7 @@ describe('PayPalCheckout', () => {
   });
 
   it('redirects to login immediately if sessionStorage login is false', async () => {
-    const mockCart = { items: [ { productId: 'p1', title: 'T1', price: 12.5, quantity: 1 } ] } as any;
+    const mockCart = { items: [{ productId: 'p1', title: 'T1', price: 12.5, quantity: 1 }] } as any;
 
     const TestWrapper: React.FC = ({ children }) => (
       <Provider initialValues={[[cartStore, mockCart]]}>
@@ -221,7 +225,7 @@ describe('PayPalCheckout', () => {
     // Simulate sessionStorage marking user as logged out
     sessionStorage.setItem('login', 'false');
 
-    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => {});
+    const goSpy = jest.spyOn(navigation, 'goTo').mockImplementation(() => { });
 
     render(
       <>
@@ -231,7 +235,7 @@ describe('PayPalCheckout', () => {
       { wrapper: TestWrapper }
     );
 
-    const button = screen.getByRole('button', { name: /Pagar con PayPal/i });
+    const button = screen.getByRole('button', { name: /Pago con PayPal/i }); // Matches aria-label
     fireEvent.click(button);
 
     // Should redirect immediately and not call createPaymentIntent

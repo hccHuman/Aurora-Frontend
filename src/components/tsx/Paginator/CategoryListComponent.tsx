@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CategoryCard from "@/components/tsx/CategoryCard/CategoryCard";
+import CategoryCardSkeleton from "@/components/tsx/CategoryCard/CategoryCardSkeleton";
 import Paginator from "@/components/tsx/Paginator/Paginator";
 import { fetchPaginatedCategories } from "@/services/categoryService";
 import { getResponsivePageSize } from "@/services/deviceService";
 import type { Category } from "@/models/EcommerceProps/CategoryPaginationProps";
+import { useYOLI } from "@/modules/YOLI/injector";
 
 /**
  * CategoryListComponent Component
@@ -15,12 +17,13 @@ import type { Category } from "@/models/EcommerceProps/CategoryPaginationProps";
  *
  * @component
  */
-export default function CategoryListComponent({ lang }: Category) {
+export default function CategoryListComponent({ lang = "es" }: Category) {
+  const t = useYOLI(lang);
   const [categories, setCategories] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [pageSize, setPageSize] = useState(getResponsivePageSize());
+  const [pageSize, setPageSize] = useState<number | null>(null);
 
   const loadCategories = async (pageToLoad: number, size: number) => {
     setLoading(true);
@@ -42,10 +45,21 @@ export default function CategoryListComponent({ lang }: Category) {
     loadCategories(page, size);
   }, [page]);
 
-  if (loading) return <p className="text-center my-8">Cargando categorías...</p>;
+  // Show skeletons while loading
+  if (loading || pageSize === null) {
+    return (
+      <div className="flex flex-col w-full px-12 flex-1">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-6 mb-12">
+          {Array.from({ length: pageSize || 8 }).map((_, index) => (
+            <CategoryCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col w-full px-12">
+    <div className="flex flex-col w-full px-12 flex-1">
       <motion.div
         initial="hidden"
         animate="show"
@@ -65,7 +79,7 @@ export default function CategoryListComponent({ lang }: Category) {
         ))}
       </motion.div>
 
-      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <Paginator initialPage={page} totalPages={totalPages} onPageChange={setPage} lang={lang} />
     </div>
   );
 }

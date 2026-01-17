@@ -42,13 +42,37 @@ export default function HeaderSearch({
   ariaLabel = "Search products",
   pageSize = 5,
   categoryId = null,
-}: HeaderSearchProps) {
+  id = "search-input",
+}: HeaderSearchProps & { id?: string }) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   // no local dropdown used: search results are stored in the shared atom
   const timer = useRef<number | null>(null);
 
   const [, setSearchState] = useAtom(searchStateAtom);
+
+  // M.A.R.I.A Integration: Listen for proactive search triggers
+  useEffect(() => {
+    const handleTrigger = (e: Event) => {
+      const term = (e as CustomEvent).detail;
+      if (term) {
+        setQuery(term);
+        doSearch(term);
+      }
+    };
+
+    window.addEventListener("aurora-trigger-search", handleTrigger);
+
+    // Check for query params on mount (for navigation-based search)
+    const urlParams = new URLSearchParams(window.location.search);
+    const q = urlParams.get('q');
+    if (q) {
+      setQuery(q);
+      doSearch(q);
+    }
+
+    return () => window.removeEventListener("aurora-trigger-search", handleTrigger);
+  }, []); // Run on mount
 
   useEffect(() => {
     // Only activate/search on the AllProducts page: /products/allproducts
@@ -119,6 +143,8 @@ export default function HeaderSearch({
   return (
     <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
       <input
+        id={id}
+        name="q"
         value={query}
         onChange={onChange}
         onFocus={onFocus}
