@@ -12,7 +12,6 @@
 import React, { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 import * as PIXI from "pixi.js";
-import "@/modules/AURORA/utils/initPixi"; // Fix for RETINA_PREFIX error
 // Use the standalone ticker class that pixi-live2d-display expects
 import { Ticker } from "@pixi/ticker";
 // Type for Live2D model instance
@@ -23,7 +22,6 @@ let Live2DModel: any = null;
 const loadLive2DModel = async (): Promise<any> => {
   if (!Live2DModel) {
     try {
-      // PIXI global is already handled by initPixi import
       const module = await import("pixi-live2d-display");
       Live2DModel = module.Live2DModel;
     } catch (err) {
@@ -37,7 +35,7 @@ import { AnaCore } from "../../ANA/AnaCore";
 import { analyzeEmotion } from "../../ANA/AnaEmotionMap";
 import { applyAuroraInstruction } from "../controller/AuroraController";
 import { useAuroraState } from "../hook/useAuroraState";
-// import { AuroraChatFrame } from "./AuroraChatFrame";
+
 import { AuroraVoiceLocal } from "../core/AuroraVoice";
 import { AudioPermissionRequest } from "./AudioPermissionRequest";
 import { auroraVoiceInstanceAtom } from "@/store/chatStore";
@@ -102,14 +100,17 @@ const VtuberLive2D: React.FC = () => {
       // Resize renderer to match container exactly
       app.renderer.resize(containerW, containerH);
 
-      const scaleToFitHeight = (containerH * 1.4) / 1200;
+      // "Alejar cámara un poco más": 0.72 multiplier --> ZOOM IN: 1.3 (+60%)
+      // "Más abajo": Increase Y (from -180 closer to 0 or positive) --> Shoulders up
+      const scaleToFitHeight = (containerH * 1.3) / 1200;
       model.scale.set(scaleToFitHeight);
 
       // Center horizontally
       model.x = (containerW - model.width) / 2;
 
-      // Position vertically higher
-      model.y = -80;
+      // Position: Moves model UP (negative Y) to show head and shoulders
+      // -90 was too high (headless). -250 way too high. 60 was too low. Trying -20.
+      model.y = -40;
 
       console.log(`📐 Layout Re-Refined: ${containerW}x${containerH} | Scale: ${model.scale.y.toFixed(3)} | Y: ${model.y}`);
     };
@@ -223,7 +224,6 @@ const VtuberLive2D: React.FC = () => {
         antialias: true,
         resolution: window.devicePixelRatio || 1,
       });
-      app.ticker.maxFPS = 30; // Limit FPS for performance as requested
 
       if (!mounted) { app.destroy(true); return; }
       if (canvasRef.current) {
@@ -388,7 +388,7 @@ const VtuberLive2D: React.FC = () => {
     <div className="relative w-full h-full overflow-hidden bg-slate-900 flex flex-col">
       <div ref={canvasRef} className="flex-1 relative w-full h-full" />
 
-      {/* AuroraChatFrame removed to avoid duplication with ChatWrapper */}
+
 
       <AudioPermissionRequest />
     </div>

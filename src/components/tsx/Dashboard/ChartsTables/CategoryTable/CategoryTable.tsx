@@ -183,6 +183,8 @@ export default function CategoryTable() {
                     <td className="p-2 text-sm">
                       {editingId === c.id ? (
                         <input
+                          id={`edit-cat-name-${c.id}`}
+                          name="category-name"
                           value={draftName}
                           onChange={(e) => setDraftName(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -195,6 +197,8 @@ export default function CategoryTable() {
                     <td className="p-2 text-sm">
                       {editingId === c.id ? (
                         <input
+                          id={`edit-cat-img-${c.id}`}
+                          name="category-image"
                           value={draftImg}
                           onChange={(e) => setDraftImg(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -261,6 +265,8 @@ export default function CategoryTable() {
                     <td className="p-2 text-sm">-</td>
                     <td className="p-2">
                       <input
+                        id="new-cat-name"
+                        name="new-category-name"
                         value={draftName}
                         onChange={(e) => setDraftName(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -269,6 +275,8 @@ export default function CategoryTable() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-cat-img"
+                        name="new-category-image"
                         value={draftImg}
                         onChange={(e) => setDraftImg(e.target.value)}
                         className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"

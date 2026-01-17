@@ -101,12 +101,12 @@ export default function ChatWrapper() {
             initial={{ opacity: 0, scale: 0.8, y: 20, transformOrigin: "bottom right" }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-4 right-4 shadow-2xl rounded-2xl overflow-hidden flex flex-col z-50 w-[380px] h-[650px] max-h-[85vh] max-w-[90vw] border border-slate-200 dark:border-slate-700 bg-slate-900"
+            className="fixed bottom-4 right-4 shadow-2xl rounded-2xl overflow-hidden flex flex-col z-[9999] w-[380px] h-[650px] max-h-[85vh] max-w-[90vw] border border-slate-200 dark:border-slate-700 bg-slate-900"
           >
             {/* Barra superior con X */}
-            <div className="cabecera flex justify-between items-center bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-slate-800 dark:text-white px-4 py-2 flex-shrink-0">
-              <span className="font-bold text-sm tracking-wide">Chat Aurora</span>
-              <button onClick={handleClose} className="hover:bg-slate-200 dark:hover:bg-slate-700 rounded p-1 transition-colors">
+            <div className="cabecera flex justify-between items-center bg-gray-900/90 backdrop-blur-xl text-white px-4 py-3 border-b border-white/5 flex-shrink-0">
+              <span className="font-bold text-sm tracking-wide bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Chat Aurora</span>
+              <button onClick={handleClose} className="hover:bg-white/10 rounded p-1 transition-colors text-white/70 hover:text-white">
                 <FiX size={20} />
               </button>
             </div>
@@ -134,7 +134,7 @@ export default function ChatWrapper() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handleOpen}
-          className="fixed bottom-4 right-4 text-white rounded-full shadow-2xl z-50 overflow-hidden bg-slate-900 border-4 border-red-600"
+          className="fixed bottom-4 right-4 text-white rounded-full shadow-2xl z-[9999] overflow-hidden bg-slate-900 border-4 border-red-600"
         >
           <picture>
             <source srcSet="/assets/Icons/ia_icon.webp" type="image/webp" />

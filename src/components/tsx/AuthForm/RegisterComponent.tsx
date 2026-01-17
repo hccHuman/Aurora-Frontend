@@ -17,6 +17,7 @@ import { t } from "@/modules/YOLI/injector";
  *
  * @component
  */
+
 export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
   const [, setUser] = useAtom(userStore);
 
@@ -27,7 +28,8 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
   const [password2, setPassword2] = useState("");
 
   // UI states
-  const [error, setError] = useState<string | null>(null);
+  const [errorField, setErrorField] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -37,26 +39,31 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorField(null);
+    setErrorMsg(null);
     setSuccess(null);
 
     if (!validateName(nombre)) {
-      setError(t("auth.errors.invalid_name", lang));
+      setErrorField("nombre");
+      setErrorMsg(t("auth.errors.invalid_name", lang));
       return;
     }
 
     if (!validateEmail(email)) {
-      setError(t("auth.errors.invalid_email", lang));
+      setErrorField("email");
+      setErrorMsg(t("auth.errors.invalid_email", lang));
       return;
     }
 
     if (!validatePassword(password)) {
-      setError(t("auth.errors.invalid_password", lang));
+      setErrorField("password");
+      setErrorMsg(t("auth.errors.invalid_password", lang));
       return;
     }
 
     if (password !== password2) {
-      setError(t("auth.errors.passwords_dont_match", lang));
+      setErrorField("password2");
+      setErrorMsg(t("auth.errors.passwords_dont_match", lang));
       return;
     }
 
@@ -67,56 +74,135 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
       sessionStorage.setItem("login", "true");
       sessionStorage.setItem("user", JSON.stringify(data.user));
       setSuccess(t("auth.register.success", lang));
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
+      setTimeout(() => (window.location.href = `/${lang}/`), 1500);
     } catch (err: any) {
-      setError(err.message || t("auth.errors.unknown_register", lang));
+      setErrorField(null);
+      setErrorMsg(err.message || t("auth.errors.unknown_register", lang));
     } finally {
       setLoading(false);
     }
   };
 
+  const validateField = (field: string, value: string) => {
+    switch (field) {
+      case "nombre":
+        if (!validateName(value)) {
+          setErrorField("nombre");
+          setErrorMsg(t("auth.errors.invalid_name", lang));
+        } else {
+          setErrorField(null);
+          setErrorMsg(null);
+        }
+        break;
+      case "email":
+        if (!validateEmail(value)) {
+          setErrorField("email");
+          setErrorMsg(t("auth.errors.invalid_email", lang));
+        } else {
+          setErrorField(null);
+          setErrorMsg(null);
+        }
+        break;
+      case "password":
+        if (!validatePassword(value)) {
+          setErrorField("password");
+          setErrorMsg(t("auth.errors.invalid_password", lang));
+        } else if (password2 && value !== password2) {
+          setErrorField("password2");
+          setErrorMsg(t("auth.errors.passwords_dont_match", lang));
+        } else {
+          setErrorField(null);
+          setErrorMsg(null);
+        }
+        break;
+      case "password2":
+        if (value !== password) {
+          setErrorField("password2");
+          setErrorMsg(t("auth.errors.passwords_dont_match", lang));
+        } else {
+          setErrorField(null);
+          setErrorMsg(null);
+        }
+        break;
+    }
+  };
+
   return (
-    <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl mx-auto mt-12 p-6 sm:px-8 md:px-12 border rounded-lg shadow-md bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl mx-auto mt-12 mb-20 md:mb-8 lg:mb-0 p-6 sm:px-8 md:px-12 border rounded-lg shadow-md bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center">{t("auth.register.title", lang)}</h2>
 
-      {error && <p className="text-red-500 mb-3 text-center">{error}</p>}
-      {success && <p className="text-green-500 mb-3 text-center">{success}</p>}
+      <div className="text-center min-h-[1.25rem]">
+        {errorMsg && (
+          <p
+            className="text-red-500 mb-2"
+            role="alert"
+            aria-live="assertive"
+          >
+            {errorMsg}
+          </p>
+        )}
+        {success && (
+          <p
+            className="text-green-500 mb-2"
+            role="status"
+            aria-live="polite"
+          >
+            {success}
+          </p>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative">
         {/* Name */}
         <input
+          id="nombre"
+          name="nombre"
           type="text"
           placeholder={t("auth.labels.name", lang)}
           aria-label={t("auth.labels.name", lang)}
+          aria-invalid={errorField === "nombre"}
+          aria-describedby={errorField === "nombre" ? "nombre-error" : undefined}
+          autoComplete="name"
           value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
+          onChange={(e) => {setNombre(e.target.value); validateField("nombre", e.target.value)}}
           required
-          className="text-black px-4 py-3 rounded border focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className={`text-black px-4 py-3 rounded border w-full focus:outline-none focus:ring-2 focus:ring-sky-500 ${errorField === "nombre" ? "border-red-500" : "border-gray-300"
+            }`}
         />
 
         {/* Email */}
         <input
+          id="email"
+          name="email"
           type="email"
           placeholder={t("auth.labels.email", lang)}
           aria-label={t("auth.labels.email", lang)}
+          aria-invalid={errorField === "email"}
+          aria-describedby={errorField === "email" ? "email-error" : undefined}
+          autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {setEmail(e.target.value); validateField("email", e.target.value)}}
           required
-          className="text-black px-4 py-3 rounded border focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className={`text-black px-4 py-3 rounded border w-full focus:outline-none focus:ring-2 focus:ring-sky-500 ${errorField === "email" ? "border-red-500" : "border-gray-300"
+            }`}
         />
 
         {/* Password */}
         <div className="relative">
           <input
+            id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
             placeholder={t("auth.labels.password", lang)}
             aria-label={t("auth.labels.password", lang)}
+            aria-invalid={errorField === "password"}
+            aria-describedby={errorField === "password" ? "password-error" : undefined}
+            autoComplete="new-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {setPassword(e.target.value); validateField("password", e.target.value)}}
             required
-            className="text-black px-4 py-3 rounded border w-full focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className={`text-black px-4 py-3 rounded border w-full focus:outline-none focus:ring-2 focus:ring-sky-500 ${errorField === "password" ? "border-red-500" : "border-gray-300"
+              }`}
           />
           <button
             type="button"
@@ -131,13 +217,19 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
         {/* Repeat Password */}
         <div className="relative">
           <input
+            id="password2"
+            name="password2"
             type={showPassword2 ? "text" : "password"}
             placeholder={t("auth.labels.confirm_password", lang)}
             aria-label={t("auth.labels.confirm_password", lang)}
+            aria-invalid={errorField === "password2"}
+            aria-describedby={errorField === "password2" ? "password2-error" : undefined}
+            autoComplete="new-password"
             value={password2}
-            onChange={(e) => setPassword2(e.target.value)}
+            onChange={(e) => {setPassword2(e.target.value); validateField("password2", e.target.value)}}
             required
-            className="text-black px-4 py-3 rounded border w-full focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className={`text-black px-4 py-3 rounded border w-full focus:outline-none focus:ring-2 focus:ring-sky-500 ${errorField === "password2" ? "border-red-500" : "border-gray-300"
+              }`}
           />
           <button
             type="button"
@@ -149,10 +241,22 @@ export const RegisterComponent: React.FC<Auth> = ({ lang }) => {
           </button>
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
-          disabled={loading}
-          className="bg-sky-700 dark:bg-sky-500 text-white py-3 rounded hover:bg-sky-600 dark:hover:bg-sky-400 transition text-lg disabled:opacity-50"
+          className="bg-sky-700 dark:bg-sky-500 text-white py-3 sm:py-4 rounded hover:bg-sky-600 dark:hover:bg-sky-400 transition text-lg sm:text-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={
+            !validateName(nombre) ||
+            !validateEmail(email) ||
+            !validatePassword(password) ||
+            password !== password2
+          }
+          aria-disabled={
+            !validateName(nombre) ||
+            !validateEmail(email) ||
+            !validatePassword(password) ||
+            password !== password2
+          }
         >
           {loading ? t("auth.register.button_loading", lang) : t("auth.register.button", lang)}
         </button>

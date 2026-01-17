@@ -33,7 +33,7 @@ const NewProductsChart: React.FC = () => {
     const items = data?.data?.slice(-MAX_ITEMS) ?? [];
     const categories = items.map((p: any) => p.nombre);
     const series = [
-      { name: "Stock", data: items.map((p: any) => ({ x: p.nombre, y: p.stock })) },
+      { name: "Stock", data: items.map((p: any) => p.stock) },
     ];
 
     controllerRef.current = initNewProductsChart(ref.current, { series, categories });
@@ -54,7 +54,7 @@ const NewProductsChart: React.FC = () => {
       const items = res?.data?.slice(-MAX_ITEMS) ?? [];
       const categories = items.map((p: any) => p.nombre);
       const series = [
-        { name: "Stock", data: items.map((p: any) => ({ x: p.nombre, y: p.stock })) },
+        { name: "Stock", data: items.map((p: any) => p.stock) },
       ];
 
       controllerRef.current?.update?.(series, categories);

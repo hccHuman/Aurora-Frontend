@@ -129,7 +129,7 @@ export default function ProfileView({ lang }: ProfileViewProps) {
     };
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
             {/* Header */}
             <div className="mb-8 flex justify-between items-center">
                 <div>
@@ -169,6 +169,8 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                     <div>
                                         <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">{t("profile.labels.name", lang)}</label>
                                         <input
+                                            id="profile-name"
+                                            name="nombre"
                                             type="text"
                                             value={formData.nombre}
                                             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
@@ -179,6 +181,8 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                     <div>
                                         <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">{t("profile.labels.email", lang)}</label>
                                         <input
+                                            id="profile-email"
+                                            name="email"
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -190,6 +194,8 @@ export default function ProfileView({ lang }: ProfileViewProps) {
                                         <label className="text-xs text-slate-500 uppercase tracking-wider block mb-2">{t("profile.labels.new_password", lang)}</label>
                                         <div className="relative">
                                             <input
+                                                id="profile-password"
+                                                name="password"
                                                 type={showPassword ? "text" : "password"}
                                                 value={formData.password}
                                                 placeholder={t("profile.placeholders.password_hint", lang)}

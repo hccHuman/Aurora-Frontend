@@ -42,7 +42,8 @@ export default function HeaderSearch({
   ariaLabel = "Search products",
   pageSize = 5,
   categoryId = null,
-}: HeaderSearchProps) {
+  id = "search-input",
+}: HeaderSearchProps & { id?: string }) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   // no local dropdown used: search results are stored in the shared atom
@@ -142,6 +143,8 @@ export default function HeaderSearch({
   return (
     <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
       <input
+        id={id}
+        name="q"
         value={query}
         onChange={onChange}
         onFocus={onFocus}

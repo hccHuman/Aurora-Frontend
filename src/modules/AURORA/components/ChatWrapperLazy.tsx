@@ -6,6 +6,7 @@
  * reducing initial bundle size significantly.
  * 
  * @component
+ * @component
  */
 import { lazy, Suspense } from "react";
 

@@ -207,6 +207,8 @@ export default function UsersList() {
                     <td className="p-2">-</td> {/* ID */}
                     <td className="p-2">
                       <input
+                        id="new-user-name"
+                        name="new-user-name"
                         value={draftName}
                         onChange={(e) => setDraftName(e.target.value)}
                         placeholder="Name"
@@ -215,6 +217,8 @@ export default function UsersList() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-user-email"
+                        name="new-user-email"
                         value={draftEmail}
                         onChange={(e) => setDraftEmail(e.target.value)}
                         placeholder="Email"
@@ -224,6 +228,8 @@ export default function UsersList() {
                     {/* Password Hash como input al crear */}
                     <td className="p-2 flex gap-1 items-center">
                       <input
+                        id="new-user-password"
+                        name="new-user-password"
                         type={draftShowPassword ? "text" : "password"}
                         value={draftPassword}
                         onChange={(e) => setDraftPassword(e.target.value)}
@@ -255,6 +261,8 @@ export default function UsersList() {
                     </td>
                     <td className="p-2">
                       <input
+                        id="new-user-active"
+                        name="new-user-active"
                         type="checkbox"
                         checked={draftActivo}
                         onChange={(e) => setDraftActivo(e.target.checked)}
@@ -296,6 +304,8 @@ export default function UsersList() {
                     <td className="p-2 text-sm">
                       {editingId === u.id ? (
                         <input
+                          id={`edit-user-name-${u.id}`}
+                          name="user-name"
                           value={draftName}
                           onChange={(e) => setDraftName(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -307,6 +317,8 @@ export default function UsersList() {
                     <td className="p-2 text-sm">
                       {editingId === u.id ? (
                         <input
+                          id={`edit-user-email-${u.id}`}
+                          name="user-email"
                           value={draftEmail}
                           onChange={(e) => setDraftEmail(e.target.value)}
                           className="w-full rounded-md border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white"
@@ -319,6 +331,8 @@ export default function UsersList() {
                       {editingId === u.id ? (
                         <>
                           <input
+                            id={`edit-user-pass-${u.id}`}
+                            name="user-password"
                             type={draftShowPassword ? "text" : "password"}
                             value={draftPassword}
                             onFocus={() => {
@@ -362,6 +376,8 @@ export default function UsersList() {
                     <td className="p-2 text-sm">
                       {editingId === u.id ? (
                         <input
+                          id={`edit-user-active-${u.id}`}
+                          name="user-active"
                           type="checkbox"
                           checked={draftActivo}
                           onChange={(e) => setDraftActivo(e.target.checked)}
