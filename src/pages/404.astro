@@ -1,0 +1,364 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { t } from "@/modules/YOLI/injector";
+
+// Detect language from URL search params (set by middleware) or Referer header
+const urlLang = Astro.url.searchParams.get("lang");
+const referer = Astro.request.headers.get("referer") || "";
+const lang = urlLang || (referer.includes("/en/") ? "en" : "es");
+---
+
+<Layout
+  lang={lang}
+  title={t("404.title", lang)}
+  metaTitle={t("404.meta_title", lang)}
+  metaDescription={t("404.meta_description", lang)}
+  canonicalUrl={`https://lahia.shop/404`}
+  previewImage="/assets/preview.png"
+  home={true}
+>
+  <div
+    class="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+  >
+    <!-- Animated background grid -->
+    <div class="absolute inset-0 opacity-20">
+      <div
+        class="absolute inset-0"
+        style="background-image: linear-gradient(rgba(168, 85, 247, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 85, 247, 0.1) 1px, transparent 1px); background-size: 50px 50px;"
+      >
+      </div>
+    </div>
+
+    <!-- Drift smoke effect -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        class="smoke-1 absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-drift-smoke"
+      >
+      </div>
+      <div
+        class="smoke-2 absolute w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-drift-smoke-delayed"
+      >
+      </div>
+    </div>
+
+    <div
+      class="relative flex flex-col items-center justify-center min-h-[80vh] text-center px-4 py-12"
+    >
+      <!-- Graffiti-style 404 -->
+      <div class="relative mb-8">
+        <h1 class="graffiti-404 text-[12rem] md:text-[16rem] font-black leading-none select-none">
+          404
+        </h1>
+        <!-- Spray paint drips -->
+        <div
+          class="absolute bottom-0 left-1/4 w-2 h-12 bg-gradient-to-b from-purple-500 to-transparent opacity-60 animate-drip"
+        >
+        </div>
+        <div
+          class="absolute bottom-0 right-1/3 w-2 h-16 bg-gradient-to-b from-violet-500 to-transparent opacity-60 animate-drip-delayed"
+        >
+        </div>
+      </div>
+
+      <!-- Drift-style subtitle -->
+      <div class="relative mb-6">
+        <h2 class="text-3xl md:text-5xl font-black text-white uppercase tracking-wider drift-text">
+          {t("404.heading", lang)}
+        </h2>
+        <div
+          class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"
+        >
+        </div>
+      </div>
+
+      <p class="text-lg md:text-xl text-slate-300 max-w-2xl mb-8 leading-relaxed">
+        {t("404.message", lang)}
+        <span class="block mt-2 text-purple-400 font-semibold">{t("404.cta", lang)}</span>
+      </p>
+
+      <!-- Action buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 items-center justify-center">
+        <a
+          href={`/${lang}/`}
+          class="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 hover:-translate-y-1 overflow-hidden"
+        >
+          <span class="relative z-10 flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              ></path>
+            </svg>
+            {t("404.back_home", lang)}
+          </span>
+          <div
+            class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"
+          >
+          </div>
+        </a>
+
+        <a
+          href={`/${lang}/products/allproducts`}
+          class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl border-2 border-slate-600 hover:border-purple-500"
+        >
+          {t("404.view_products", lang)}
+        </a>
+      </div>
+
+      <!-- Decorative tire marks -->
+      <div class="mt-16 opacity-30">
+        <svg
+          width="200"
+          height="40"
+          viewBox="0 0 200 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 20 Q 50 10, 100 20 T 200 20"
+            stroke="currentColor"
+            stroke-width="8"
+            stroke-linecap="round"
+            class="text-slate-600"></path>
+          <path
+            d="M0 25 Q 50 15, 100 25 T 200 25"
+            stroke="currentColor"
+            stroke-width="6"
+            stroke-linecap="round"
+            class="text-slate-700"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Graffiti-style 404 text */
+    .graffiti-404 {
+      background: linear-gradient(
+        135deg,
+        #a855f7 0%,
+        #8b5cf6 25%,
+        #7c3aed 50%,
+        #8b5cf6 75%,
+        #a855f7 100%
+      );
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow:
+        0 0 30px rgba(168, 85, 247, 0.5),
+        0 0 60px rgba(139, 92, 246, 0.3),
+        0 0 90px rgba(124, 58, 237, 0.2);
+      animation:
+        graffiti-glow 3s ease-in-out infinite,
+        graffiti-shift 8s ease-in-out infinite;
+      filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
+      transform: skew(-5deg);
+    }
+
+    /* Drift-style text */
+    .drift-text {
+      text-shadow:
+        2px 2px 0px #a855f7,
+        4px 4px 0px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(168, 85, 247, 0.5);
+      animation: drift-shake 0.5s ease-in-out infinite;
+    }
+
+    /* Animations */
+    @keyframes graffiti-glow {
+      0%,
+      100% {
+        filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5)) brightness(1);
+      }
+      50% {
+        filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5)) brightness(1.2);
+      }
+    }
+
+    @keyframes graffiti-shift {
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes drift-shake {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-1px);
+      }
+      75% {
+        transform: translateX(1px);
+      }
+    }
+
+    @keyframes drift-smoke {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translate(100px, -50px) scale(1.5);
+        opacity: 0.1;
+      }
+      100% {
+        transform: translate(200px, -100px) scale(2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes drift-smoke-delayed {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translate(-100px, -50px) scale(1.5);
+        opacity: 0.1;
+      }
+      100% {
+        transform: translate(-200px, -100px) scale(2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes drip {
+      0% {
+        height: 0;
+        opacity: 0.8;
+      }
+      100% {
+        height: 3rem;
+        opacity: 0.4;
+      }
+    }
+
+    .animate-drift-smoke {
+      animation: drift-smoke 4s ease-in-out infinite;
+    }
+
+    .animate-drift-smoke-delayed {
+      animation: drift-smoke-delayed 4s ease-in-out infinite 2s;
+    }
+
+    .animate-drip {
+      animation: drip 2s ease-out infinite;
+    }
+
+    .animate-drip-delayed {
+      animation: drip 2s ease-out infinite 1s;
+    }
+
+    .smoke-1 {
+      top: 20%;
+      left: 10%;
+    }
+
+    .smoke-2 {
+      bottom: 20%;
+      right: 10%;
+    }
+
+    /* Accessibility Mode Overrides - Disable animations for epilepsy and ADHD modes */
+    html.mode-epilepsy .graffiti-404,
+    html.mode-adhd .graffiti-404 {
+      animation: none !important;
+      text-shadow: none !important;
+      filter: none !important;
+      transform: none !important;
+      -webkit-text-fill-color: #a855f7 !important;
+    }
+
+    html.mode-epilepsy .drift-text,
+    html.mode-adhd .drift-text {
+      animation: none !important;
+      text-shadow: none !important;
+    }
+
+    html.mode-epilepsy .animate-drift-smoke,
+    html.mode-epilepsy .animate-drift-smoke-delayed,
+    html.mode-adhd .animate-drift-smoke,
+    html.mode-adhd .animate-drift-smoke-delayed,
+    html.mode-epilepsy .animate-drip,
+    html.mode-epilepsy .animate-drip-delayed,
+    html.mode-adhd .animate-drip,
+    html.mode-adhd .animate-drip-delayed {
+      animation: none !important;
+      opacity: 0 !important;
+    }
+
+    html.mode-epilepsy .absolute.opacity-20,
+    html.mode-adhd .absolute.opacity-20 {
+      display: none !important;
+    }
+  </style>
+
+  <script is:inline>
+    // Client-side language detection for static 404 page
+    (function () {
+      const path = window.location.pathname;
+      const isEnglish = path.includes("/en/");
+
+      if (isEnglish) {
+        // Translations map
+        const texts = {
+          heading: "You've left the track!",
+          message: "The page you're looking for doesn't exist or has drifted off course.",
+          cta: "Get back to the start and keep drifting! 🏎️💨",
+          backHome: "Back to Home",
+          viewProducts: "View Products",
+          title: "404 - Page not found",
+        };
+
+        // Update document title
+        document.title = texts.title;
+
+        // Update elements text
+        const headingEl = document.querySelector(".drift-text");
+        if (headingEl) headingEl.innerText = texts.heading;
+
+        const messageEl = document.querySelector("p.text-slate-300");
+        if (messageEl) {
+          messageEl.childNodes[0].nodeValue = texts.message + " ";
+          const span = messageEl.querySelector("span");
+          if (span) span.innerText = texts.cta;
+        }
+
+        const homeLink = document.querySelector('a[href*="/es/"]');
+        if (homeLink) {
+          homeLink.href = "/en/";
+          const span = homeLink.querySelector("span");
+          if (span) {
+            // Preserve SVG
+            const svg = span.querySelector("svg");
+            span.innerHTML = "";
+            if (svg) span.appendChild(svg);
+            span.appendChild(document.createTextNode(texts.backHome));
+          }
+        }
+
+        const productsLink = document.querySelector('a[href*="/products/allproducts"]');
+        if (productsLink) {
+          productsLink.href = "/en/products/allproducts";
+          productsLink.innerText = texts.viewProducts;
+        }
+      }
+    })();
+  </script>
+</Layout>

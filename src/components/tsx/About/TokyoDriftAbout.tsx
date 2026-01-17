@@ -118,7 +118,7 @@ const TokyoDriftAbout: React.FC<Props> = ({ lang }) => {
                     >
                         <div className="absolute -inset-6 bg-yellow-400/5 -rotate-3"></div>
                         <img
-                            src="/img/about/garage_1.png"
+                            src="/img/about/garage_1.webp"
                             alt="The Hideout"
                             className="relative rounded-sm shadow-2xl border-4 border-slate-800 grayscale hover:grayscale-0 transition-all duration-700 brightness-75 group-hover:brightness-100"
                         />
@@ -152,7 +152,7 @@ const TokyoDriftAbout: React.FC<Props> = ({ lang }) => {
             <section className="relative py-56 text-center overflow-hidden border-t-[10px] border-double border-yellow-400">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-black/70 z-10"></div>
-                    <img src="/img/about/city_1.png" className="w-full h-full object-cover grayscale brightness-[0.3]" alt="The City" />
+                    <img src="/img/about/city_1.webp" className="w-full h-full object-cover grayscale brightness-[0.3]" alt="The City" />
                 </div>
 
                 <div className="container mx-auto px-6 relative z-20">
@@ -218,6 +218,48 @@ const TokyoDriftAbout: React.FC<Props> = ({ lang }) => {
         }
         .animate-drip {
             animation: drip 4s ease-in infinite;
+        }
+
+        /* Accessibility Mode Overrides - Disable animations for epilepsy and ADHD modes */
+        html.mode-epilepsy .animate-drip,
+        html.mode-adhd .animate-drip {
+            animation: none !important;
+            opacity: 0 !important;
+        }
+
+        html.mode-epilepsy [style*="animation"],
+        html.mode-adhd [style*="animation"] {
+            animation: none !important;
+        }
+
+        html.mode-epilepsy [class*="blur"],
+        html.mode-adhd [class*="blur"] {
+            filter: none !important;
+        }
+
+        html.mode-epilepsy [class*="shadow"],
+        html.mode-adhd [class*="shadow"] {
+            box-shadow: none !important;
+            text-shadow: none !important;
+            filter: none !important;
+            drop-shadow: none !important;
+        }
+
+        html.mode-epilepsy .absolute.opacity-10,
+        html.mode-epilepsy .absolute.opacity-20,
+        html.mode-adhd .absolute.opacity-10,
+        html.mode-adhd .absolute.opacity-20 {
+            display: none !important;
+        }
+
+        html.mode-epilepsy [class*="grayscale"],
+        html.mode-adhd [class*="grayscale"] {
+            filter: none !important;
+        }
+
+        html.mode-epilepsy [class*="bounce"],
+        html.mode-adhd [class*="bounce"] {
+            animation: none !important;
         }
       `}} />
         </div>
