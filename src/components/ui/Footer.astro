@@ -10,6 +10,7 @@
 const { lang = "es" } = Astro.props;
 
 import { t } from "@/modules/YOLI/injector";
+import FooterModalInitializer from "../tsx/Modal/FooterModalInitializer";
 
 // IMPORT ESTÁTICO
 import TermsES from "../../content/legal/terms.es.md";
@@ -44,22 +45,44 @@ const text = {
 </div>
 
 <footer
-  class="w-full bg-gradient-to-b from-slate-900 to-slate-950 text-white border-t border-slate-700/50 py-12 mt-16"
+  class="w-full bg-slate-950 text-white border-t border-slate-700/50 py-12 transition-colors duration-300"
 >
   <div class="max-w-7xl mx-auto px-6">
     <!-- Main Content -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-8 mb-8">
       <!-- Brand Section -->
       <div class="flex flex-col gap-4">
-        <h3 class="text-xl font-bold text-slate-100">HCC Shop</h3>
+        <h3 class="text-xl font-bold text-slate-100">Lahia Shop</h3>
         <p class="text-slate-400 text-sm leading-relaxed">
           {t("footer.brand_desc", lang)}
         </p>
       </div>
 
-      <!-- Quick Links -->
       <div class="flex flex-col gap-4">
-        <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-400">
+        <h3 class="text-xl font-bold text-slate-100">{t("footer.contact_title", lang)}</h3>
+        <div itemscope itemtype="http://schema.org/Organization">
+          <address class="not-italic text-slate-400 text-sm">
+            <span itemprop="name">Lahia Shop</span><br />
+            <span itemprop="address">{t("footer.contact_info.address", lang)}</span><br />
+            Tel: <a
+              href={`tel:${t("footer.contact_info.phone", lang).replace(/\s/g, "")}`}
+              itemprop="telephone"
+              class="hover:text-red-400">{t("footer.contact_info.phone", lang)}</a
+            ><br />
+            Email: <a
+              href={`mailto:${t("footer.contact_info.email", lang)}`}
+              itemprop="email"
+              class="hover:text-red-400">{t("footer.contact_info.email", lang)}</a
+            >
+          </address>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <nav class="flex flex-col gap-4" aria-label={t("footer.aria.nav_quick", lang)}>
+        <h4
+          class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+        >
           {t("footer.quick_links", lang)}
         </h4>
         <div class="flex flex-col gap-2">
@@ -70,110 +93,83 @@ const text = {
             {t("header.products", lang)}
           </a>
           <a
-            href={`/${lang}/account/profile`}
+            href={`/${lang}/about`}
             class="text-slate-300 hover:text-red-400 transition-colors text-sm"
           >
-            {t("header.profile", lang)}
+            {t("about.title", lang)}
           </a>
         </div>
-      </div>
+      </nav>
 
       <!-- Legal Links -->
-      <div class="flex flex-col gap-4">
+      <nav class="flex flex-col gap-4" aria-label={t("footer.aria.nav_legal", lang)}>
         <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-400">
           {t("footer.legal", lang)}
         </h4>
         <div class="flex flex-col gap-2">
           <button
+            type="button"
             data-modal="terms"
             class="legal-btn text-left text-slate-300 hover:text-red-400 transition-colors text-sm"
+            aria-haspopup="dialog"
+            aria-controls="legal-content-terms"
           >
             {text.terms}
           </button>
           <button
+            type="button"
             data-modal="privacy"
             class="legal-btn text-left text-slate-300 hover:text-red-400 transition-colors text-sm"
+            aria-haspopup="dialog"
+            aria-controls="legal-content-privacy"
           >
             {text.privacy}
           </button>
           <button
+            type="button"
             data-modal="cookies"
             class="legal-btn text-left text-slate-300 hover:text-red-400 transition-colors text-sm"
+            aria-haspopup="dialog"
+            aria-controls="legal-content-cookies"
           >
             {text.cookies}
           </button>
         </div>
+      </nav>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div
+      class="flex flex-col md:flex-row items-center justify-between gap-6 border-t border-slate-700/50 pt-8"
+    >
+      <div class="order-1 md:order-1">
+        <p class="text-slate-400 text-sm">
+          © {new Date().getFullYear()} Lahia Shop — {text.rights}
+        </p>
+      </div>
+      <div class="order-2 md:order-2">
+        <a
+          href="https://www.w3.org/WAI/WCAG2AAA-Conformance"
+          title="Explanation of WCAG 2 Level AAA conformance"
+          class="hover:opacity-80 transition-opacity block"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            height="32"
+            width="88"
+            src="https://www.w3.org/WAI/WCAG22/wcag2.2AAA"
+            alt="Level AAA conformance, W3C WAI Web Content Accessibility Guidelines 2.2"
+            class="rounded-sm"
+          />
+        </a>
       </div>
     </div>
-
-    <!-- Divider -->
-    <div class="h-px bg-slate-700/50 my-8"></div>
-
-    <!-- Copyright -->
-    <div class="text-center">
-      <p class="text-slate-400 text-sm">
-        © {new Date().getFullYear()} HCC Shop — {text.rights}
-      </p>
-    </div>
   </div>
+
+  <!-- Legal Modals (React component) - will be populated by FooterModalInitializer -->
+  <div id="legal-modals-root"></div>
+
+  <!-- React component to initialize modals - runs on client -->
+  <FooterModalInitializer client:load lang={lang} />
 </footer>
-
-<!-- Legal Modals (React component) - will be populated by script -->
-<div id="legal-modals-root"></div>
-
-<!-- Client-side script for modal handling -->
-<script>
-  import { createRoot } from "react-dom/client";
-  import { createElement } from "react";
-  import LegalModalsWrapper from "../tsx/Modal/LegalModalsWrapper";
-
-  document.addEventListener("DOMContentLoaded", () => {
-    // Get the HTML content from hidden divs
-    const termsContent = document.getElementById("legal-content-terms")?.innerHTML || "";
-    const privacyContent = document.getElementById("legal-content-privacy")?.innerHTML || "";
-    const cookiesContent = document.getElementById("legal-content-cookies")?.innerHTML || "";
-
-    // Get titles from data attributes or default text
-    const termsTitle =
-      document.querySelector('[data-modal="terms"]')?.textContent || "Terms & Conditions";
-    const privacyTitle =
-      document.querySelector('[data-modal="privacy"]')?.textContent || "Privacy Policy";
-    const cookiesTitle =
-      document.querySelector('[data-modal="cookies"]')?.textContent || "Cookie Policy";
-
-    // Get current language from document
-    const currentLang = document.documentElement.lang || "es";
-
-    // Render the React component
-    const root = document.getElementById("legal-modals-root");
-    if (root) {
-      const reactRoot = createRoot(root);
-      reactRoot.render(
-        createElement(LegalModalsWrapper, {
-          termsTitle,
-          termsContent,
-          privacyTitle,
-          privacyContent,
-          cookiesTitle,
-          cookiesContent,
-          lang: currentLang,
-        })
-      );
-    }
-
-    // Attach event listeners to legal buttons
-    const buttons = document.querySelectorAll(".legal-btn");
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const modalType = (btn as any).dataset.modal;
-        if (modalType) {
-          window.dispatchEvent(
-            new CustomEvent("openLegalModal", {
-              detail: { type: modalType },
-            })
-          );
-        }
-      });
-    });
-  });
-</script>

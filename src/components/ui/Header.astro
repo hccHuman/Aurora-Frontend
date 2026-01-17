@@ -41,13 +41,12 @@ import CartCount from "../tsx/Header/CartCount";
 const { lang, home, showSearch = false, searchCategoryId = null } = Astro.props;
 
 import { t } from "@/modules/YOLI/injector";
+import "@/styles/Components/Header.css";
 
 import iconImg from "@/assets/icon.png";
 import accountImg from "@/assets/Icons/dark/account.png";
 import cartImg from "@/assets/Icons/dark/cart.png";
 ---
-
-<link rel="stylesheet" href="/src/styles/Components/Header.css" />
 
 <header
   class="w-full bg-slate-900 dark:bg-slate-950 text-white dark:text-slate-50 border-b border-sky-100 dark:border-slate-700 shadow-md transition-colors duration-300"
@@ -58,29 +57,37 @@ import cartImg from "@/assets/Icons/dark/cart.png";
       href={`/${lang}/`}
       class="flex items-center gap-2 font-bold text-xl tracking-wide hover:opacity-80 transition"
       aria-label={t("header.home", lang)}
+      role="link"
     >
       <Image
         src={iconImg}
         alt={"Aurora Shop Logo"}
-        class="w-16 sm:w-20 h-16 sm:h-20 rounded-full"
+        class="w-16 sm:w-20 h-16 sm:h-20 rounded-full object-cover"
         inferSize={true}
       />
-      <span>Hcc Shop</span>
+      <span>Lahia Shop</span>
     </a>
 
-    <!-- DESKTOP NAVIGATION & ICONS (hidden on mobile, shown on md+) -->
-    <div class="hidden md:flex items-center gap-6">
+    <!-- DESKTOP NAVIGATION & ICONS (hidden on mobile/tablet, shown on lg+) -->
+    <div class="hidden lg:flex items-center gap-6">
       {/* Main navigation links */}
-      <nav class="flex gap-6 text-sm">
+      <nav
+        class="flex gap-6 text-sm"
+        aria-label={t("header.aria.nav_main", lang)}
+        role="navigation"
+      >
         {
           home && (
-            <a href={`/${lang}/`} class="hover:text-red-400 transition">
+            <a href={`/${lang}/`} class="hover:text-red-400 transition" role="link">
               {t("header.home", lang)}
             </a>
           )
         }
-        <a href={`/${lang}/products/allproducts`} class="hover:text-red-400 transition">
+        <a href={`/${lang}/products/allproducts`} class="hover:text-red-400 transition" role="link">
           {t("header.products", lang)}
+        </a>
+        <a href={`/${lang}/about`} class="hover:text-red-400 transition" role="link">
+          {t("about.title", lang)}
         </a>
       </nav>
 
@@ -94,6 +101,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
                 placeholder={t("header.search_placeholder", lang)}
                 ariaLabel={t("header.aria.search", lang)}
                 categoryId={searchCategoryId}
+                id="search-input-desktop"
               />
             </div>
           )
@@ -105,18 +113,20 @@ import cartImg from "@/assets/Icons/dark/cart.png";
             id="account-toggle"
             aria-label={t("header.aria.account", lang)}
             aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="account-menu"
             class="hover:opacity-75 transition"
           >
             <Image
               src={accountImg}
               alt={"account light"}
-              class="w-10 h-10 dark:hidden rounded-full"
+              class="w-10 h-10 dark:hidden rounded-full object-cover"
               inferSize={true}
             />
             <Image
               src={accountImg}
               alt={"account dark"}
-              class="w-10 h-10 hidden dark:block rounded-full"
+              class="w-10 h-10 hidden dark:block rounded-full object-cover"
               inferSize={true}
             />
           </button>
@@ -137,18 +147,20 @@ import cartImg from "@/assets/Icons/dark/cart.png";
             id="cart-toggle"
             aria-label={t("header.aria.cart", lang)}
             aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="cart-menu"
             class="hover:opacity-75 transition relative"
           >
             <Image
               src={cartImg}
               alt={"cart light"}
-              class="w-10 h-10 dark:hidden"
+              class="w-10 h-10 dark:hidden rounded-full object-cover"
               inferSize={true}
             />
             <Image
               src={cartImg}
               alt={"cart dark"}
-              class="w-10 h-10 hidden dark:block"
+              class="w-10 h-10 hidden dark:block rounded-full object-cover"
               inferSize={true}
             />
             <CartCount client:load variant="badge" />
@@ -216,20 +228,22 @@ import cartImg from "@/assets/Icons/dark/cart.png";
 
         {/* Accessibility Menu */}
         <div class="flex-shrink-0">
-          <AccessibilityMenu client:load />
+          <AccessibilityMenu client:load lang={lang} />
         </div>
       </div>
     </div>
 
-    {/* Mobile header (visible only on mobile) */}
-    <div class="flex items-center gap-4 md:hidden">
-      <AccessibilityMenu client:load />
+    {/* Mobile header (visible only on mobile/tablet) */}
+    <div class="flex items-center gap-4 lg:hidden">
+      <AccessibilityMenu client:load lang={lang} />
       {/* Mobile menu hamburger button */}
       <button
         id="mobile-toggle"
         class="text-2xl"
         aria-label={t("header.aria.open_menu", lang)}
-        aria-expanded="false">☰</button
+        aria-expanded="false"
+        aria-haspopup="true"
+        aria-controls="mobile-menu">☰</button
       >
     </div>
   </div>
@@ -237,14 +251,16 @@ import cartImg from "@/assets/Icons/dark/cart.png";
   {/* MOBILE NAVIGATION MENU (hidden by default, toggled with hamburger) */}
   <nav
     id="mobile-menu"
-    class="md:hidden flex flex-col gap-4 px-4 py-4 bg-slate-900 text-white border-sky-100 dark:border-slate-600 border-t bg-sky-50 dark:bg-slate-950 transition-colors duration-300"
+    class="lg:hidden flex flex-col gap-4 px-4 py-4 bg-slate-900 text-white border-sky-100 dark:border-slate-600 border-t bg-sky-50 dark:bg-slate-950 transition-colors duration-300"
+    aria-label={t("header.aria.nav_mobile", lang)}
+    role="navigation"
   >
     {/* Quick links section */}
     <div class="flex items-center gap-4">
       <p class="dark:text-slate-100">{t("header.quick_links", lang)}</p>
       {
         home && (
-          <a href={`/${lang}/`} class="hover:text-red-400 transition">
+          <a href={`/${lang}/`} class="hover:text-red-400 transition" role="link">
             {t("header.home", lang)}
           </a>
         )
@@ -252,8 +268,16 @@ import cartImg from "@/assets/Icons/dark/cart.png";
       <a
         href={`/${lang}/products/allproducts`}
         class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
+        role="link"
       >
         {t("header.products", lang)}
+      </a>
+      <a
+        href={`/${lang}/about`}
+        class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
+        role="link"
+      >
+        {t("about.title", lang)}
       </a>
     </div>
 
@@ -266,6 +290,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
             placeholder={t("header.search_placeholder", lang)}
             ariaLabel={t("header.aria.search", lang)}
             categoryId={searchCategoryId}
+            id="search-input-mobile"
           />
         </div>
       )
@@ -277,6 +302,8 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         id="account-toggle-mobile"
         aria-label={t("header.aria.account", lang)}
         aria-expanded="false"
+        aria-haspopup="true"
+        aria-controls="mobile-menu"
         class="hover:bg-slate-800 bg-slate-900/50 backdrop-blur-sm transition-all w-full text-left py-3 px-4 border border-slate-700/50 rounded-xl text-slate-100 font-medium flex justify-between items-center"
       >
         <span>{t("header.account", lang)}</span>
@@ -297,6 +324,8 @@ import cartImg from "@/assets/Icons/dark/cart.png";
         id="cart-toggle-mobile"
         aria-label={t("header.aria.cart", lang)}
         aria-expanded="false"
+        aria-haspopup="true"
+        aria-controls="cart-menu-mobile"
         class="hover:bg-slate-800 bg-slate-900/50 backdrop-blur-sm transition-all w-full text-left py-1.5 px-4 border border-slate-700/50 rounded-xl text-slate-100 font-medium"
       >
         <CartCount client:load variant="button" />
@@ -365,163 +394,295 @@ import cartImg from "@/assets/Icons/dark/cart.png";
 
   {/* DROPDOWN & MENU TOGGLE SCRIPT */}
   <script is:inline>
-    const lang = document.documentElement.lang || "es";
+    // Ensure DOM is ready before attaching event listeners
+    function initMenus() {
+      const lang = document.documentElement.lang || "es";
 
-    /**
-     * Mobile menu toggle
-     * Shows/hides full mobile menu on hamburger button click
-     */
-    const mobileToggle = document.getElementById("mobile-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
-    mobileToggle?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      mobileMenu.classList.toggle("open");
-      mobileToggle.setAttribute(
-        "aria-expanded",
-        mobileMenu.classList.contains("open") ? "true" : "false"
-      );
-    });
+      /**
+       * Mobile menu toggle
+       * Shows/hides full mobile menu on hamburger button click
+       */
+      const mobileToggle = document.getElementById("mobile-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
 
-    /**
-     * Desktop account menu dropdown
-     * Shows account menu if logged in, redirects to login page if not
-     */
-    const accountToggle = document.getElementById("account-toggle");
-    const accountMenu = document.getElementById("account-menu");
-    accountToggle?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (sessionStorage.getItem("login") !== "true") {
-        // Redirect to login page if not authenticated
-        window.location.href = `/${lang}/account/login`;
-      } else {
-        // Show/hide account dropdown
-        accountMenu.classList.toggle("hidden");
-        accountToggle.setAttribute(
-          "aria-expanded",
-          accountMenu.classList.contains("hidden") ? "false" : "true"
-        );
+      function closeAllMenus() {
+        if (accountMenu) accountMenu.classList.add("hidden");
+        if (cartMenu) cartMenu.classList.add("hidden");
+        if (accountMenuMobile) accountMenuMobile.classList.add("hidden");
+        if (cartMenuMobile) cartMenuMobile.classList.add("hidden");
+
+        // Close mobile overlay too
+        if (mobileMenu) mobileMenu.classList.remove("open");
+
+        // Reset ARIA
+        if (accountToggle) accountToggle.setAttribute("aria-expanded", "false");
+        if (cartToggle) cartToggle.setAttribute("aria-expanded", "false");
+        if (accountToggleMobile) accountToggleMobile.setAttribute("aria-expanded", "false");
+        if (cartToggleMobile) cartToggleMobile.setAttribute("aria-expanded", "false");
+        if (mobileToggle) mobileToggle.setAttribute("aria-expanded", "false");
       }
-    });
 
-    /**
-     * Desktop cart menu dropdown
-     * Shows cart summary with quick links to cart and checkout
-     */
-    const cartToggle = document.getElementById("cart-toggle");
-    const cartMenu = document.getElementById("cart-menu");
-    cartToggle?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      cartMenu.classList.toggle("hidden");
-      cartToggle.setAttribute(
-        "aria-expanded",
-        cartMenu.classList.contains("hidden") ? "false" : "true"
-      );
-    });
+      if (mobileToggle && mobileMenu) {
+        mobileToggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const isCurrentlyOpen = mobileMenu.classList.contains("open");
+          closeAllMenus();
 
-    /**
-     * Mobile account menu dropdown
-     * Same behavior as desktop but for mobile version
-     */
-    const accountToggleMobile = document.getElementById("account-toggle-mobile");
-    const accountMenuMobile = document.getElementById("account-menu-mobile");
-    accountToggleMobile?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (sessionStorage.getItem("login") !== "true") {
-        window.location.href = `/${lang}/account/login`;
-      } else {
-        accountMenuMobile.classList.toggle("hidden");
-        accountToggleMobile.setAttribute(
-          "aria-expanded",
-          accountMenuMobile.classList.contains("hidden") ? "false" : "true"
-        );
+          if (!isCurrentlyOpen) {
+            mobileMenu.classList.add("open");
+            mobileToggle.setAttribute("aria-expanded", "true");
+          }
+        });
       }
-    });
 
-    /**
-     * Mobile cart menu dropdown
-     * Same behavior as desktop but for mobile version
-     */
-    const cartToggleMobile = document.getElementById("cart-toggle-mobile");
-    const cartMenuMobile = document.getElementById("cart-menu-mobile");
-    cartToggleMobile?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      cartMenuMobile.classList.toggle("hidden");
-      cartToggleMobile.setAttribute(
-        "aria-expanded",
-        cartMenuMobile.classList.contains("hidden") ? "false" : "true"
-      );
-    });
+      /**
+       * Desktop account menu dropdown
+       * Shows account menu if logged in, redirects to login page if not
+       */
+      const accountToggle = document.getElementById("account-toggle");
+      const accountMenu = document.getElementById("account-menu");
 
-    /**
-     * Close mobile account menu when link is clicked
-     * Automatically collapses dropdown after navigation
-     */
-    const accountLinksM = accountMenuMobile?.querySelectorAll("a");
-    accountLinksM?.forEach((link) => {
-      link.addEventListener("click", () => {
-        accountMenuMobile?.classList.add("hidden");
-        accountToggleMobile?.setAttribute("aria-expanded", "false");
+      if (accountToggle && accountMenu) {
+        accountToggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (sessionStorage.getItem("login") !== "true") {
+            // Redirect to login page if not authenticated
+            window.location.href = `/${lang}/account/login`;
+          } else {
+            // Close others
+            const isHidden = accountMenu.classList.contains("hidden");
+            closeAllMenus();
+
+            // Show/hide account dropdown
+            if (isHidden) {
+              accountMenu.classList.remove("hidden");
+              accountToggle.setAttribute("aria-expanded", "true");
+            }
+          }
+        });
+
+        // Close menu when a link inside is clicked (desktop)
+        const accountLinks = accountMenu.querySelectorAll("a");
+        accountLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            accountMenu.classList.add("hidden");
+            accountToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      /**
+       * Desktop cart menu dropdown
+       * Shows cart summary with quick links to cart and checkout
+       */
+      const cartToggle = document.getElementById("cart-toggle");
+      const cartMenu = document.getElementById("cart-menu");
+
+      if (cartToggle && cartMenu) {
+        cartToggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const isHidden = cartMenu.classList.contains("hidden");
+          closeAllMenus();
+
+          if (isHidden) {
+            cartMenu.classList.remove("hidden");
+            cartToggle.setAttribute("aria-expanded", "true");
+          }
+        });
+
+        // Close menu when a link inside is clicked (desktop)
+        const cartLinks = cartMenu.querySelectorAll("a");
+        cartLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            cartMenu.classList.add("hidden");
+            cartToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      /**
+       * Mobile account menu dropdown
+       * Same behavior as desktop but for mobile version
+       */
+      const accountToggleMobile = document.getElementById("account-toggle-mobile");
+      const accountMenuMobile = document.getElementById("account-menu-mobile");
+
+      if (accountToggleMobile && accountMenuMobile) {
+        accountToggleMobile.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (sessionStorage.getItem("login") !== "true") {
+            window.location.href = `/${lang}/account/login`;
+          } else {
+            accountMenuMobile.classList.toggle("hidden");
+            accountToggleMobile.setAttribute(
+              "aria-expanded",
+              !accountMenuMobile.classList.contains("hidden") ? "true" : "false"
+            );
+          }
+        });
+      }
+
+      /**
+       * Mobile cart menu dropdown
+       * Same behavior as desktop but for mobile version
+       */
+      const cartToggleMobile = document.getElementById("cart-toggle-mobile");
+      const cartMenuMobile = document.getElementById("cart-menu-mobile");
+
+      if (cartToggleMobile && cartMenuMobile) {
+        cartToggleMobile.addEventListener("click", (e) => {
+          e.stopPropagation();
+          cartMenuMobile.classList.toggle("hidden");
+          cartToggleMobile.setAttribute(
+            "aria-expanded",
+            !cartMenuMobile.classList.contains("hidden") ? "true" : "false"
+          );
+        });
+      }
+
+      /**
+       * Close mobile account menu when link is clicked
+       * Automatically collapses dropdown after navigation
+       */
+      if (accountMenuMobile) {
+        const accountLinksM = accountMenuMobile.querySelectorAll("a");
+        accountLinksM.forEach((link) => {
+          link.addEventListener("click", () => {
+            accountMenuMobile.classList.add("hidden");
+            if (accountToggleMobile) {
+              accountToggleMobile.setAttribute("aria-expanded", "false");
+            }
+          });
+        });
+      }
+
+      /**
+       * Close mobile cart menu when link is clicked
+       * Automatically collapses dropdown after navigation
+       */
+      if (cartMenuMobile) {
+        const cartLinksM = cartMenuMobile.querySelectorAll("a");
+        cartLinksM.forEach((link) => {
+          link.addEventListener("click", () => {
+            cartMenuMobile.classList.add("hidden");
+            if (cartToggleMobile) {
+              cartToggleMobile.setAttribute("aria-expanded", "false");
+            }
+          });
+        });
+      }
+
+      /**
+       * Close dropdowns when clicking outside
+       * Click detection system that closes menus when user clicks elsewhere
+       * Excludes: search inputs, theme toggle, header element (to avoid closing on internal clicks)
+       */
+      document.addEventListener("click", (e) => {
+        const target = e.target;
+
+        // Don't close if clicking on search field or buttons
+        if (target.closest("input") || target.closest("button[type='submit']")) {
+          return;
+        }
+
+        // Don't close if clicking on theme toggle
+        if (target.closest("#theme-toggle") || target.closest(".theme-toggle")) {
+          return;
+        }
+
+        // Don't close if clicking anywhere in header
+        if (target.closest("header")) {
+          return;
+        }
+
+        // Close all menus if click is outside header
+        if (accountMenu) accountMenu.classList.add("hidden");
+        if (cartMenu) cartMenu.classList.add("hidden");
+        if (accountMenuMobile) accountMenuMobile.classList.add("hidden");
+        if (cartMenuMobile) cartMenuMobile.classList.add("hidden");
+        if (mobileMenu) mobileMenu.classList.remove("open");
+
+        // Update aria-expanded attributes
+        if (accountToggle) accountToggle.setAttribute("aria-expanded", "false");
+        if (cartToggle) cartToggle.setAttribute("aria-expanded", "false");
+        if (accountToggleMobile) accountToggleMobile.setAttribute("aria-expanded", "false");
+        if (cartToggleMobile) cartToggleMobile.setAttribute("aria-expanded", "false");
+        if (mobileToggle) mobileToggle.setAttribute("aria-expanded", "false");
       });
-    });
+    }
 
-    /**
-     * Close mobile cart menu when link is clicked
-     * Automatically collapses dropdown after navigation
-     */
-    const cartLinksM = cartMenuMobile?.querySelectorAll("a");
-    cartLinksM?.forEach((link) => {
-      link.addEventListener("click", () => {
-        cartMenuMobile?.classList.add("hidden");
-        cartToggleMobile?.setAttribute("aria-expanded", "false");
-      });
-    });
+    // Initialize when DOM is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initMenus);
+    } else {
+      initMenus();
+    }
 
-    /**
-     * Close dropdowns when clicking outside
-     * Click detection system that closes menus when user clicks elsewhere
-     * Excludes: search inputs, theme toggle, header element (to avoid closing on internal clicks)
-     */
-    document.addEventListener("click", (e) => {
-      const target = e.target;
-
-      // Don't close if clicking on search field
-      if (target.closest("input") || target.closest("button[type='submit']")) {
-        return;
-      }
-
-      // Don't close if clicking on theme toggle
-      if (target.closest("#theme-toggle") || target.closest(".theme-toggle")) {
-        return;
-      }
-
-      // Don't close if clicking anywhere in header
-      if (target.closest("header")) {
-        return;
-      }
-
-      // Close all menus if click is outside header
-      accountMenu?.classList.add("hidden");
-      cartMenu?.classList.add("hidden");
-      accountMenuMobile?.classList.add("hidden");
-      cartMenuMobile?.classList.add("hidden");
-      mobileMenu?.classList.add("hidden");
-
-      // Update aria-expanded attributes
-      accountToggle?.setAttribute("aria-expanded", "false");
-      cartToggle?.setAttribute("aria-expanded", "false");
-      accountToggleMobile?.setAttribute("aria-expanded", "false");
-      cartToggleMobile?.setAttribute("aria-expanded", "false");
-      mobileToggle?.setAttribute("aria-expanded", "false");
+    // Re-initialize menus after Astro transitions (ClientRouter)
+    document.addEventListener("astro:after-swap", () => {
+      initMenus();
     });
   </script>
-  <script type="module">
-    import { setupFinalizeLinks } from "/src/lib/headerNavigation.ts";
-    // initialize finalize purchase handlers for header links
-    try {
-      const lang = document.documentElement.lang || "es";
-      setupFinalizeLinks(lang);
-    } catch (e) {
-      // ignore errors during setup
-    }
+  <script is:inline>
+    // Setup finalize purchase links with session awareness
+    (function () {
+      function navigateTo(url) {
+        if (typeof window !== "undefined" && typeof window.goTo === "function") {
+          window.goTo(url);
+          return;
+        }
+        try {
+          window.location.assign(url);
+        } catch (e) {
+          try {
+            window.location.href = url;
+          } catch (err) {
+            // fallback
+          }
+        }
+      }
+
+      function handleFinalizeLinkClick(e, lang = "es") {
+        e.preventDefault();
+        let loginFlag = null;
+        try {
+          if (typeof window !== "undefined") {
+            loginFlag = window.sessionStorage.getItem("login");
+          }
+        } catch (err) {
+          // ignore storage errors
+        }
+        if (loginFlag === "true") {
+          navigateTo(`/${lang}/products/checkout`);
+        } else {
+          navigateTo(`/${lang}/account/login`);
+        }
+      }
+
+      function setupFinalizeLinks(lang = "es") {
+        if (typeof document === "undefined") return;
+        const links = document.querySelectorAll(".finalize-purchase");
+        links.forEach((link) => {
+          link.addEventListener("click", (e) => handleFinalizeLinkClick(e, lang));
+        });
+      }
+
+      // Initialize on DOMContentLoaded
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          const lang = document.documentElement.lang || "es";
+          setupFinalizeLinks(lang);
+        });
+      } else {
+        const lang = document.documentElement.lang || "es";
+        setupFinalizeLinks(lang);
+      }
+
+      // Re-initialize after Astro transitions
+      document.addEventListener("astro:after-swap", () => {
+        const lang = document.documentElement.lang || "es";
+        setupFinalizeLinks(lang);
+      });
+    })();
   </script>
 </header>

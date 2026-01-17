@@ -3,6 +3,8 @@ import AllProductsListComponent from "@/components/tsx/Paginator/AllProductsList
 import ChatbotLoader from "@/components/ui/ChatbotLoader.astro";
 import Layout from "@/layouts/Layout.astro";
 
+import { t } from "@/modules/YOLI/injector";
+
 // Sacamos lang desde la URL
 const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
 const lang = pathSegments[0];
@@ -10,13 +12,17 @@ const lang = pathSegments[0];
 
 <Layout
   lang={lang}
-  title="Aurora Chat - Español"
-  description="Plataforma de chat con IA en español"
-  canonicalUrl="https://miweb.com/es/"
-  previewImage="/assets/preview.png"
+  title={t("header.aria.nav_main", lang)}
+  metaTitle={t("header.aria.nav_main", lang)}
+  description={t("common.loading_products", lang)}
+  metaDescription={t("common.loading_products", lang)}
+  canonicalUrl="https://lahia.shop/en/products/allproducts"
+  previewImage="https://lahia.shop/assets/preview.png"
   home={true}
   showSearch={true}
 >
   <ChatbotLoader />
-  <AllProductsListComponent client:load lang={lang} />
+  <div class="flex-1 w-full flex flex-col">
+    <AllProductsListComponent client:load lang={lang} />
+  </div>
 </Layout>

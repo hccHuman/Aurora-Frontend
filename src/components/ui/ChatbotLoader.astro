@@ -2,19 +2,27 @@
 /**
  * ChatbotLoader Astro Component
  *
- * Responsible for loading the necessary Live2D scripts and the `ChatWrapper` React component.
- * Serves as the entry point for the AI chatbot interface across the site.
- * Ensures client-side hydration for the Live2D model.
+ * Lazy-loads the ChatWrapper component to reduce initial bundle size.
+ * The chatbot module is code-split and loaded on-demand, significantly
+ * reducing the main bundle footprint (~1MB → ~200-300KB in main bundle).
  */
 import "@/styles/global.css";
 import "@/styles/Components/ChatFrame.css";
-import ChatWrapper from "@/modules/AURORA/components/ChatWrapper";
+import ChatWrapperLazy from "@/modules/AURORA/components/ChatWrapperLazy";
+import { YoliAnnouncer } from "@/modules/YOLI/components/YoliAnnouncer";
 ---
 
-<div>
-  <script is:inline src="/webpack/live2d.min.js"></script>
-  <script is:inline src="/webpack/live2dcubismcore.js"></script>
+<div
+  id="aurora-global-container"
+  transition:persist
+  transition:name="aurora-chat"
+  class="relative z-[9999]"
+>
+  <!-- Y.O.L.I. ARIA Announcer (Hidden) -->
+  <YoliAnnouncer client:load />
+
   <div class="flex justify-center">
-    <ChatWrapper client:only="react" />
+    <!-- Lazy-loaded ChatWrapper: code-split to separate bundle -->
+    <ChatWrapperLazy client:only="react" />
   </div>
 </div>
