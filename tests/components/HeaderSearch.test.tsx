@@ -29,7 +29,7 @@ describe('HeaderSearch component', () => {
 
     render(<HeaderSearch />);
 
-    const input = screen.getByRole('searchbox', { name: /buscar productos/i });
+    const input = screen.getByRole('searchbox', { name: /search products/i }); // English aria-label
     fireEvent.change(input, { target: { value: 'Freno<script>' } });
 
     // advance timers for debounce, wrapped in act to avoid warnings
@@ -49,7 +49,7 @@ describe('HeaderSearch component', () => {
     (searchProducts as jest.Mock).mockResolvedValueOnce({ data: [{ id: 42, nombre: 'Freno Turbo', precio: 33, img_url: '/img/x.png' }] });
 
     render(<HeaderSearch />);
-    const input = screen.getByRole('searchbox', { name: /buscar productos/i });
+    const input = screen.getByRole('searchbox', { name: /search products/i }); // English aria-label
     // set value then focus (simulating a tap)
     fireEvent.change(input, { target: { value: 'Turbo<script>' } });
 

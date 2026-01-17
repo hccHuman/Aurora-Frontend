@@ -384,7 +384,7 @@ describe("Theme System - Light/Dark Mode", () => {
 
       // Should have sr-only text for screen readers
       const srText = toggleButton.querySelector(".sr-only");
-      expect(srText?.textContent).toBe("Toggle theme");
+      expect(srText?.textContent).toBe("Cambiar tema"); // Spanish text
     });
   });
 

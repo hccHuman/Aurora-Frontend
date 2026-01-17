@@ -36,7 +36,8 @@ describe('Aurora Chat Integration Flow', () => {
         expect(sendMessage).toHaveBeenCalledWith(userInput, undefined);
         expect(result).toEqual({
             text: mockApiResponse.aiMessage.contenido,
-            chatId: mockChatId
+            chatId: mockChatId,
+            aiMessage: mockApiResponse.aiMessage
         });
     });
 
@@ -63,7 +64,8 @@ describe('Aurora Chat Integration Flow', () => {
         expect(sendMessage).toHaveBeenCalledWith(userInput, initialChatId);
         expect(result).toEqual({
             text: mockApiResponse.aiMessage.contenido,
-            chatId: initialChatId
+            chatId: initialChatId,
+            aiMessage: mockApiResponse.aiMessage
         });
     });
 
