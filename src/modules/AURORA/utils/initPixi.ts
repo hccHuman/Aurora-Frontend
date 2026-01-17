@@ -11,16 +11,29 @@ import * as PIXI from "pixi.js";
 // Create a mutable copy/proxy of PIXI to safely polyfill missing properties
 const PIXI_GLOBAL = { ...PIXI };
 
-// Polyfill PIXI.settings if it doesn't exist (common in some bundles)
-if (!PIXI_GLOBAL.settings) {
-    PIXI_GLOBAL.settings = { RETINA_PREFIX: /@2x/ } as any;
-} else if (!PIXI_GLOBAL.settings.RETINA_PREFIX) {
-    PIXI_GLOBAL.settings.RETINA_PREFIX = /@2x/;
+// Force Global PIXI onto window
+if (typeof window !== "undefined") {
+    const wins = window as any;
+
+    // Ensure window.PIXI exists
+    if (!wins.PIXI) {
+        wins.PIXI = PIXI_GLOBAL;
+    }
+
+    // Polyfill PIXI.settings if it doesn't exist
+    if (!wins.PIXI.settings) {
+        wins.PIXI.settings = {};
+    }
+
+    // Polyfill RETINA_PREFIX
+    if (!wins.PIXI.settings.RETINA_PREFIX) {
+        wins.PIXI.settings.RETINA_PREFIX = /@2x/;
+    }
+
+    console.log("✅ Live2D Fix: PIXI global shimmed successfully", {
+        hasSettings: !!wins.PIXI.settings,
+        hasRetina: !!wins.PIXI.settings?.RETINA_PREFIX
+    });
 }
-
-// Expose globally for pixi-live2d-display
-(window as any).PIXI = PIXI_GLOBAL;
-
-console.log("✅ Live2D Fix: PIXI initialized globally via initPixi.ts");
 
 export default PIXI_GLOBAL;

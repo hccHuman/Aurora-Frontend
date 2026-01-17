@@ -125,6 +125,12 @@
     },
     "footer": {
         "brand_desc": "Tu tienda online de confianza con los mejores productos y atención al cliente.",
+        "contact_title": "Nuestros datos:",
+        "contact_info": {
+            "address": "Calle Ejemplo 123, 28000 Madrid, España",
+            "phone": "+34 123 456 789",
+            "email": "info@lahia.shop"
+        },
         "quick_links": "Enlaces Rápidos",
         "legal": "Legal",
         "rights": "Todos los derechos reservados",
@@ -198,5 +204,15 @@
         "mission_text": "Equipar a la nueva generación de pilotos con componentes que aguantan cualquier derrape. Nuestra misión es clara: que cada pieza que compres te acerque más al podio del asfalto urbano.",
         "join_title": "PISA A FONDO",
         "join_text": "¿Buscas mejorar tu coche? Has llegado al sitio indicado. Prepárate para quemar neumático con los mejores productos del mundillo."
+    },
+    "404": {
+        "title": "Página no encontrada",
+        "meta_title": "404 - Página no encontrada | Lahia Shop",
+        "meta_description": "La página que buscas no existe. Vuelve al inicio y sigue explorando.",
+        "heading": "¡Te has salido del circuito!",
+        "message": "La página que buscas no existe o ha derrapado fuera de la pista.",
+        "cta": "¡Vuelve al inicio y sigue drifteando! 🏎️💨",
+        "back_home": "Volver al Inicio",
+        "view_products": "Ver Productos"
     }
 }

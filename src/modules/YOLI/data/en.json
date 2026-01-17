@@ -125,6 +125,12 @@
     },
     "footer": {
         "brand_desc": "Your trusted online store with the best products and customer service.",
+        "contact_title": "Contact Information:",
+        "contact_info": {
+            "address": "123 Example Street, 28000 Madrid, Spain",
+            "phone": "+34 123 456 789",
+            "email": "info@lahia.shop"
+        },
         "quick_links": "Quick Links",
         "legal": "Legal",
         "rights": "All rights reserved",
@@ -198,5 +204,15 @@
         "mission_text": "Equipping the new generation of drivers with components that withstand any slide. Our mission is clear: every part you buy brings you closer to the urban asphalt podium.",
         "join_title": "FLOOR IT",
         "join_text": "Looking to upgrade your ride? You've come to the right place. Get ready to burn rubber with the best products in the scene."
+    },
+    "404": {
+        "title": "Page not found",
+        "meta_title": "404 - Page not found | Lahia Shop",
+        "meta_description": "The page you're looking for doesn't exist. Go back to the homepage and keep exploring.",
+        "heading": "You've left the track!",
+        "message": "The page you're looking for doesn't exist or has drifted off course.",
+        "cta": "Get back to the start and keep drifting! 🏎️💨",
+        "back_home": "Back to Home",
+        "view_products": "View Products"
     }
 }
