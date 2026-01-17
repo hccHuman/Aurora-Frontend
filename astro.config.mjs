@@ -2,22 +2,29 @@ import { defineConfig } from "astro/config";
 import fs from "fs";
 import react from "@astrojs/react";
 
-import sitemap from "@astrojs/sitemap";
-
 export default defineConfig({
-  site: "https://miweb.com",
-  integrations: [react(), sitemap()],
+  integrations: [react()],
   vite: {
     ssr: {
       // Mark external modules that shouldn't be bundled for SSR
       noExternal: ['framer-motion'],
     },
+    server: {
+      https: {
+        key: fs.readFileSync("./ssl/mysite.key"),
+        cert: fs.readFileSync("./ssl/mysite.crt"),
+      },
+      port: 4321,
+    },
     resolve: {
-      dedupe: ['react', 'react-dom', 'jotai'],
+      alias: {
+        // Alias pixi.js to our local patched copy to fix "RETINA_PREFIX" hydration error
+        // and avoid circular dependency
+        "pixi.js": "/src/vendor/pixi.mjs",
+      },
     },
-    optimizeDeps: {
-      include: ['react', 'react-dom', 'jotai'],
-    },
+    // Disable source maps in production to avoid loading src files
+    sourcemap: false,
     build: {
       rollupOptions: {
         output: {
@@ -38,12 +45,9 @@ export default defineConfig({
               return "vendor-i18n";
             }
 
-            // Live2D libraries - Split to ensure PIXI is loaded/patched before pixi-live2d-display
-            if (id.includes("node_modules/pixi-live2d-display")) {
-              return "vendor-live2d-display";
-            }
-            if (id.includes("node_modules/pixi.js") || id.includes("node_modules/@pixi")) {
-              return "vendor-pixi";
+            // Live2D libraries - pixi and pixi-live2d-display bundle normally
+            if (id.includes("node_modules/pixi") || id.includes("pixi-live2d")) {
+              return "vendor-live2d";
             }
 
             // ========== AURORA MODULES ==========
