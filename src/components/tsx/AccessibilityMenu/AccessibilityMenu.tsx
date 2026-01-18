@@ -98,7 +98,7 @@ const AccessibilityMenu: React.FC<Lang> = ({ lang }) => {
 
             {isOpen && (
                 <div
-                    className="absolute right-0 mt-3 w-80 bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl z-50 p-5 transition-all animate-in fade-in zoom-in-95 duration-300"
+                    className="fixed lg:absolute top-16 lg:top-auto right-4 lg:right-0 w-[calc(100vw-2rem)] lg:w-80 max-w-sm bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl z-50 p-5 transition-all animate-in fade-in zoom-in-95 duration-300"
                     role="menu"
                     aria-label={t("aria.accessibility_menu")}
                 >

@@ -12,6 +12,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { searchProducts } from '@/services/productService';
 import { useAtom } from 'jotai';
 import { searchStateAtom } from '@/store/searchStore';
+import { Search, Loader2 } from 'lucide-react';
 
 /**
  * Sanitizes search terms by removing potentially dangerous HTML characters.
@@ -141,7 +142,14 @@ export default function HeaderSearch({
   // No local dropdown results; modal opening happens from product cards below
 
   return (
-    <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
+    <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md group">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors">
+        {loading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Search className="w-4 h-4" />
+        )}
+      </div>
       <input
         id={id}
         name="q"
@@ -151,7 +159,7 @@ export default function HeaderSearch({
         type="search"
         placeholder={placeholder}
         aria-label={ariaLabel}
-        className="w-full rounded px-2 py-1 text-sm bg-transparent border border-gray-300 dark:border-gray-600"
+        className="w-full bg-white/10 dark:bg-slate-800/60 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 hover:bg-white/15 dark:hover:bg-slate-800/80 focus:bg-white/20 dark:focus:bg-slate-900/90 focus:border-sky-400 focus:ring-4 focus:ring-sky-500/20 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-400 shadow-lg shadow-black/10 transition-all outline-none"
       />
 
       {/* Dropdown removed — search runs live and updates the page's product grid */}

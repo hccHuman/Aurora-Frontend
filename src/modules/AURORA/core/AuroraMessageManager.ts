@@ -46,15 +46,15 @@ export async function processUserInput(rawInput: string, chatId?: number): Promi
       try {
         const userData = JSON.parse(userDataStr);
         if (userData && userData.nombre) {
-          enrichedText = `(Mensaje de ${userData.nombre}): ${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+          enrichedText = `(Mensaje de ${userData.nombre}): ${cleanText}.`;
         } else {
-          enrichedText = `${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+          enrichedText = `${cleanText}.`;
         }
       } catch (e) {
-        enrichedText = `${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+        enrichedText = `${cleanText}.`;
       }
     } else {
-      enrichedText = `${cleanText}. [System: Recuerda ser dulce, amable y no ser demasiado técnica.]`;
+      enrichedText = `${cleanText}.`;
     }
   }
 

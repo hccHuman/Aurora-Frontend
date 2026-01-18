@@ -99,7 +99,9 @@ export default function OrdersTable() {
             ))}
           </div>
         </div>
-
+        <div className="mb-5">
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} disabled={loading} />
+        </div>
         <div className="overflow-x-auto rounded-lg">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
             <thead>
@@ -150,13 +152,6 @@ export default function OrdersTable() {
             </tbody>
           </table>
         </div>
-
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          disabled={loading}
-        />
       </div>
     </section>
   );

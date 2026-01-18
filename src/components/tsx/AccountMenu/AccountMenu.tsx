@@ -57,15 +57,6 @@ const AccountMenu: React.FC<Lang> = ({ lang }) => {
             </a>
           )}
 
-          <a
-            href={`/${lang}/about`}
-            className="flex items-center gap-3 px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/30 hover:border-slate-600 rounded-lg text-slate-200 transition-all duration-200 group"
-            role="menuitem"
-          >
-            <span className="text-red-400 font-bold group-hover:scale-110 transition-transform">ℹ️</span>
-            <span>{t("about.title")}</span>
-          </a>
-
           <div className="h-px bg-slate-700/50 my-1 mx-2" />
 
           <a

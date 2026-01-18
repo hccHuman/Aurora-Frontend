@@ -1,9 +1,11 @@
 import { defineConfig } from "astro/config";
 import fs from "fs";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  integrations: [react()],
+  site: "https://lahia.shop",
+  integrations: [react(), sitemap()],
   vite: {
     ssr: {
       // Mark external modules that shouldn't be bundled for SSR

@@ -91,12 +91,12 @@
             "name": "Name"
         },
         "errors": {
-            "invalid_name": "Name is invalid 💔",
-            "invalid_email": "Email is invalid 💔",
-            "invalid_password": "Password must be at least 8 characters with 1 uppercase, 1 lowercase, one number, and one special character 💔",
-            "passwords_dont_match": "Passwords do not match 💔",
-            "unknown": "Unknown error",
-            "unknown_register": "Unknown error during registration"
+            "invalid_name": "The name you entered is invalid. Please use only letters and spaces, and make sure it is at least 2 characters long.",
+            "invalid_email": "The email address you entered is invalid. Make sure it follows the format example@domain.com.",
+            "invalid_password": "The password is invalid. It must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character from @$!%*?&._#-.",
+            "passwords_dont_match": "The passwords you entered do not match. Please make sure both password fields are identical.",
+            "unknown": "An unknown error occurred. Please try again or contact support if the issue persists.",
+            "unknown_register": "An unknown error occurred during registration. Please check your information and try again, or contact support if the problem continues."
         }
     },
     "header": {

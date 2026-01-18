@@ -61,7 +61,7 @@ export default function ProductCardReact({
         </div>
 
         {/* Botones */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 mt-auto">
           <button
             className="ac-btn ac-btn--primary"
             onClick={() => {

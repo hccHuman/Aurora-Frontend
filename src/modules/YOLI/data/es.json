@@ -91,12 +91,12 @@
             "name": "Nombre"
         },
         "errors": {
-            "invalid_name": "El nombre no es válido 💔",
-            "invalid_email": "El email no es válido 💔",
-            "invalid_password": "La contraseña debe tener mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial 💔",
-            "passwords_dont_match": "Las contraseñas no coinciden 💔",
-            "unknown": "Error desconocido",
-            "unknown_register": "Error desconocido durante el registro"
+            "invalid_name": "El nombre que ingresaste no es válido. Por favor, usa solo letras y espacios, y asegúrate de que tenga al menos 2 caracteres.",
+            "invalid_email": "El correo electrónico que ingresaste no es válido. Asegúrate de que siga el formato ejemplo@dominio.com.",
+            "invalid_password": "La contraseña no es válida. Debe tener al menos 8 caracteres e incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial de @$!%*?&._#-.",
+            "passwords_dont_match": "Las contraseñas que ingresaste no coinciden. Por favor, asegúrate de que ambos campos de contraseña sean idénticos.",
+            "unknown": "Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo o contacta con soporte si el problema persiste.",
+            "unknown_register": "Ha ocurrido un error desconocido durante el registro. Revisa tu información e inténtalo de nuevo, o contacta con soporte si el problema continúa."
         }
     },
     "header": {

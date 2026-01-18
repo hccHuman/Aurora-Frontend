@@ -25,7 +25,11 @@ const LogoutComponent: React.FC<{ lang?: string }> = ({ lang = "es" }) => {
         setUser({ loggedIn: false, user: null, ready: true });
         sessionStorage.setItem("login", "false");
         sessionStorage.setItem("user", JSON.stringify([]));
-        history.back();
+
+        // Dispatch global event to close all menus
+        window.dispatchEvent(new CustomEvent("aurora-logout"));
+
+        window.location.href = "/";
       } catch (e) {
         console.error("❌ Error al hacer logout", e);
       }

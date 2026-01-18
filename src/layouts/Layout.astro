@@ -31,8 +31,9 @@ const {
   canonicalUrl,
   previewImage,
   home,
-  showSearch = false,
+  showSearch = true,
   searchCategoryId = null,
+  about,
 } = Astro.props;
 ---
 
@@ -166,6 +167,8 @@ const {
       home={home}
       showSearch={showSearch}
       searchCategoryId={searchCategoryId}
+      about={about}
+      showSearch={showSearch}
     />
     <main id="main-content" class="flex-1 flex flex-col pt-4 animate-pageChange" tabindex="-1">
       <slot />

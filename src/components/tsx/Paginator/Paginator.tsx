@@ -27,7 +27,7 @@ export default function Paginator({
   };
 
   return (
-    <nav className="flex justify-center gap-4 my-8" aria-label="Pagination">
+    <nav className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 my-8 px-2" aria-label="Pagination">
       <button
         className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition disabled:opacity-50"
         onClick={() => goTo(page - 1)}

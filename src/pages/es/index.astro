@@ -4,21 +4,18 @@ import CategoryListComponent from "@/components/tsx/Paginator/CategoryListCompon
 
 let lang = "es";
 ---
+
 <Layout
   lang={lang}
   title="Aurora Chat – Asistente IA accesible | Lahia Shop"
-
   metaTitle="Aurora Chat – Asistente IA accesible para tu compra en Lahia Shop"
-
   description="Aurora Chat es el asistente virtual con inteligencia artificial de Lahia Shop, diseñado para ayudarte a encontrar productos de automoción de forma rápida, accesible y personalizada."
-
   metaDescription="Aurora Chat es el asistente virtual con inteligencia artificial de Lahia Shop, diseñado para ayudarte a encontrar productos de automoción de forma rápida, accesible y personalizada."
-
   canonicalUrl="https://lahia.shop/es/"
-
   previewImage="https://lahia.shop/assets/preview.png"
-
+  showSearch={false}
   home={false}
+  about={false}
 >
   <!-- Product Categories Grid: Fetches and displays categories from backend -->
   <CategoryListComponent client:load lang={lang} />

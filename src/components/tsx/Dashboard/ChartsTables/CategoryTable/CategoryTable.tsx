@@ -147,7 +147,9 @@ export default function CategoryTable() {
           Add Category
         </button>
       </div>
-
+      <div className="mb-5">
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} disabled={loading} />
+      </div>
       <div className="overflow-x-auto rounded-lg">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
           <thead className="bg-gray-50 dark:bg-slate-800">
@@ -312,8 +314,6 @@ export default function CategoryTable() {
           </tbody>
         </table>
       </div>
-
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} disabled={loading} />
     </section>
   );
 }

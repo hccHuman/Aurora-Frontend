@@ -38,7 +38,7 @@ import AccountMenu from "../tsx/AccountMenu/AccountMenu";
 import HeaderSearch from "../tsx/Header/HeaderSearch";
 import AccessibilityMenu from "../tsx/AccessibilityMenu/AccessibilityMenu";
 import CartCount from "../tsx/Header/CartCount";
-const { lang, home, showSearch = false, searchCategoryId = null } = Astro.props;
+const { lang, home, showSearch, searchCategoryId = null, about } = Astro.props;
 
 import { t } from "@/modules/YOLI/injector";
 import "@/styles/Components/Header.css";
@@ -94,7 +94,7 @@ import cartImg from "@/assets/Icons/dark/cart.png";
       <div class="flex items-center gap-4">
         <!-- Search component (desktop) -->
         {
-          showSearch && (
+          showSearch && home && (
             <div role="search">
               <HeaderSearch
                 client:load
@@ -251,39 +251,50 @@ import cartImg from "@/assets/Icons/dark/cart.png";
   {/* MOBILE NAVIGATION MENU (hidden by default, toggled with hamburger) */}
   <nav
     id="mobile-menu"
-    class="lg:hidden flex flex-col gap-4 px-4 py-4 bg-slate-900 text-white border-sky-100 dark:border-slate-600 border-t bg-sky-50 dark:bg-slate-950 transition-colors duration-300"
+    class="lg:hidden flex flex-col gap-4 px-4 py-4 border-sky-100 dark:border-slate-600 border-t bg-slate-900 dark:bg-slate-950 text-white dark:text-slate-100 transition-colors duration-300"
     aria-label={t("header.aria.nav_mobile", lang)}
     role="navigation"
   >
     {/* Quick links section */}
-    <div class="flex items-center gap-4">
-      <p class="dark:text-slate-100">{t("header.quick_links", lang)}</p>
-      {
-        home && (
-          <a href={`/${lang}/`} class="hover:text-red-400 transition" role="link">
-            {t("header.home", lang)}
-          </a>
-        )
-      }
-      <a
-        href={`/${lang}/products/allproducts`}
-        class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
-        role="link"
-      >
-        {t("header.products", lang)}
-      </a>
-      <a
-        href={`/${lang}/about`}
-        class="dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition py-2"
-        role="link"
-      >
-        {t("about.title", lang)}
-      </a>
+    <div class="flex flex-col gap-2">
+      <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+        {t("header.quick_links", lang)}
+      </p>
+      <div class="flex flex-col md:flex-row md:flex-wrap gap-2 md:gap-6 md:items-center">
+        {
+          home && (
+            <a
+              href={`/${lang}/`}
+              class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              role="link"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-red-400" />
+              {t("header.home", lang)}
+            </a>
+          )
+        }
+        <a
+          href={`/${lang}/products/allproducts`}
+          class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-100"
+          role="link"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+          {t("header.products", lang)}
+        </a>
+        <a
+          href={`/${lang}/about`}
+          class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-100"
+          role="link"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          {t("about.title", lang)}
+        </a>
+      </div>
     </div>
 
     <!-- Mobile search (client) -->
     {
-      showSearch && (
+      showSearch && !home && !about && (
         <div role="search" class="w-full">
           <HeaderSearch
             client:load
@@ -577,6 +588,21 @@ import cartImg from "@/assets/Icons/dark/cart.png";
        * Click detection system that closes menus when user clicks elsewhere
        * Excludes: search inputs, theme toggle, header element (to avoid closing on internal clicks)
        */
+      function closeAllMenus() {
+        if (accountMenu) accountMenu.classList.add("hidden");
+        if (cartMenu) cartMenu.classList.add("hidden");
+        if (accountMenuMobile) accountMenuMobile.classList.add("hidden");
+        if (cartMenuMobile) cartMenuMobile.classList.add("hidden");
+        if (mobileMenu) mobileMenu.classList.remove("open");
+
+        // Update aria-expanded attributes
+        if (accountToggle) accountToggle.setAttribute("aria-expanded", "false");
+        if (cartToggle) cartToggle.setAttribute("aria-expanded", "false");
+        if (accountToggleMobile) accountToggleMobile.setAttribute("aria-expanded", "false");
+        if (cartToggleMobile) cartToggleMobile.setAttribute("aria-expanded", "false");
+        if (mobileToggle) mobileToggle.setAttribute("aria-expanded", "false");
+      }
+
       document.addEventListener("click", (e) => {
         const target = e.target;
 
@@ -595,20 +621,11 @@ import cartImg from "@/assets/Icons/dark/cart.png";
           return;
         }
 
-        // Close all menus if click is outside header
-        if (accountMenu) accountMenu.classList.add("hidden");
-        if (cartMenu) cartMenu.classList.add("hidden");
-        if (accountMenuMobile) accountMenuMobile.classList.add("hidden");
-        if (cartMenuMobile) cartMenuMobile.classList.add("hidden");
-        if (mobileMenu) mobileMenu.classList.remove("open");
-
-        // Update aria-expanded attributes
-        if (accountToggle) accountToggle.setAttribute("aria-expanded", "false");
-        if (cartToggle) cartToggle.setAttribute("aria-expanded", "false");
-        if (accountToggleMobile) accountToggleMobile.setAttribute("aria-expanded", "false");
-        if (cartToggleMobile) cartToggleMobile.setAttribute("aria-expanded", "false");
-        if (mobileToggle) mobileToggle.setAttribute("aria-expanded", "false");
+        closeAllMenus();
       });
+
+      // Listen for global logout event
+      window.addEventListener("aurora-logout", closeAllMenus);
     }
 
     // Initialize when DOM is ready
