@@ -50,7 +50,7 @@ import { auroraVoiceInstanceAtom } from "@/store/chatStore";
 // - Map audio input (visemes) to the model's mouth parameters.
 // - Apply expressions and motions coming from Aurora's state.
 // - Provide debug helpers to play motions/expressions manually.
-// Este componente se puede usar como hijo en un popup React
+// This component can be used as a child in a React popup.
 const VtuberLive2D: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement | null>(null);
   const modelRef = useRef<Live2DModelType | null>(null);
@@ -100,8 +100,8 @@ const VtuberLive2D: React.FC = () => {
       // Resize renderer to match container exactly
       app.renderer.resize(containerW, containerH);
 
-      // "Alejar cámara un poco más": 0.72 multiplier --> ZOOM IN: 1.3 (+60%)
-      // "Más abajo": Increase Y (from -180 closer to 0 or positive) --> Shoulders up
+      // "Zoom out a bit more": 0.72 multiplier --> ZOOM IN: 1.3 (+60%)
+      // "Lower": Increase Y (from -180 closer to 0 or positive) --> Shoulders up
       const scaleToFitHeight = (containerH * 1.3) / 1200;
       model.scale.set(scaleToFitHeight);
 
@@ -170,7 +170,7 @@ const VtuberLive2D: React.FC = () => {
     window.addEventListener("resize", updateLayout);
 
     const init = async () => {
-      console.log("🟦 Iniciando aplicación PIXI...");
+      console.log("🟦 Starting PIXI application...");
 
       // Wait for Live2D globals to be ready (set by Layout.astro)
       if ((window as any).__live2dReady) {
@@ -325,7 +325,7 @@ const VtuberLive2D: React.FC = () => {
     if (m.internalModel && (m.internalModel as any).expressionManager) {
       (m.internalModel as any).expressionManager
         .setExpression(expUrl)
-        .catch(() => console.warn("⚠️ No se encontró la expresión:", expression));
+        .catch(() => console.warn("⚠️ Expression not found:", expression));
     }
   }, [expression, isModelLoaded]);
 

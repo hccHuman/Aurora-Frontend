@@ -21,7 +21,7 @@ export default function initNewProductsChart(
   const options = {
     chart: {
       type: "bar",
-      height: 300, // altura aumentada para ver las barras
+      height: 300, // increased height to see the bars
       toolbar: { show: false },
     },
     colors: ["#800080", "#FF69B4"],

@@ -81,7 +81,8 @@ export const AuroraChatFrame: React.FC = () => {
     } catch (error) {
       console.error("Error processing user input:", error);
       // Optional: Add an error message to the chat
-      setMessages((prev) => [...prev, { remitente: "ia", contenido: "Hubo un error al procesar tu mensaje. Inténtalo de nuevo." }]);
+      // Note: This string should ideally be localized
+      setMessages((prev) => [...prev, { remitente: "ia", contenido: "There was an error processing your message. Please try again." }]);
     } finally {
       setIsTyping(false);
     }

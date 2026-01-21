@@ -23,7 +23,7 @@ export const LoginComponent: React.FC<Auth> = ({ lang }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // estado ojo
+  const [showPassword, setShowPassword] = useState(false); // visibility state
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);

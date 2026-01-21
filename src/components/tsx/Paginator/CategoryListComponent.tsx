@@ -32,7 +32,7 @@ export default function CategoryListComponent({ lang = "es" }: Category) {
       setCategories(data);
       setTotalPages(totalPages);
     } catch (err) {
-      console.error("Error cargando categorías:", err);
+      console.error("Error loading categories:", err);
       setCategories([]);
       setTotalPages(1);
     }
@@ -40,7 +40,7 @@ export default function CategoryListComponent({ lang = "es" }: Category) {
   };
 
   useEffect(() => {
-    const size = getResponsivePageSize(); // aquí sí existe window
+    const size = getResponsivePageSize(); // window exists here
     setPageSize(size);
     loadCategories(page, size);
   }, [page]);

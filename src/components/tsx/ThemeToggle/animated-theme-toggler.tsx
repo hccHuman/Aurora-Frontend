@@ -50,7 +50,7 @@ import { useYOLI } from "@/modules/YOLI/injector";
  */
 export const AnimatedThemeToggler = ({
   className,
-  duration, // ignoramos este valor si viene (se calcula dinámicamente)
+  duration, // ignore this value if it comes (it is calculated dynamically)
   lang = "es",
   ...props
 }: AnimatedThemeTogglerProps) => {

@@ -41,7 +41,7 @@ export default function CategoryProductsListComponent({ categoryId, lang = "es" 
       setProducts(data);
       setTotalPages(totalPages);
     } catch (err) {
-      console.error("Error cargando productos de categoría:", err);
+      console.error("Error loading category products:", err);
       setProducts([]);
       setTotalPages(1);
     }
@@ -68,7 +68,7 @@ export default function CategoryProductsListComponent({ categoryId, lang = "es" 
             setTotalPages(1);
           }
         } catch (err) {
-          console.error('Error cargando búsqueda por categoría', err);
+          console.error('Error loading category search', err);
           setProducts([]);
           setTotalPages(1);
         }

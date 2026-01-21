@@ -22,7 +22,7 @@ const NewProductsChart: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(document.documentElement.classList.contains("dark"));
 
-  const MAX_ITEMS = 7; // mostrar solo últimos 7 productos
+  const MAX_ITEMS = 7; // show only the last 7 products
 
   /** INIT CHART */
   useEffect(() => {
@@ -66,7 +66,7 @@ const NewProductsChart: React.FC = () => {
     return () => { mounted = false; };
   }, [range, isDarkMode]);
 
-  /** OBSERVAR MODO OSCURO */
+  /** OBSERVE DARK MODE */
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.documentElement.classList.contains("dark"));
@@ -87,8 +87,8 @@ const NewProductsChart: React.FC = () => {
           onChange={(e) => setRange(e.target.value as StatsRange)}
           className="rounded-md border px-2 py-1 text-sm dark:bg-slate-900 dark:text-white"
         >
-          <option value="30d">30 días</option>
-          <option value="1y">1 año</option>
+          <option value="30d">30 days</option>
+          <option value="1y">1 year</option>
         </select>
       </div>
 

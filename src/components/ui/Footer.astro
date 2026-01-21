@@ -12,7 +12,7 @@ const { lang = "es" } = Astro.props;
 import { t } from "@/modules/YOLI/injector";
 import FooterModalInitializer from "../tsx/Modal/FooterModalInitializer";
 
-// IMPORT ESTÁTICO
+// STATIC IMPORTS
 import TermsES from "../../content/legal/terms.es.md";
 import TermsEN from "../../content/legal/terms.en.md";
 import PrivacyES from "../../content/legal/privacy.es.md";
@@ -20,7 +20,7 @@ import PrivacyEN from "../../content/legal/privacy.en.md";
 import CookiesES from "../../content/legal/cookies.es.md";
 import CookiesEN from "../../content/legal/cookies.en.md";
 
-// Seleccionamos según idioma
+// Select based on language
 const TermsComponent = lang === "es" ? TermsES : TermsEN;
 const PrivacyComponent = lang === "es" ? PrivacyES : PrivacyEN;
 const CookiesComponent = lang === "es" ? CookiesES : CookiesEN;

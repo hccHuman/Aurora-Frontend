@@ -3,6 +3,7 @@ import LoginReader from "@/components/tsx/statement/loginReader";
 
 // src/pages/index.astro
 ---
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,20 +11,20 @@ import LoginReader from "@/components/tsx/statement/loginReader";
     <script type="module">
       async function redirectByLang() {
         try {
-          // 1️⃣ Detectamos el idioma del navegador
+          // 1️⃣ Detect browser language
           const userLang = navigator.language || navigator.userLanguage;
           const shortLang = userLang.slice(0, 2); // ej. "es-ES" -> "es"
 
-          // 2️⃣ Traemos el JSON desde public
+          // 2️⃣ Fetch JSON from public
           const res = await fetch("/assets/langs.json");
           if (!res.ok) throw new Error("No se pudo cargar langs.json");
           const langMap = await res.json();
 
-          // 3️⃣ Redirigimos según el idioma, si no existe, fallback a inglés
+          // 3️⃣ Redirect based on language, fallback to English if not found
           const redirectUrl = langMap[shortLang] || langMap["en"];
           window.location.replace(redirectUrl);
         } catch (err) {
-          console.error("Error al redirigir por idioma:", err);
+          console.error("Error redirecting by language:", err);
           // Fallback manual
           window.location.replace("/");
         }
@@ -34,6 +35,6 @@ import LoginReader from "@/components/tsx/statement/loginReader";
   </head>
   <body>
     <LoginReader client:load />
-    <p>Redirigiendo...</p>
+    <p>Redirecting...</p>
   </body>
 </html>

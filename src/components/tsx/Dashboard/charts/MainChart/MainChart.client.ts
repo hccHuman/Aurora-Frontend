@@ -27,8 +27,8 @@ export default function initMainChart(
     markers: { size: 8, hover: { size: 10 }, strokeWidth: 2 },
     tooltip: {
       enabled: true,
-      shared: false, // un solo valor
-      intersect: true, // obliga a tocar el punto
+      shared: false, // single value
+      intersect: true, // requires touching the point
       followCursor: false,
       theme: isDarkMode() ? "dark" : "light",
       y: { formatter: (val: number) => `$${val}` },
@@ -73,7 +73,7 @@ export default function initMainChart(
           animations: {
             enabled: true,
             easing: "easeout",
-            speed: 800, // duración animación en ms
+            speed: 800, // animation duration in ms
           },
         },
         true,

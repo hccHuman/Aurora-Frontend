@@ -57,7 +57,7 @@ export default function CategoryTable() {
     setLoading(true);
     const res = await fetchCategories(currentPage, size);
     if (res) {
-      // Mapea img_url a img
+      // Maps img_url to img
       const mapped = res.data.map((c: any) => ({
         ...c,
         img: c.img_url ?? null,
@@ -80,7 +80,7 @@ export default function CategoryTable() {
     setDraftImg(c.img ?? "");
   }
 
-  /* ✚ Crear nueva categoría */
+  /* ✚ Create new category */
   /**
    * Prepares the interface for creating a new category.
    */
@@ -99,7 +99,7 @@ export default function CategoryTable() {
    */
   async function onSave(c: Category | null) {
     if (c) {
-      // Actualización
+      // Update
       const saved = await saveCategoryUpdate({
         id: c.id,
         nombre: draftName,
@@ -113,7 +113,7 @@ export default function CategoryTable() {
         );
       }
     } else {
-      // Crear nueva categoría
+      // Create new category
       const saved = await saveCategory({ nombre: draftName, img_url: draftImg });
       if (saved) {
         setItems((prev) => [saved, ...prev]);
@@ -255,7 +255,7 @@ export default function CategoryTable() {
                   </motion.tr>
                 ))}
 
-                {/* Fila de creación */}
+                {/* Creation row */}
                 {editingId === "new" && (
                   <motion.tr
                     key="new-category"

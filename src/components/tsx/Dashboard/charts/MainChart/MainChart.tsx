@@ -23,7 +23,7 @@ const MainChart: React.FC = () => {
 
   const [total, setTotal] = useState(0);
 
-  /** Inicializa chart solo una vez */
+  /** Initializes chart only once */
   useEffect(() => {
     if (!ref.current || chartRef.current) return;
 
@@ -33,7 +33,7 @@ const MainChart: React.FC = () => {
     });
   }, []);
 
-  /** Fetch + update chart directamente */
+  /** Fetch + update chart directly */
   useEffect(() => {
     let mounted = true;
 
@@ -42,14 +42,14 @@ const MainChart: React.FC = () => {
       const data = await fetchSalesStats(range);
       if (!mounted || !data) return;
 
-      // Calculamos total
+      // Calculate total
       const totalVal = data.series.reduce(
         (acc: number, s: any) => acc + s.data.reduce((a: number, b: number) => a + b, 0),
         0
       );
       setTotal(totalVal);
 
-      // Actualizamos chart directamente
+      // Update chart directly
       chartRef.current?.update(data.series, data.categories, isDarkMode);
 
       setLoading(false);
@@ -81,10 +81,10 @@ const MainChart: React.FC = () => {
           onChange={(e) => setRange(e.target.value as StatsRange)}
           className="rounded-md border px-2 py-1 text-sm dark:bg-slate-900 dark:text-white"
         >
-          <option value="7d">7 días</option>
-          <option value="30d">30 días</option>
-          <option value="90d">90 días</option>
-          <option value="1y">1 año</option>
+          <option value="7d">7 days</option>
+          <option value="30d">30 days</option>
+          <option value="90d">90 days</option>
+          <option value="1y">1 year</option>
         </select>
       </div>
 

@@ -184,7 +184,6 @@ export class AuroraVoiceLocal {
 
         // Also dispatch window event for compatibility
         try {
-          // console.log("👄 Dispatching lip sync:", v.toFixed(2)); // Uncomment for noisy debug
           window.dispatchEvent(new CustomEvent("aurora-lipsync", { detail: v }));
         } catch (e) { }
 
