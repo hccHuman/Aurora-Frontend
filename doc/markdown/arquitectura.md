@@ -106,6 +106,17 @@ Aurora utiliza **Jotai** para una gestión de estado atómica y eficiente. Esto 
 
 ---
 
+## 🌐 Navegación SPA y Persistencia de Componentes
+
+Aurora implementa **ClientRouter** (Astro 5) para navegación sin recargas completas:
+
+- **Ventaja Principal**: Componentes como `VtuberLive2D` persisten su estado durante la navegación, permitiendo que las animaciones y síntesis de voz continúen sin interrupciones.
+- **Implementación**: Se incluye `<ClientRouter />` en `src/layouts/Layout.astro`.
+- **Event Listeners**: Se escucha `astro:after-swap` para reinicializar listeners de componentes específicos (ej: menús desplegables) tras cada transición.
+- **Impacto en UX**: Experiencia más fluida y profesional, especialmente en el módulo AURORA (Chat + Avatar).
+
+---
+
 ## 🛠️ Aviso Logístico de Bloqueo y Anomalías (A.L.B.A.)
 
 A.L.B.A. es el subsistema encargado de la resiliencia del frontend. Captura errores de red, fallos en la IA o excepciones en los servicios y los traduce en notificaciones visuales (Toasts) para el usuario.

@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { fetchCategories } from "@/services/categoryService";
 import CategoryProductsListComponent from "@/components/tsx/Paginator/CategoryProductsListComponent";
-// ⚡ getStaticPaths se ejecuta en build
+// ⚡ getStaticPaths runs at build time
 export async function getStaticPaths() {
   const categories: any[] = await fetchCategories();
 
@@ -11,10 +11,10 @@ export async function getStaticPaths() {
   }));
 }
 
-// Parámetro dinámico de la URL
+// Dynamic URL parameter
 const { categories } = Astro.params;
 
-// Traemos todas las categorías para obtener el id
+// Fetch all categories to get the ID
 const allCategories: any[] = await fetchCategories();
 const currentCategory = allCategories.find(
   (cat: any) => cat.nombre.toLowerCase().replace(/\s+/g, "-") === categories

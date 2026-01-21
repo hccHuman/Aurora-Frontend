@@ -26,9 +26,12 @@ Contiene activos estáticos que no pasan por el pipeline de compilación.
 
 ### `/doc`
 Documentación técnica y de diseño.
-- **`markdown/`**: Guías detalladas en formato MD.
+- **`markdown/`**: Guías detalladas en formato MD (Arquitectura, Avatar, Animaciones, etc.).
 - **`tests/doc/`**: Documentación específica autogenerada de las pruebas (Unit, Integration, System, E2E).
 - **`pdf/`**: Documentos oficiales del proyecto (Anteproyecto, Glosario, Guía de Diseño).
+
+### `/raíz del proyecto`
+- **`products_clean.json`**: Archivo con catálogo de 142 productos extraído en formato JSON simplificado (id + img_url) para fines de catálogo visual.
 
 ---
 

@@ -26,10 +26,11 @@ Coloca nuevos archivos en `public/models/haru/runtime/` respetando la estructura
 ## 3) Inicialización paso a paso
 
 1. Crear `PIXI.Application` con las dimensiones deseadas y `resolution` según `window.devicePixelRatio`.
-2. Limpiar y montar el `canvas` en el contenedor `canvasRef`.
-3. Cargar el modelo con `await Live2DModel.from(modelPath)`. Este método descarga y parsea el `model3.json` y sus recursos relacionados.
-4. Escuchar el evento `model.once('load', ...)` para ejecutar tareas post-carga (detener motions, reset de expresión, detectar parámetros expuestos).
-5. Registrar el ticker necesario: `Live2DModel.registerTicker(Ticker)`. Esto enlaza la runtime de Live2D con el sistema de tiempo de PIXI.
+2. Validar que el contenedor (`canvasRef`) tenga dimensiones no-nulas antes de PIXI (esperar con async loop si es necesario).
+3. Limpiar y montar el `canvas` en el contenedor `canvasRef`.
+4. Cargar el modelo con `await Live2DModel.from(modelPath)`. Este método descarga y parsea el `model3.json` y sus recursos relacionados.
+5. Escuchar el evento `model.once('load', ...)` para ejecutar tareas post-carga (detener motions, reset de expresión, detectar parámetros expuestos).
+6. Registrar el ticker necesario: `Live2DModel.registerTicker(Ticker)`. Esto enlaza la runtime de Live2D con el sistema de tiempo de PIXI.
 
 ## 4) Posicionamiento y Escalado Adaptativo
 
@@ -45,9 +46,21 @@ En dispositivos móviles, para evitar que las piernas del modelo Live2D se vean 
 - **Función**: Corta visualmente el modelo a la altura de la cintura.
 - **Beneficio**: Mantiene la limpieza visual de la interfaz y evita solapamientos antiestéticos con el historial de mensajes.
 
-6. Añadir el modelo al `app.stage`, fijar `model.scale`, `model.x`, `model.y` y propiedades como `interactive` si se requiere.
-7. (Opcional) Añadir un `PIXI.Sprite` como fondo para estética.
-8. Añadir un `app.ticker` adicional que invoque `model.update(...)` como redundancia en entornos donde la integración automática no funcione.
+7. Añadir el modelo al `app.stage`, fijar `model.scale`, `model.x`, `model.y` y propiedades como `interactive` si se requiere.
+8. (Opcional) Añadir un `PIXI.Sprite` como fondo para estética.
+9. Añadir un `app.ticker` adicional que invoque `model.update(...)` como redundancia en entornos donde la integración automática no funcione.
+
+## 9) Persistencia del Avatar en Navegación SPA
+
+**Problema resuelto**: Antes, la navegación entre páginas causaba recargas completas que destruían el componente `VtuberLive2D`, interrumpiendo animaciones y síntesis de voz.
+
+**Solución implementada**:
+- **ClientRouter**: Se añadió `<ClientRouter />` en `src/layouts/Layout.astro` para navegación SPA sin recargas completas.
+- **Persistencia de Estado**: El componente `VtuberLive2D` ya no se desmonta durante transiciones; los listeners de voz persisten.
+- **Detección de Lenguaje**: El componente ahora detecta el idioma actual desde la URL (`/en/` vs `/es/`) y ajusta la síntesis de voz en consecuencia sin reinicializar innecesariamente.
+- **Reinicialización de Listeners**: Tras transiciones Astro, se escucha `astro:after-swap` para reinicializar otros listeners (ej: menús desplegables en Header).
+
+**Impacto**: Las animaciones de boca continúan fluidamente incluso al navegar a otra página.
 
 ## 6) Lip-sync (cómo se mueve la boca)
 
@@ -99,7 +112,7 @@ Buenas prácticas:
 - Nombres consistentes: usar convenciones claras (ej. `smile`, `neutral`, `haru_g_idle`) para que el código que solicita motions/expressions no necesite mapeos adicionales.
 - Validar que las rutas relativas dentro de `model3.json` y los assets coinciden con `public/models/...`.
 
-## 8) Integración con la IA y flujo de control
+## 10) Integración con la IA y flujo de control
 
 Flujo típico:
 

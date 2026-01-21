@@ -26,6 +26,8 @@ Aurora utiliza una combinación de **Framer Motion** para componentes React y **
 ### Componentes de Navegación
 - **Header**: El menú móvil tiene transiciones suaves de deslizamiento y opacidad. Los menús desplegables (cuenta, carrito) usan una animación de escala y desvanecimiento (`dropdown-animate`).
 - **Transiciones de Página**: Se aplica un efecto de deslizamiento vertical suave (`animate-pageChange`) al cambiar de ruta, proporcionando continuidad visual.
+- **ClientRouter (Astro 5)**: Se utiliza `<ClientRouter />` en `Layout.astro` para habilitar navegación SPA sin recargas completas, permitiendo que componentes como `VtuberLive2D` persistan su estado durante la navegación.
+- **Event Listeners Post-Transición**: Se escucha el evento `astro:after-swap` para reinicializar listeners (ej: menús desplegables) tras transiciones SPA.
 
 ### Experiencia E-commerce
 - **Tarjetas de Producto**: Las imágenes aparecen con un ligero escalado y desvanecimiento al entrar en el viewport (`motion.img`).
