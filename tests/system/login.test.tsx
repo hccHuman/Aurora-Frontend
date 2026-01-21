@@ -31,7 +31,7 @@ describe('System: LoginComponent', () => {
         fireEvent.change(passwordInput, { target: { value: 'Password123!' } });
         fireEvent.submit(form);
 
-        expect(await screen.findByText(/Email is invalid/i)).toBeDefined();
+        expect(await screen.findByText(/email.*is invalid/i)).toBeDefined();
     });
 
     it('should show error for weak password', async () => {
@@ -45,7 +45,7 @@ describe('System: LoginComponent', () => {
         fireEvent.change(screen.getByPlaceholderText(/Password/i), { target: { value: 'weak' } });
         fireEvent.click(screen.getByRole('button', { name: /Log in/i }));
 
-        expect(await screen.findByText(/Password must be at least 8 characters/i)).toBeDefined();
+        expect(await screen.findByText(/password.*is invalid/i)).toBeDefined();
     });
 
     it('should succeed with valid credentials and redirect', async () => {

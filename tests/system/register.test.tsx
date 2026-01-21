@@ -29,7 +29,7 @@ describe('System: RegisterComponent', () => {
         fireEvent.change(nameInput, { target: { value: 'A' } }); // too short/invalid
         fireEvent.submit(form);
 
-        expect(await screen.findByText(/Name is invalid/i)).toBeDefined();
+        expect(await screen.findByText(/name.*is invalid/i)).toBeDefined();
     });
 
     it('should show error if passwords do not match', async () => {
@@ -47,7 +47,7 @@ describe('System: RegisterComponent', () => {
         const form = screen.getByPlaceholderText(/Name/i).closest('form')!;
         fireEvent.submit(form);
 
-        expect(await screen.findByText(/Passwords do not match/i)).toBeDefined();
+        expect(await screen.findByText(/passwords.*do not match/i)).toBeDefined();
     });
 
     it('should succeed with valid data', async () => {

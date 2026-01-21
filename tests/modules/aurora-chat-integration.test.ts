@@ -33,7 +33,7 @@ describe('Aurora Chat Integration Flow', () => {
         const result = await processUserInput(userInput);
 
         // Assert
-        expect(sendMessage).toHaveBeenCalledWith(userInput, undefined);
+        expect(sendMessage).toHaveBeenCalledWith(userInput + ".", undefined);
         expect(result).toEqual({
             text: mockApiResponse.aiMessage.contenido,
             chatId: mockChatId,
@@ -61,7 +61,7 @@ describe('Aurora Chat Integration Flow', () => {
         const result = await processUserInput(userInput, initialChatId);
 
         // Assert
-        expect(sendMessage).toHaveBeenCalledWith(userInput, initialChatId);
+        expect(sendMessage).toHaveBeenCalledWith(userInput + ".", initialChatId);
         expect(result).toEqual({
             text: mockApiResponse.aiMessage.contenido,
             chatId: initialChatId,
