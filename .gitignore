@@ -20,10 +20,13 @@ pnpm-debug.log*
 .DS_Store
 
 # jetbrains setting folder
-.idea/
+idea/
 
 # test files and reports
 tests/reports/
 
 # vscode settings
 .vscode/
+
+# coverage test folder
+coverage/

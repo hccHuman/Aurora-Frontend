@@ -34,7 +34,7 @@ git --version
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/aurora-frontend.git
+git clone https://github.com/hccHuman/Aurora-Frontend
 
 # Navegar al directorio del proyecto
 cd aurora-frontend
