@@ -6,12 +6,13 @@ Aurora es una plataforma de e-commerce revolucionaria que combina la potencia de
 
 ## 🎯 Características Principales
 
-### 🤖 **Sistema Tri-Modal de IA**
+### 🤖 **Sistema Multi-Modal de IA**
 
 - **🧠 LUCIA** - Lógica Unificada de Comprensión e Interfaz Accesible
 - **💾 MARIA** - Módulo Administrador y Redireccionador Interno de Aplicación
 - **💖 ANA** - Analizador de Niveles Afectivos
 - **📡 YOLI** - Yector Omnilingüe de Lenguajes Inyectables
+- **🛡️ ALBA** - Aviso Logístico de Bloqueo y Anomalías
 - **🤖 AURORA** - Interfaz de Usuario y Avatar Inteligente
 
 ### 🛒 **Funcionalidades E-commerce**
@@ -75,6 +76,8 @@ Es responsable de la gestión de procesos, coordinación entre módulos y manten
 import { appState, navigateTo } from "./modules/MARIA/context";
 ```
 
+## 💖 ANA - La Conciencia Emocional
+
 A.N.A. constituye la **capa emocional** de la IA.  
 Su función es detectar, interpretar y regular las expresiones emocionales en el avatar, manteniendo un equilibrio emocional natural y coherente.
 
@@ -88,6 +91,17 @@ Su función es inyectar en componentes y páginas el texto correspondiente de un
 import { t } from "./modules/YOLI/injector";
 ```
 
+## 🛡️ ALBA - El Sistema de Resiliencia
+
+A.L.B.A. es el **subsistema de gestión de errores y resiliencia** del frontend.  
+Su función es capturar errores de red, fallos en la IA o excepciones en los servicios y traducirlos en notificaciones visuales (Toasts) para el usuario.
+
+```typescript
+// Ejemplo de uso
+import { AlbaClient } from "./modules/ALBA/AlbaClient";
+import { handleInternalError } from "./modules/ALBA/ErrorHandler";
+```
+
 ## 🌌 Integración General
 
 | Módulo         | Rol Principal                        | Tipo de Procesamiento   | Interacción                           |
@@ -95,6 +109,8 @@ import { t } from "./modules/YOLI/injector";
 | **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico      | Coordina y gestiona todos los módulos |
 | **L.U.C.I.A.** | Comprensión e interfaz accesible     | Cognitivo / Lingüístico | Comunica la IA con el usuario         |
 | **A.N.A.**     | Análisis y regulación emocional      | Afectivo / Adaptativo   | Equilibra las emociones del sistema   |
+| **Y.O.L.I.**   | Inyección de lenguaje y traducción   | Contextual / Dinámico   | Adapta el idioma del sistema al usuario|
+| **A.L.B.A.**   | Gestión de errores y resiliencia     | Defensivo / Reactivo    | Captura y notifica errores al usuario |
 
 ---
 
@@ -122,15 +138,6 @@ npm run dev
 # Construir para producción
 npm run build
 ```
-
-## 🌌 Integración General
-
-| Módulo         | Rol Principal                        | Tipo de Procesamiento   | Interacción                           |
-| :------------- | :----------------------------------- | :---------------------- | :------------------------------------ |
-| **M.A.R.I.A.** | Administración y redirección interna | Operativo / Lógico      | Coordina y gestiona todos los módulos |
-| **L.U.C.I.A.** | Comprensión e interfaz accesible     | Cognitivo / Lingüístico | Comunica la IA con el usuario         |
-| **A.N.A.**     | Análisis y regulación emocional      | Afectivo / Adaptativo   | Equilibra las emociones del sistema   |
-| **Y.O.L.I.**   | Inyección de lenguaje y traducción  | Contextual / Dinámico   | Adapta el idioma del sistema al usuario|
 
 ---
 

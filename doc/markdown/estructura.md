@@ -42,7 +42,7 @@ La inteligencia de Aurora se procesa en `src/modules/`:
 2. `ANA` analiza el estado emocional y ajusta la respuesta.
 3. `MARIA` gestiona la navegación o los procesos internos necesarios.
 4. `YOLI` inyecta los textos adecuados según el idioma seleccionado.
-5. `ALBA` vigila el proceso para informar de cualquier anomalía.
+5. `ALBA` vigila el proceso para capturar y notificar cualquier anomalía o error.
 
 ## 🎨 Sistema de Estilos y Animaciones
 

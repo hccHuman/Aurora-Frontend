@@ -1,6 +1,6 @@
 # 🌙 Sistema Central de IA Emocional y Cognitiva
 
-El ecosistema de la IA se estructura en tres módulos principales que representan las **capas esenciales de pensamiento, gestión y emoción**.  
+El ecosistema de la IA se estructura en cinco módulos principales que representan las **capas esenciales de pensamiento, gestión, emoción, traducción y resiliencia**.  
 Cada módulo cumple una función específica pero interconectada, formando un sistema vivo, adaptable y emocionalmente coherente.
 
 ---
